@@ -1,0 +1,62 @@
+const Contact = require('../models/contact');
+
+const createContact = async (req, res) => {
+    try {
+        const contact = req.body;
+        const result = await Contact.create(contact);
+        res.status(201).json({ message: 'Contact créé avec succès', contactId: result.insertId });
+    } catch (error) {
+        res.status(500).json({ message: 'Erreur lors de la création du contact', error: error.message });
+    }
+};
+
+const getContacts = async (req, res) => {
+    try {
+        const contacts = await Contact.getAll();
+        res.status(200).json(contacts);
+    } catch (error) {
+        res.status(500).json({ message: 'Erreur lors de la récupération des contacts', error: error.message });
+    }
+};
+
+const getContactById = async (req, res) => {
+    try {
+        const contactId = req.params.id;
+        const contact = await Contact.getById(contactId);
+        if (!contact) {
+            return res.status(404).json({ message: 'Contact non trouvé' });
+        }
+        res.status(200).json(contact);
+    } catch (error) {
+        res.status(500).json({ message: 'Erreur lors de la récupération du contact', error: error.message });
+    }
+};
+
+const updateContact = async (req, res) => {
+    try {
+        const contactId = req.params.id;
+        const newContactData = req.body;
+        const result = await Contact.update(contactId, newContactData);
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Contact non trouvé' });
+        }
+        res.status(200).json({ message: 'Contact mis à jour avec succès' });
+    } catch (error) {
+        res.status(500).json({ message: 'Erreur lors de la mise à jour du contact', error: error.message });
+    }
+};
+
+const deleteContact = async (req, res) => {
+    try {
+        const contactId = req.params.id;
+        const result = await Contact.delete(contactId);
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Contact non trouvé' });
+        }
+        res.status(200).json({ message: 'Contact supprimé avec succès' });
+    } catch (error) {
+        res.status(500).json({ message: 'Erreur lors de la suppression du contact', error: error.message });
+    }
+};
+
+module.exports = { createContact, getContacts, getContactById, updateContact, deleteContact };
