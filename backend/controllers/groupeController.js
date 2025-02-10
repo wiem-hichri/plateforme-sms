@@ -4,7 +4,10 @@ const createGroupe = async (req, res) => {
     try {
         const groupe = req.body;
         const result = await Groupe.create(groupe);
-        res.status(201).json({ message: 'Groupe créé avec succès', GroupeId: result.insertId });
+        res.json({
+            status: "Groupe créé avec succès",
+            data: result,
+        });    
     } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la création du groupe', error: error.message });
     }
@@ -13,7 +16,10 @@ const createGroupe = async (req, res) => {
 const getGroupes = async (req, res) => {
     try {
         const groupes = await Groupe.getAll();
-        res.status(200).json(groupes);
+        res.json({
+            status: "Success",
+            data: groupes,
+        });
     } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la récupération des groupes', error: error.message });
     }
@@ -26,7 +32,10 @@ const getGroupeById = async (req, res) => {
         if (!groupe) {
             return res.status(404).json({ message: 'Groupe non trouvé' });
         }
-        res.status(200).json(groupe);
+        res.json({
+            status: "Success",
+            data: groupe,
+        });
     } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la récupération du groupe', error: error.message });
     }
@@ -40,7 +49,10 @@ const updateGroupe = async (req, res) => {
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: 'Groupe non trouvé' });
         }
-        res.status(200).json({ message: 'Groupe mis à jour avec succès' });
+        res.json({
+            status: "Groupe mis à jour avec succès",
+            data: result,
+        });
     } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la mise à jour du groupe', error: error.message });
     }
@@ -53,8 +65,10 @@ const deleteGroupe = async (req, res) => {
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: 'Groupe non trouvé' });
         }
-        res.status(200).json({ message: 'Groupe supprimé avec succès' });
-    } catch (error) {
+        res.json({
+            status: "Groupe supprimé avec succès",
+            data: result,
+        });    } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la suppression du groupe', error: error.message });
     }
 };

@@ -4,7 +4,11 @@ const createContact = async (req, res) => {
     try {
         const contact = req.body;
         const result = await Contact.create(contact);
-        res.status(201).json({ message: 'Contact créé avec succès', contactId: result.insertId });
+        //res.status(201).json({ message: 'Contact créé avec succès', contactId: result.insertId });
+        res.json({
+            status: "Contact créé avec succès",
+            data: result,
+        });
     } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la création du contact', error: error.message });
     }
@@ -13,7 +17,10 @@ const createContact = async (req, res) => {
 const getContacts = async (req, res) => {
     try {
         const contacts = await Contact.getAll();
-        res.status(200).json(contacts);
+        res.json({
+            status: "success",
+            data: contacts,
+        });
     } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la récupération des contacts', error: error.message });
     }
@@ -26,7 +33,10 @@ const getContactById = async (req, res) => {
         if (!contact) {
             return res.status(404).json({ message: 'Contact non trouvé' });
         }
-        res.status(200).json(contact);
+        res.json({
+            status: "success",
+            data: contact,
+        });
     } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la récupération du contact', error: error.message });
     }
@@ -40,7 +50,11 @@ const updateContact = async (req, res) => {
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: 'Contact non trouvé' });
         }
-        res.status(200).json({ message: 'Contact mis à jour avec succès' });
+        //res.status(200).json({ message: 'Contact mis à jour avec succès' });
+        res.json({
+            status: "Contact mis à jour avec succès",
+            data: result,
+        });
     } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la mise à jour du contact', error: error.message });
     }
@@ -53,7 +67,11 @@ const deleteContact = async (req, res) => {
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: 'Contact non trouvé' });
         }
-        res.status(200).json({ message: 'Contact supprimé avec succès' });
+        //res.status(200).json({ message: 'Contact supprimé avec succès' });
+        res.json({
+            status: "Contact supprimé avec succès",
+            data: result,
+        });
     } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la suppression du contact', error: error.message });
     }
