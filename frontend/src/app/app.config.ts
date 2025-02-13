@@ -1,8 +1,13 @@
 import { ApplicationConfig } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Routes } from '@angular/router';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { ContactsComponent } from './pages/contacts/contacts.component';
 
-import { routes } from './app.routes';
+const routes: Routes = [
+  { path: '', component: DashboardComponent }, // Default route (Dashboard)
+  { path: 'contacts', component: ContactsComponent }, // Contacts Page
+];
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes)]
+  providers: [provideRouter(routes)],
 };
