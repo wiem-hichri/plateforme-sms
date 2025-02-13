@@ -1,0 +1,104 @@
+// Define primary colors
+$primary-color: #fc5130;
+$hover-color: darken($primary-color, 10%);
+$text-color: #ffffff;
+
+// Full-page layout
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; // Ensures the page takes the full height
+  background: #f8f9fa;
+  padding-bottom: 60px; // Prevents footer from overlapping content
+}
+
+// Move content to the right but allow growth
+.container {
+  width: 65%;
+  max-width: 900px;
+  padding: 3rem;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: auto; // Add top margin so content starts below header
+  margin-left: 25%; // ✅ Keeps it moved to the right
+  overflow: hidden; // Prevents content from overflowing
+}
+
+// Table container to allow it to grow naturally
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto; // Ensures responsiveness
+  margin-top: 20px;
+  max-height: 60vh; // Limits height to avoid overlapping footer
+  overflow-y: auto; // Allows scrolling if too many rows
+}
+
+// Header styling
+h2 {
+  color: $primary-color;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+// Button styling
+button {
+  background: $primary-color !important;
+  color: $text-color !important;
+  font-weight: bold;
+  border-radius: 6px;
+  padding: 12px 20px;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    background: $hover-color !important;
+  }
+}
+
+// Table styling
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 8px;
+  overflow: hidden;
+
+  th {
+    background: $primary-color;
+    color: $text-color;
+    padding: 14px;
+    text-align: left;
+    font-size: 16px;
+    text-transform: uppercase;
+  }
+
+  td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+    color: #444;
+    text-align: center;
+  }
+
+  tr:hover {
+    background: #fff3e0;
+  }
+}
+
+// Footer styling to keep it at the bottom
+.footer {
+  width: 100%;
+  background: #333;
+  color: white;
+  text-align: center;
+  padding: 15px 0;
+  font-size: 14px;
+  position: relative; // Keeps it below the content
+}
