@@ -24,9 +24,9 @@ les etapes pour pusher les modifications :
 
 les etapes pour puler les dernires modifications :
 
-1/  git checkout main
-2/  git pull origin main
-3/  git checkout -b ghaith
+
+1/  git pull origin main
+
 
 Éviter les conflits : 
 
