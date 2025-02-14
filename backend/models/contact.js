@@ -29,7 +29,14 @@ const Contact = {
     delete: async (id) => {
         const [result] = await db.query("DELETE FROM contacts WHERE id = ?", [id]);
         return result;
+    },
+
+    getByGroup: async (groupName) => {
+        const query = "SELECT * FROM contacts WHERE service = ?";
+        const [results] = await db.query(query, [groupName]);
+        return results;
     }
+
 };
 
 module.exports = Contact;

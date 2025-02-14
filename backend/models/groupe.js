@@ -28,7 +28,7 @@ const Groupe = {
     delete: async (id) => {
         const [result] = await db.query("DELETE FROM groupes WHERE id = ?", [id]);
         return result;
-    }
+    },
 };
 
 module.exports = Groupe;
