@@ -1,14 +1,12 @@
 const Contact = require('../models/contact');
+const Groupe = require('../models/groupe'); 
+
 
 const createContact = async (req, res) => {
     try {
         const contact = req.body;
         const result = await Contact.create(contact);
-        //res.status(201).json({ message: 'Contact créé avec succès', contactId: result.insertId });
-        res.json({
-            status: "Contact créé avec succès",
-            data: result,
-        });
+        res.status(201).json({ message: 'Contact créé avec succès', contactId: result.insertId });
     } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la création du contact', error: error.message });
     }
@@ -77,4 +75,22 @@ const deleteContact = async (req, res) => {
     }
 };
 
-module.exports = { createContact, getContacts, getContactById, updateContact, deleteContact };
+const getContactsByGroup = async (req, res) => {
+    try {
+        const { groupName } = req.params;  
+        const contacts = await Contact.getByGroup(groupName); 
+
+        if (contacts.length === 0) {
+            return res.status(404).json({ message: 'Aucun contact trouvé pour ce groupe' });
+        }
+
+        res.json({
+            status: "Success",
+            data: contacts,
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Erreur lors de la récupération des contacts', error: error.message });
+    }
+};
+
+module.exports = { createContact, getContacts, getContactById, updateContact, deleteContact, getContactsByGroup };

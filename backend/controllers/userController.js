@@ -8,10 +8,7 @@ const createUser = async (req, res) => {
     try {
         const user = req.body;
         const result = await User.create(user);
-        res.json({
-            status: "User créé avec succès",
-            data: result,
-        }); 
+        res.status(201).json({ message: 'User créé avec succès', userId: result.insertId });
         } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la création du User', error: error.message });
     }
@@ -65,35 +62,31 @@ const deleteUser = async (req, res) => {
         res.status(500).json({ message: 'Erreur lors de la suppression du user', error: error.message });
     }
 };
+
 const login = async (req, res) => {
-        try {
-            
-            const { email, password } = req.body;
+    try {
+        const { email, password } = req.body;
 
-            const [users] = await db.query("SELECT * FROM users WHERE email = ?", [email]);
-            if (users.length === 0) {
-                return res.status(401).json({ message: "Email incorrect" });
-            }
-
-            const user = users[0];
-
-            const validPassword = await bcrypt.compare(password, user.password);
-            if (!validPassword) {
-                return res.status(401).json({ message: "Mot de passe incorrect" });
-            }
-            const token = jwt.sign(
-                { id: user.id, role: user.role },
-                process.env.JWT_SECRET, 
-                { expiresIn: "1h" }
-            );
-
-            res.status(200).json({ message: "Connexion réussie", token });
-
-        } catch (error) {
-            res.status(500).json({ message: "Erreur lors de la connexion", error: error.message });
+        const [user] = await db.query("SELECT * FROM users WHERE email = ?", [email]);
+        if (user.length === 0) {
+            return res.status(400).json({ message: "Email incorrect" });
         }
-   
+
+        const isMatch = await bcrypt.compare(password, user[0].password);
+        if (!isMatch) {
+            return res.status(400).json({ message: "Mot de passe incorrect" });
+        }
+
+        const token = jwt.sign(
+            { id: user[0].id, role: user[0].role }, 
+            process.env.JWT_SECRET,
+            { expiresIn: "1h" }
+        );
+
+        res.json({ message: "Connexion réussie", token });
+    } catch (error) {
+        res.status(500).json({ message: "Erreur serveur", error: error.message });
+    }
 };
 
-
-module.exports = { createUser, getUsers, getUserById, updateUser, deleteUser, login};
+module.exports = { createUser, getUsers, getUserById, updateUser, deleteUser, login };

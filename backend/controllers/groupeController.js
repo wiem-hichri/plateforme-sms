@@ -73,4 +73,5 @@ const deleteGroupe = async (req, res) => {
     }
 };
 
+
 module.exports = { createGroupe, getGroupes, getGroupeById, updateGroupe, deleteGroupe};
