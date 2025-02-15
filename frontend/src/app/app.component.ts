@@ -5,11 +5,12 @@ import { DashboardComponent } from './dashboard/dashboard.component';// Import N
 import { FooterComponent } from './footer/footer.component'; // Import FooterComponent
 import { HeaderComponent } from './header/header.component';
 import {ContactsComponent} from './pages/contacts/contacts.component'
+import { GroupsComponent } from './pages_G/groups/groups.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, SidebarComponent,DashboardComponent,FooterComponent,HeaderComponent,ContactsComponent], // Add SidebarComponent here
+  imports: [RouterOutlet, SidebarComponent,DashboardComponent,FooterComponent,HeaderComponent,ContactsComponent,GroupsComponent], // Add SidebarComponent here
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
