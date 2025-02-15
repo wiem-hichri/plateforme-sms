@@ -65,11 +65,11 @@ const deleteUser = async (req, res) => {
 
 const login = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { login, password } = req.body;
 
-        const [user] = await db.query("SELECT * FROM users WHERE email = ?", [email]);
+        const [user] = await db.query("SELECT * FROM users WHERE login = ?", [login]);
         if (user.length === 0) {
-            return res.status(400).json({ message: "Email incorrect" });
+            return res.status(400).json({ message: "login incorrect" });
         }
 
         const isMatch = await bcrypt.compare(password, user[0].password);
