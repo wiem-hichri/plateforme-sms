@@ -1,17 +1,14 @@
-
 <div class="page-wrapper">
   <div class="container">
     <h2>Contacts</h2>
 
-    <div class="actions">
-      <button mat-raised-button color="primary" (click)="openAddContactDialog()">➕ Add Contact</button>
-    </div>
-  </div>
+    <button mat-raised-button color="primary" (click)="openAddContactModal()">+ New Contact</button>
+
     <div class="table-wrapper">
       <table mat-table [dataSource]="contacts" class="mat-elevation-z8">
-        <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef> ID </th>
-          <td mat-cell *matCellDef="let contact"> {{ contact.id }} </td>
+        <ng-container matColumnDef="matricule">
+          <th mat-header-cell *matHeaderCellDef> Matricule </th>
+          <td mat-cell *matCellDef="let contact"> {{ contact.matricule }} </td>
         </ng-container>
 
         <ng-container matColumnDef="nom">
@@ -24,27 +21,37 @@
           <td mat-cell *matCellDef="let contact"> {{ contact.prenom }} </td>
         </ng-container>
 
-        <ng-container matColumnDef="telephone">
-          <th mat-header-cell *matHeaderCellDef> Téléphone </th>
-          <td mat-cell *matCellDef="let contact"> {{ contact.telephone }} </td>
-          
+        <ng-container matColumnDef="telephone_personnel">
+          <th mat-header-cell *matHeaderCellDef> Téléphone Perso </th>
+          <td mat-cell *matCellDef="let contact"> {{ contact.telephone_personnel }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="telephone_professionnel">
+          <th mat-header-cell *matHeaderCellDef> Téléphone Pro </th>
+          <td mat-cell *matCellDef="let contact"> {{ contact.telephone_professionnel }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="service">
+          <th mat-header-cell *matHeaderCellDef> Service </th>
+          <td mat-cell *matCellDef="let contact"> {{ contact.service }} </td>
+        </ng-container>
+        <ng-container matColumnDef="cin">
+          <th mat-header-cell *matHeaderCellDef> CIN </th>
+          <td mat-cell *matCellDef="let contact"> {{ contact.cin }} </td>
         </ng-container>
         
-  <ng-container matColumnDef="role">
-    <th mat-header-cell *matHeaderCellDef> role </th>
-    <td mat-cell *matCellDef="let contact"> {{ contact.role }} </td>
-  </ng-container>
+        <ng-container matColumnDef="site">
+          <th mat-header-cell *matHeaderCellDef> Site </th>
+          <td mat-cell *matCellDef="let contact"> {{ contact.site }} </td>
+        </ng-container>
 
-        <!-- Action Column -->
         <ng-container matColumnDef="action">
           <th mat-header-cell *matHeaderCellDef> Action </th>
           <td mat-cell *matCellDef="let contact">
             <button mat-icon-button class="edit-btn" (click)="editContact(contact)">
               <span class="material-icons">edit</span>
             </button>
-        
-            <!-- Delete Button -->
-            <button mat-icon-button class="delete-btn" (click)="deleteContact(contact.id)">
+            <button mat-icon-button class="delete-btn" (click)="deleteContact(contact.matricule)">
               <span class="material-icons">delete</span>
             </button>
           </td>
@@ -55,8 +62,4 @@
       </table>
     </div>
   </div>
-
-
-
-
- 
+</div>

@@ -7,16 +7,16 @@ $text-color: #ffffff;
 .page-wrapper {
   display: flex;
   flex-direction: column;
-  min-height: 100vh; // Ensures the page takes the full height
+  min-height: 100vh;
   background: #f8f9fa;
-  padding-bottom: 60px; // Prevents footer from overlapping content
+  padding-bottom: 60px;
 }
 
-// Move content to the right but allow growth
-.container {
+// Main container
+.groups-container {
   width: 80%;
   max-width: 1200px;
-  padding: 3rem;
+  padding: 2rem;
   background: #fff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   border-radius: 10px;
@@ -24,21 +24,12 @@ $text-color: #ffffff;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: auto; // Add top margin so content starts below header
-  margin-left: 25%; // ✅ Keeps it moved to the right
-  overflow: hidden; // Prevents content from overflowing
+  margin: auto;
+  margin-left: 25%;
+  overflow: hidden;
 }
 
-// Table container to allow it to grow naturally
-.table-wrapper {
-  width: 100%;
-  overflow-x: auto; // Ensures responsiveness
-  margin-top: 20px;
-  max-height: 60vh; // Limits height to avoid overlapping footer
-  overflow-y: auto; // Allows scrolling if too many rows
-}
-
-// Header styling
+// Header
 h2 {
   color: $primary-color;
   font-size: 2rem;
@@ -46,7 +37,7 @@ h2 {
   margin-bottom: 1rem;
 }
 
-// Button styling
+// Buttons
 button {
   background: $primary-color !important;
   color: $text-color !important;
@@ -64,6 +55,14 @@ button {
 }
 
 // Table styling
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 20px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
@@ -92,7 +91,7 @@ table {
   }
 }
 
-// Footer styling to keep it at the bottom
+// Footer
 .footer {
   width: 100%;
   background: #333;
@@ -100,5 +99,5 @@ table {
   text-align: center;
   padding: 15px 0;
   font-size: 14px;
-  position: relative; // Keeps it below the content
+  position: relative;
 }
