@@ -7,8 +7,8 @@ const User = {
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(user.password, salt);
 
-            const query = `INSERT INTO users (matricule, nom, prenom, email, password, role) VALUES (?, ?, ?, ?, ?, ?)`;
-            const values = [user.matricule, user.nom, user.prenom, user.email, hashedPassword, user.role];
+            const query = `INSERT INTO users (matricule, nom, prenom, login, password, role) VALUES (?, ?, ?, ?, ?, ?)`;
+            const values = [user.matricule, user.nom, user.prenom, user.login, hashedPassword, user.role];
 
             const [result] = await db.query(query, values);
             return result;
@@ -31,8 +31,8 @@ const User = {
 
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(user.password, salt);
-        const query = `UPDATE users SET matricule=?, nom=?, prenom=?, email=?, password=?, role=? WHERE id=?`;
-        const values = [user.matricule, user.nom, user.prenom, user.email, hashedPassword, user.role, id];
+        const query = `UPDATE users SET matricule=?, nom=?, prenom=?, login=?, password=?, role=? WHERE id=?`;
+        const values = [user.matricule, user.nom, user.prenom, user.login, hashedPassword, user.role, id];
 
         const [result] = await db.query(query, values);
         return result;
