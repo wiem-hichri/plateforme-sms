@@ -4,6 +4,8 @@ import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { AddGroupsDialogComponent } from '../add-groups-dialog/add-groups-dialog.component';
 
 @Component({
   selector: 'app-groups',
@@ -13,12 +15,27 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./groups.component.scss']
 })
 export class GroupsComponent {
-  displayedColumns: string[] = ['id', 'nom', 'action'];
+  displayedColumns: string[] = [ 'nom', 'action'];
 
   groups = [
-    { id: 2, nom: 'Transport' },
-    { id: 3, nom: 'Transporteurs Internes' },
-    { id: 4, nom: 'Transporteurs Externes' },
-    { id: 6, nom: 'Logistique' }
+    { nom: 'Transport' },
+    { nom: 'Transporteurs Internes' },
+    { nom: 'Transporteurs Externes' },
+    { nom: 'Logistique' }
   ];
+
+   constructor(public dialog: MatDialog) {}
+  
+    openAddGroupsModal() {
+      const dialogRef = this.dialog.open(AddGroupsDialogComponent, {
+        width: '400px'
+      });
+  
+      dialogRef.afterClosed().subscribe(newGroup => {
+        if (newGroup) {
+          this.groups.push(newGroup);
+        }
+      });
+    }
+  
 }
