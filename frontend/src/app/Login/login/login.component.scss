@@ -1,0 +1,98 @@
+// Color Variables
+$primary-color: #fc5130;
+$secondary-color: #fff;
+$input-bg: #f3f3f3;
+$border-radius: 8px;
+
+.login-container {
+  display: flex;
+  height: 100vh;
+  align-items: center;
+  justify-content: flex-end; // ✅ Push everything to the right
+  background: #f8f9fa;
+  padding-right: 5%; // ✅ Adjust spacing
+
+  .login-box {
+    width: 35%; // ✅ Make it smaller
+    background: $secondary-color;
+    padding: 2rem;
+    border-radius: $border-radius;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+
+    h2 {
+      color: $primary-color;
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: #666;
+      font-size: 1rem;
+      margin-bottom: 20px;
+    }
+
+    .input-group {
+      margin-bottom: 15px;
+
+      input {
+        width: 100%;
+        padding: 12px;
+        background: $input-bg;
+        border: none;
+        border-radius: $border-radius;
+        font-size: 1rem;
+        outline: none;
+      }
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      background: $primary-color;
+      color: $secondary-color;
+      font-size: 1rem;
+      border: none;
+      border-radius: $border-radius;
+      cursor: pointer;
+      transition: 0.3s;
+
+      &:hover {
+        background: darken($primary-color, 10%);
+      }
+    }
+  }
+
+  .image-section {
+    position: absolute;
+    left: 0; // ✅ Fix image to the left
+    top: 0;
+    width: 60%;
+    height: 100vh;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+}
+
+// Responsive Design for Mobile
+@media (max-width: 768px) {
+  .login-container {
+    flex-direction: column;
+    justify-content: center;
+    padding-right: 0; // ✅ Remove right padding
+
+    .login-box {
+      width: 80%;
+      margin-top: 20px;
+    }
+
+    .image-section {
+      display: none; // Hide truck image on small screens
+    }
+  }
+}
