@@ -1,31 +1,72 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ContactService } from '../../services/contact.service';
 import { AddContactDialogComponent } from '../contact-dialog/contact-dialog.component';
 import { EditContactDialogComponent } from '../edit-contact-dialog/edit-contact-dialog.component';
 
 @Component({
   selector: 'app-contacts',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatButtonModule, MatIconModule, FormsModule],
+  imports: [
+    CommonModule,
+    MatTableModule, // ✅ Ensure MatTableModule is imported
+    MatButtonModule,
+    MatIconModule,
+    FormsModule,
+    MatDialogModule
+  ],
   templateUrl: './contacts.component.html',
   styleUrls: ['./contacts.component.scss']
 })
-export class ContactsComponent {
-  displayedColumns: string[] = ['matricule', 'nom', 'prenom', 'telephone_personnel', 'telephone_professionnel', 'service', 'cin', 'site', 'action'];
-
-  contacts = [
-    { matricule: 'A123', nom: 'Ali', prenom: 'Ben Ali', telephone_personnel: '55362987', telephone_professionnel: '70123456', service: 'IT', cin: '12345678', site: 'Tunis' },
-    { matricule: 'B456', nom: 'Ahmed', prenom: 'Ben Ahmed', telephone_personnel: '52895632', telephone_professionnel: '71234567', service: 'Finance', cin: '87654321', site: 'Sfax' },
-    { matricule: 'C789', nom: 'Mohamed', prenom: 'Ben Mohamed', telephone_personnel: '20365987', telephone_professionnel: '72234567', service: 'HR', cin: '11223344', site: 'Sousse' }
+export class ContactsComponent implements OnInit {
+  displayedColumns: string[] = [
+    'matricule',
+    'nom',
+    'prenom',
+    'telephone_personnel',
+    'telephone_professionnel',
+    'service',
+    'cin',
+    'site',
+    'action' // ✅ Ensure "action" appears only once
   ];
+  
+  contacts: any[] = [];
 
+  constructor(private contactService: ContactService, public dialog: MatDialog) {}
 
-  constructor(public dialog: MatDialog) {}
+  ngOnInit() {
+    this.fetchContacts();
+  }
+
+  fetchContacts() {
+    this.contactService.getContacts().subscribe(
+      (response: any) => {
+        console.log('API Response:', response); // Debugging API response
+  
+        if (Array.isArray(response)) {
+          // ✅ If response is already an array, assign it directly
+          this.contacts = response;
+        } else if (response && response.data && Array.isArray(response.data)) {
+          // ✅ If response has { status, data }, extract `data`
+          this.contacts = response.data;
+        } else {
+          console.warn('Unexpected API response format:', response);
+          this.contacts = [];
+        }
+      },
+      (error) => {
+        console.error('Error fetching contacts:', error);
+        this.contacts = [];
+      }
+    );
+  }
+  
 
   openAddContactModal() {
     const dialogRef = this.dialog.open(AddContactDialogComponent, {
@@ -34,7 +75,7 @@ export class ContactsComponent {
 
     dialogRef.afterClosed().subscribe(newContact => {
       if (newContact) {
-        this.contacts.push(newContact);
+        this.fetchContacts();
       }
     });
   }
@@ -47,10 +88,7 @@ export class ContactsComponent {
 
     dialogRef.afterClosed().subscribe(updatedContact => {
       if (updatedContact) {
-        const index = this.contacts.findIndex(c => c.matricule === updatedContact.matricule);
-        if (index !== -1) {
-          this.contacts[index] = updatedContact; // Update the contact in the list
-        }
+        this.fetchContacts();
       }
     });
   }
