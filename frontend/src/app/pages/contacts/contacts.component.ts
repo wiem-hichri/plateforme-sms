@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ContactService } from '../../services/contact.service';
+import { Contact } from '../../models/contact.model'; // ✅ Import the Contact model
 import { AddContactDialogComponent } from '../contact-dialog/contact-dialog.component';
 import { EditContactDialogComponent } from '../edit-contact-dialog/edit-contact-dialog.component';
 
@@ -72,26 +73,33 @@ export class ContactsComponent implements OnInit {
     const dialogRef = this.dialog.open(AddContactDialogComponent, {
       width: '400px'
     });
-
+  
     dialogRef.afterClosed().subscribe(newContact => {
       if (newContact) {
-        this.fetchContacts();
+        this.fetchContacts(); // ✅ Refresh contacts after adding
       }
     });
   }
+  
 
-  editContact(contact: any) {
+  editContact(contact: Contact) {
     const dialogRef = this.dialog.open(EditContactDialogComponent, {
-      width: '400px',
-      data: { contact }
+      data: { contact }, // ✅ Send contact data
     });
-
-    dialogRef.afterClosed().subscribe(updatedContact => {
+  
+    dialogRef.afterClosed().subscribe((updatedContact) => {
       if (updatedContact) {
-        this.fetchContacts();
+        const index = this.contacts.findIndex(c => c.id === updatedContact.id); // ✅ Use ID instead of matricule
+        if (index !== -1) {
+          this.contacts[index] = updatedContact; // ✅ Update the UI
+        }
       }
     });
   }
+  
+  
+  
+
 
   deleteContact(matricule: string) {
     this.contacts = this.contacts.filter(contact => contact.matricule !== matricule);

@@ -1,29 +1,27 @@
 <div class="modal-overlay">
-    <div class="modal-card">
-      <h3>Modifier un Contact</h3>
-      <form>
-        <input type="text" [(ngModel)]="contact.matricule" placeholder="Matricule" disabled>
-        <input type="text" [(ngModel)]="contact.nom" placeholder="Nom">
-        <input type="text" [(ngModel)]="contact.prenom" placeholder="Prénom">
-        <input type="text" [(ngModel)]="contact.telephone_personnel" placeholder="Téléphone Personnel">
-        <input type="text" [(ngModel)]="contact.telephone_professionnel" placeholder="Téléphone Professionnel">
-        <input type="text" [(ngModel)]="contact.cin" placeholder="CIN">
-        <input type="text" [(ngModel)]="contact.site" placeholder="Site">
-  
-        <!-- Select Dropdown for Service -->
-        <select [(ngModel)]="contact.service">
-          <option value="IT">IT</option>
-          <option value="Finance">Finance</option>
-          <option value="Marketing">Marketing</option>
-          <option value="HR">Ressources Humaines</option>
-          <option value="Logistics">Logistique</option>
-        </select>
-  
-        <div class="modal-actions">
-          <button type="button" class="cancel-btn" (click)="closeDialog()">Annuler</button>
-          <button type="button" class="submit-btn" (click)="saveContact()">Enregistrer</button>
-        </div>
-      </form>
-    </div>
+  <div class="modal-card">
+    <h3>Modifier un Contact</h3>
+    <form>
+      <input type="text" [(ngModel)]="contact.matricule" name="matricule" placeholder="Matricule" disabled>
+      <input type="text" [(ngModel)]="contact.nom" name="nom" placeholder="Nom">
+      <input type="text" [(ngModel)]="contact.prenom" name="prenom" placeholder="Prénom">
+      <input type="text" [(ngModel)]="contact.telephone_personnel" name="telephone_personnel" placeholder="Téléphone Personnel">
+      <input type="text" [(ngModel)]="contact.telephone_professionnel" name="telephone_professionnel" placeholder="Téléphone Professionnel">
+      <input type="text" [(ngModel)]="contact.cin" name="cin" placeholder="CIN">
+      <input type="text" [(ngModel)]="contact.site" name="site" placeholder="Site">
+
+      <select [(ngModel)]="contact.service" name="service">
+        <option value="" disabled selected>Choisir un service</option>
+        <option value="Transporteurs_Externes">Transporteurs_Externes</option>
+        <option value="Transport">Transport</option>
+        <option value="Transporteurs_Internes">Transporteurs_Internes</option>
+        <option value="Logistics">Logistique</option>
+      </select>
+
+      <div class="modal-actions">
+        <button type="button" class="cancel-btn" (click)="closeDialog()">Annuler</button>
+        <button type="button" class="submit-btn" (click)="saveContact()">Enregistrer</button>
+      </div>
+    </form>
   </div>
-  
+</div>

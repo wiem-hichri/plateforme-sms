@@ -1,30 +1,28 @@
 <div class="modal-overlay">
     <div class="modal-card">
       <h3>Ajouter un Contact</h3>
-      <form>
-        <input type="text" [(ngModel)]="newContact.matricule" placeholder="Matricule" required>
-        <input type="text" [(ngModel)]="newContact.nom" placeholder="Nom" required>
-        <input type="text" [(ngModel)]="newContact.prenom" placeholder="Prénom">
-        <input type="text" [(ngModel)]="newContact.telephone_personnel" placeholder="Téléphone Personnel">
-        <input type="text" [(ngModel)]="newContact.telephone_professionnel" placeholder="Téléphone Professionnel">
-        <input type="text" [(ngModel)]="newContact.cin" placeholder="CIN">
-        <input type="text" [(ngModel)]="newContact.site" placeholder="Site">
-  
+      <form (ngSubmit)="addContact()"> <!-- ✅ Ensure form submission works -->
+        <input type="text" [(ngModel)]="newContact.matricule" name="matricule" placeholder="Matricule" required>
+        <input type="text" [(ngModel)]="newContact.nom" name="nom" placeholder="Nom" required>
+        <input type="text" [(ngModel)]="newContact.prenom" name="prenom" placeholder="Prénom">
+        <input type="text" [(ngModel)]="newContact.telephone_personnel" name="telephone_personnel" placeholder="Téléphone Personnel">
+        <input type="text" [(ngModel)]="newContact.telephone_professionnel" name="telephone_professionnel" placeholder="Téléphone Professionnel">
+        <input type="text" [(ngModel)]="newContact.cin" name="cin" placeholder="CIN">
+        <input type="text" [(ngModel)]="newContact.site" name="site" placeholder="Site">
+      
         <!-- Dropdown for Service -->
-        <select [(ngModel)]="newContact.service">
+        <select [(ngModel)]="newContact.service" name="service">
           <option value="" disabled selected>Choisir un service</option>
-          <option value="IT">IT</option>
-          <option value="Finance">Finance</option>
-          <option value="Marketing">Marketing</option>
-          <option value="HR">Ressources Humaines</option>
-          <option value="Logistics">Logistique</option>
+                <option value="Transporteurs_Externes	">Transporteurs_Externes	</option>
+                <option value="Transport">Transport</option>
+                <option value="Transporteurs_Internes">Transporteurs_Internes</option>
+                <option value="Logistics">Logistique</option>
         </select>
-  
+      
         <div class="modal-actions">
           <button type="button" class="cancel-btn" (click)="closeDialog()">Annuler</button>
-          <button type="button" class="submit-btn" (click)="addContact()">Ajouter</button>
+          <button type="submit" class="submit-btn">Ajouter</button> <!-- ✅ Submit button -->
         </div>
       </form>
-    </div>
-  </div>
-  
+      
+        

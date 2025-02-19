@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const  {createContact, getContacts, getContactById, updateContact, deleteContact, getContactsByGroup } = require('../controllers/contactController');
 
-router.post('/contacts', createContact);
+router.post('/addcontacts', createContact);
 router.get('/contacts', getContacts);
 router.get('/contacts/:id', getContactById);
 router.get('/contacts/group/:groupName', getContactsByGroup);
