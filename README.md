@@ -27,7 +27,6 @@ les etapes pour puler les dernires modifications :
 
 1/  git pull origin main
 
-
 Éviter les conflits : 
 
 Toujours exécuter git pull origin main avant de commencer à modifier le projet.
