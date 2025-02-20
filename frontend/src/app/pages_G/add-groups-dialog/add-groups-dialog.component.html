@@ -1,16 +1,10 @@
-<div class="modal-overlay">
-    <div class="modal-card">
-      <h3>Ajouter un Group</h3>
-      <form>
-        <input type="text" [(ngModel)]="newGroup.nom" placeholder="Nom" required>
 
-  
-    
-  
-        <div class="modal-actions">
-          <button type="button" class="cancel-btn" (click)="closeDialog()">Annuler</button>
-          <button type="button" class="submit-btn" (click)="addContact()">Ajouter</button>
-        </div>
-      </form>
-    </div>
-  </div>
+    <h3>Ajouter un Groupe</h3>
+    <form>
+      <input type="text" [(ngModel)]="newGroup.nom" placeholder="Nom" required />
+
+      <div class="modal-actions">
+        <button type="button" class="cancel-btn" (click)="closeDialog()">Annuler</button>
+        <button type="button" class="submit-btn" (click)="addGroup()">Ajouter</button>
+      </div>
+    </form>
