@@ -41,6 +41,9 @@ h2 {
 button {
   background: $primary-color !important;
   color: $text-color !important;
+  margin: 30px auto !important; // ✅ Increased margin
+  padding: 12px 24px; // ✅ Better spacing
+  font-size: 16px; // ✅ Improve visibility
   font-weight: bold;
   border-radius: 6px;
   padding: 12px 20px;
@@ -58,7 +61,7 @@ button {
 .table-wrapper {
   width: 100%;
   overflow-x: auto;
-  margin-top: 20px;
+  margin-top: 50px;
   max-height: 60vh;
   overflow-y: auto;
 }
@@ -101,3 +104,4 @@ table {
   font-size: 14px;
   position: relative;
 }
+
