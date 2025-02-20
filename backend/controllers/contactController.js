@@ -24,10 +24,10 @@ const getContacts = async (req, res) => {
     }
 };
 
-const getContactById = async (req, res) => {
+const getContactByMatricule = async (req, res) => {
     try {
-        const contactId = req.params.id;
-        const contact = await Contact.getById(contactId);
+        const contactMatricule = req.params.matricule;
+        const contact = await Contact.getByMatricule(contactMatricule);
         if (!contact) {
             return res.status(404).json({ message: 'Contact non trouvé' });
         }
@@ -65,11 +65,8 @@ const deleteContact = async (req, res) => {
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: 'Contact non trouvé' });
         }
-        //res.status(200).json({ message: 'Contact supprimé avec succès' });
-        res.json({
-            status: "Contact supprimé avec succès",
-            data: result,
-        });
+        res.status(200).json({ message: 'Contact supprimé avec succès' });
+       
     } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la suppression du contact', error: error.message });
     }
@@ -93,4 +90,4 @@ const getContactsByGroup = async (req, res) => {
     }
 };
 
-module.exports = { createContact, getContacts, getContactById, updateContact, deleteContact, getContactsByGroup };
+module.exports = { createContact, getContacts, getContactByMatricule, updateContact, deleteContact, getContactsByGroup };
