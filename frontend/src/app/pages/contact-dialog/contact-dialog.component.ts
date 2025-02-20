@@ -22,6 +22,7 @@ export class AddContactDialogComponent {
     cin: '',
     site: ''
   };
+  groupes: any[] = []; 
 
   constructor(
     public dialogRef: MatDialogRef<AddContactDialogComponent>,

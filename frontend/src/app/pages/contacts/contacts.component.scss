@@ -102,3 +102,15 @@ table {
   font-size: 14px;
   position: relative; // Keeps it below the content
 }
+.filter-wrapper {
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: flex-start;
+
+  input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 250px;
+  }
+}
