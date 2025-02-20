@@ -2,10 +2,14 @@
   <div class="container">
     <h2>Contacts</h2>
 
+    <div class="filter-wrapper">
+      <input type="text" [(ngModel)]="filterValue" (keyup)="applyFilter()" placeholder="Rechercher par matricule ou service..." />
+    </div>
+
     <button mat-raised-button color="primary" (click)="openAddContactModal()">+ New Contact</button>
 
     <div class="table-wrapper">
-      <table mat-table [dataSource]="contacts" class="mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
         
         <ng-container matColumnDef="matricule">
           <th mat-header-cell *matHeaderCellDef> Matricule </th>
@@ -53,7 +57,7 @@
             <button mat-icon-button class="edit-btn" (click)="editContact(contact)">
               <mat-icon>edit</mat-icon>
             </button>
-            <button mat-icon-button class="delete-btn" (click)="deleteContact(contact.matricule)">
+            <button mat-icon-button class="delete-btn" (click)="deleteContact(contact.id)"> 
               <mat-icon>delete</mat-icon>
             </button>
           </td>
@@ -65,3 +69,4 @@
     </div>
   </div>
 </div>
+  

@@ -14,6 +14,8 @@ import { Contact } from '../../models/contact.model';
 })
 export class EditContactDialogComponent {
   contact: Contact;
+    groupes: any[] = [];
+
 
   constructor(
     public dialogRef: MatDialogRef<EditContactDialogComponent>,

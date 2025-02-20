@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableModule, MatTableDataSource } from '@angular/material/table'; // ✅ Import MatTableDataSource
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ContactService } from '../../services/contact.service';
-import { Contact } from '../../models/contact.model'; // ✅ Import the Contact model
+import { Contact } from '../../models/contact.model';
 import { AddContactDialogComponent } from '../contact-dialog/contact-dialog.component';
 import { EditContactDialogComponent } from '../edit-contact-dialog/edit-contact-dialog.component';
 
@@ -15,7 +15,7 @@ import { EditContactDialogComponent } from '../edit-contact-dialog/edit-contact-
   standalone: true,
   imports: [
     CommonModule,
-    MatTableModule, // ✅ Ensure MatTableModule is imported
+    MatTableModule,
     MatButtonModule,
     MatIconModule,
     FormsModule,
@@ -34,10 +34,11 @@ export class ContactsComponent implements OnInit {
     'service',
     'cin',
     'site',
-    'action' // ✅ Ensure "action" appears only once
+    'action'
   ];
   
-  contacts: any[] = [];
+  dataSource = new MatTableDataSource<Contact>(); // ✅ Use MatTableDataSource
+  filterValue: string = ''; // ✅ Holds the filter value
 
   constructor(private contactService: ContactService, public dialog: MatDialog) {}
 
@@ -48,60 +49,62 @@ export class ContactsComponent implements OnInit {
   fetchContacts() {
     this.contactService.getContacts().subscribe(
       (response: any) => {
-        console.log('API Response:', response); // Debugging API response
-  
+        console.log('API Response:', response);
+
         if (Array.isArray(response)) {
-          // ✅ If response is already an array, assign it directly
-          this.contacts = response;
+          this.dataSource.data = response; // ✅ Update MatTableDataSource
         } else if (response && response.data && Array.isArray(response.data)) {
-          // ✅ If response has { status, data }, extract `data`
-          this.contacts = response.data;
+          this.dataSource.data = response.data;
         } else {
           console.warn('Unexpected API response format:', response);
-          this.contacts = [];
+          this.dataSource.data = [];
         }
       },
       (error) => {
         console.error('Error fetching contacts:', error);
-        this.contacts = [];
+        this.dataSource.data = [];
       }
     );
   }
-  
+
+  applyFilter() {
+    this.dataSource.filter = this.filterValue.trim().toLowerCase(); // ✅ Filter table
+  }
 
   openAddContactModal() {
-    const dialogRef = this.dialog.open(AddContactDialogComponent, {
-      width: '400px'
-    });
+    const dialogRef = this.dialog.open(AddContactDialogComponent, { width: '400px' });
   
     dialogRef.afterClosed().subscribe(newContact => {
       if (newContact) {
-        this.fetchContacts(); // ✅ Refresh contacts after adding
+        this.fetchContacts();
       }
     });
   }
-  
 
   editContact(contact: Contact) {
-    const dialogRef = this.dialog.open(EditContactDialogComponent, {
-      data: { contact }, // ✅ Send contact data
-    });
+    const dialogRef = this.dialog.open(EditContactDialogComponent, { data: { contact } });
   
     dialogRef.afterClosed().subscribe((updatedContact) => {
       if (updatedContact) {
-        const index = this.contacts.findIndex(c => c.id === updatedContact.id); // ✅ Use ID instead of matricule
+        const index = this.dataSource.data.findIndex(c => c.id === updatedContact.id);
         if (index !== -1) {
-          this.contacts[index] = updatedContact; // ✅ Update the UI
+          this.dataSource.data[index] = updatedContact;
+          this.dataSource._updateChangeSubscription(); // ✅ Refresh table
         }
       }
     });
   }
-  
-  
-  
 
-
-  deleteContact(matricule: string) {
-    this.contacts = this.contacts.filter(contact => contact.matricule !== matricule);
+  deleteContact(id: number) {
+    if (confirm("Are you sure you want to delete this contact?")) {
+      this.contactService.deleteContact(id).subscribe(
+        () => {
+          this.dataSource.data = this.dataSource.data.filter(contact => contact.id !== id);
+        },
+        (error) => {
+          console.error('Error deleting contact:', error);
+        }
+      );
+    }
   }
 }
