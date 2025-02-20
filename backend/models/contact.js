@@ -14,8 +14,8 @@ const Contact = {
         return results;
     },
 
-    getById: async (id) => {
-        const [results] = await db.query("SELECT * FROM contacts WHERE id = ?", [id]);
+    getByMatricule: async (matricule) => {
+        const [results] = await db.query("SELECT * FROM contacts WHERE matricule = ?", [matricule]);
         return results.length > 0 ? results[0] : null;
     },
 
