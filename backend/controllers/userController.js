@@ -88,7 +88,7 @@ const deleteUser = async (req, res) => {
     }
 };
 
-const login = async (req, res) => {
+/*const login = async (req, res) => {
     try {
         const { login, password } = req.body;
         const user = await User.getByLogin(login);
@@ -120,6 +120,6 @@ const login = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: "Erreur serveur", error: error.message });
     }
-};
+};*/
 
-module.exports = { createUser,updatePassword, getUsers, getUserById, updateUser, deleteUser, login };
+module.exports = { createUser,updatePassword, getUsers, getUserById, updateUser, deleteUser };
