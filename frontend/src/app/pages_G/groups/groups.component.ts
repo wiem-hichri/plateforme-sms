@@ -33,12 +33,12 @@ export class GroupsComponent implements OnInit {
       (response) => {
         console.log('Groups fetched:', response);
         
-        // ✅ Extract the array from response.data
+        // ✅ Ensure response.data is an array before assigning it
         if (response && Array.isArray(response.data)) { 
           this.groups = response.data; 
         } else {
-          console.error('API response does not contain an array:', response);
-          this.groups = []; // Set an empty array to avoid errors
+          console.error('API response does not contain a valid data array:', response);
+          this.groups = []; // Avoid errors by setting an empty array
         }
       },
       (error) => {
@@ -48,18 +48,40 @@ export class GroupsComponent implements OnInit {
     );
   }
   
-
-  openAddGroupModal() {
-    const dialogRef = this.dialog.open(AddGroupsDialogComponent, {
-      width: '400px',
-    });
-
-    dialogRef.afterClosed().subscribe((newGroup) => {
-      if (newGroup) {
-        this.fetchGroups(); // Refresh groups after adding
-      }
-    });
+validateAndDeleteGroup(id: number | undefined) {
+  if (id !== undefined) {
+    this.deleteGroup(id);
+  } else {
+    console.error('Invalid group ID:', id);
   }
+}
+
+
+openAddGroupModal() {
+  const dialogRef = this.dialog.open(AddGroupsDialogComponent, {
+    width: '400px',
+  });
+
+  dialogRef.afterClosed().subscribe((newGroup: Group | undefined) => {
+    if (newGroup) {
+      this.groupService.addGroup(newGroup).subscribe(
+        (response) => {
+          console.log('Group added:', response);
+          
+          // ✅ Correctly push new group or refresh list
+          if (response && response.data) {
+            this.groups.push(response.data);
+          } else {
+            this.fetchGroups(); // Reload if response is unclear
+          }
+        },
+        (error) => {
+          console.error('Error adding group:', error);
+        }
+      );
+    }
+  });
+}
 
   deleteGroup(id: number) {
     if (confirm('Are you sure you want to delete this group?')) {

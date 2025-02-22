@@ -19,10 +19,10 @@ export class GroupService {
   getGroups(): Observable<{ status: string; data: Group[] }> {
     return this.http.get<{ status: string; data: Group[] }>('http://localhost:3000/api/groupes');
   }
-  
-  addGroup(group: Group): Observable<Group> {
-    return this.http.post<any>(this.addApiUrl, group);
+  addGroup(group: Group): Observable<{ status: string; data: Group }> {
+    return this.http.post<{ status: string; data: Group }>(this.apiUrl, group);
   }
+  
 
   deleteGroup(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
