@@ -48,11 +48,7 @@ const updateContact = async (req, res) => {
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: 'Contact non trouvé' });
         }
-        //res.status(200).json({ message: 'Contact mis à jour avec succès' });
-        res.json({
-            status: "Contact mis à jour avec succès",
-            data: result,
-        });
+        res.status(200).json({ message: 'Contact mis à jour avec succès' });
     } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la mise à jour du contact', error: error.message });
     }

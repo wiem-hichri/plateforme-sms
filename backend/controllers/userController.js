@@ -7,10 +7,35 @@ require('dotenv').config();
 const createUser = async (req, res) => {
     try {
         const user = req.body;
-        const result = await User.create(user);
-        res.status(201).json({ message: 'User créé avec succès', userId: result.insertId });
-        } catch (error) {
+        const { result, generatedPassword } = await User.create(user);
+
+        res.status(201).json({
+            message: 'Utilisateur créé avec succès',
+            userId: result.insertId,
+            generatedPassword: generatedPassword // On envoie le mot de passe pour que l’admin puisse le transmettre
+        });
+    } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la création du User', error: error.message });
+    }
+};
+
+const updatePassword = async (req, res) => {
+    try {
+        const userId = req.params.id; // L'ID de l'utilisateur connecté
+        const { oldPassword, newPassword } = req.body;
+
+        // Vérifier l'ancien mot de passe
+        //await User.verifyPassword(userId, oldPassword);
+
+        // Mettre à jour le mot de passe
+        const result = await User.updatePassword(userId, newPassword);
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: "Utilisateur non trouvé" });
+        }
+
+        res.status(200).json({ message: "Mot de passe mis à jour avec succès" });
+    } catch (error) {
+        res.status(500).json({ message: "Erreur lors de la mise à jour du mot de passe", error: error.message });
     }
 };
 
@@ -66,19 +91,27 @@ const deleteUser = async (req, res) => {
 const login = async (req, res) => {
     try {
         const { login, password } = req.body;
+        const user = await User.getByLogin(login);
 
-        const [user] = await db.query("SELECT * FROM users WHERE login = ?", [login]);
-        if (user.length === 0) {
-            return res.status(400).json({ message: "login incorrect" });
+        if (!user) {
+            return res.status(400).json({ message: "Login incorrect" });
         }
 
-        const isMatch = await bcrypt.compare(password, user[0].password);
+        const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(400).json({ message: "Mot de passe incorrect" });
         }
 
+        // Vérifier si le mot de passe a expiré
+        const expiryDate = new Date(user.password_expiry);
+        const now = new Date();
+
+        if (now > expiryDate) {
+            return res.status(403).json({ message: "Votre mot de passe a expiré, veuillez le changer." });
+        }
+
         const token = jwt.sign(
-            { id: user[0].id, role: user[0].role }, 
+            { id: user.id, role: user.role },
             process.env.JWT_SECRET,
             { expiresIn: "1h" }
         );
@@ -89,4 +122,4 @@ const login = async (req, res) => {
     }
 };
 
-module.exports = { createUser, getUsers, getUserById, updateUser, deleteUser, login };
+module.exports = { createUser,updatePassword, getUsers, getUserById, updateUser, deleteUser, login };

@@ -4,10 +4,8 @@ const createGroupe = async (req, res) => {
     try {
         const groupe = req.body;
         const result = await Groupe.create(groupe);
-        res.json({
-            status: "Groupe créé avec succès",
-            data: result,
-        });    
+        res.status(201).json({ message: 'Groupe créé avec succès', contactId: result.insertId });
+   
     } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la création du groupe', error: error.message });
     }
@@ -49,10 +47,8 @@ const updateGroupe = async (req, res) => {
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: 'Groupe non trouvé' });
         }
-        res.json({
-            status: "Groupe mis à jour avec succès",
-            data: result,
-        });
+        res.status(200).json({ message: 'Groupe mis à jour avec succès' });
+
     } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la mise à jour du groupe', error: error.message });
     }
@@ -65,10 +61,9 @@ const deleteGroupe = async (req, res) => {
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: 'Groupe non trouvé' });
         }
-        res.json({
-            status: "Groupe supprimé avec succès",
-            data: result,
-        });    } catch (error) {
+        res.status(200).json({ message: 'Groupe supprimé avec succès' });
+    
+    } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la suppression du groupe', error: error.message });
     }
 };
