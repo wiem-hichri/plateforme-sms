@@ -11,18 +11,19 @@ export interface Group {
   providedIn: 'root',
 })
 export class GroupService {
-  private apiUrl = 'http://localhost:3000/api/groupes'; // Fetch groups
-  private addApiUrl = 'http://localhost:3000/api/addgroupes'; // Add group
+  private apiUrl = 'http://localhost:3000/api/groupes';
+  private addApiUrl = 'http://localhost:3000/api/addgroupes';
+
 
   constructor(private http: HttpClient) {}
 
-  getGroups(): Observable<{ status: string; data: Group[] }> {
-    return this.http.get<{ status: string; data: Group[] }>('http://localhost:3000/api/groupes');
+  getGroups(): Observable<{ data: Group[] }> {
+    return this.http.get<{ data: Group[] }>(this.apiUrl);
   }
-  addGroup(group: Group): Observable<{ status: string; data: Group }> {
-    return this.http.post<{ status: string; data: Group }>(this.apiUrl, group);
+
+  addGroup(group: Group): Observable<{ data: Group }> {
+    return this.http.post<{ data: Group }>(this.addApiUrl, group);
   }
-  
 
   deleteGroup(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);

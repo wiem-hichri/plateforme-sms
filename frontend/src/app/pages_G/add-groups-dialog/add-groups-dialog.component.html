@@ -1,10 +1,9 @@
+<form>
+  <input type="text" [(ngModel)]="newGroup.nom" name="nom" placeholder="Nom" required />
 
-    <h3>Ajouter un Groupe</h3>
-    <form>
-      <input type="text" [(ngModel)]="newGroup.nom" placeholder="Nom" required />
+  <div class="modal-actions">
+    <button type="button" class="cancel-btn" (click)="closeDialog()">Annuler</button>
+    <button type="button" class="submit-btn" (click)="addGroup()">Ajouter</button>
+  </div>
+</form>
 
-      <div class="modal-actions">
-        <button type="button" class="cancel-btn" (click)="closeDialog()">Annuler</button>
-        <button type="button" class="submit-btn" (click)="addGroup()">Ajouter</button>
-      </div>
-    </form>

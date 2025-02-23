@@ -6,11 +6,11 @@ import { FooterComponent } from './footer/footer.component'; // Import FooterCom
 import { HeaderComponent } from './header/header.component';
 import {ContactsComponent} from './pages/contacts/contacts.component'
 import { GroupsComponent } from './pages_G/groups/groups.component';
-import { UserComponent } from './Users/user/user.component';
+import { UsersComponent } from './Users/user/user.component';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, SidebarComponent,DashboardComponent,FooterComponent,HeaderComponent,ContactsComponent,GroupsComponent,UserComponent], // Add SidebarComponent here
+  imports: [RouterOutlet, SidebarComponent,DashboardComponent,FooterComponent,HeaderComponent,ContactsComponent,GroupsComponent,UsersComponent], // Add SidebarComponent here
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
