@@ -1,0 +1,17 @@
+<div class="p-6">
+    <h2 class="text-lg font-semibold mb-4">Add New User</h2>
+    
+    <form (ngSubmit)="addUser()" class="space-y-4">
+      <input type="text" [(ngModel)]="newUser.matricule" name="matricule" placeholder="Matricule" class="w-full border p-2 rounded">
+      <input type="text" [(ngModel)]="newUser.nom" name="nom" placeholder="Nom" class="w-full border p-2 rounded">
+      <input type="text" [(ngModel)]="newUser.prenom" name="prenom" placeholder="Prénom" class="w-full border p-2 rounded">
+      <input type="text" [(ngModel)]="newUser.login" name="login" placeholder="Login" class="w-full border p-2 rounded">
+      <input type="text" [(ngModel)]="newUser.role" name="role" placeholder="Role" class="w-full border p-2 rounded">
+      
+      <div class="flex justify-end space-x-2">
+        <button type="button" (click)="closeDialog()" class="px-4 py-1 bg-gray-300 rounded">Cancel</button>
+        <button type="submit" class="px-4 py-1 bg-blue-600 text-white rounded">Add</button>
+      </div>
+    </form>
+  </div>
+  
