@@ -4,11 +4,12 @@ const router = express.Router();
 const { isAuthenticated, checkRole } = require('../middlewares/authMiddleware');
 const  {createUser,updatePassword, getUsers, getUserById, updateUser, deleteUser } = require('../controllers/userController');
 
-/*router.post('/addusers', passport.authenticate('jwt', { session: false }),
-checkRole(['super-admin', 'admin']),  createUser);*/
+//router.post('/addusers', passport.authenticate('jwt', { session: false }),
+//checkRole(['super-admin', 'admin']),  createUser);
+
 router.post('/addusers', createUser);
 
-router.get('/users',isAuthenticated, checkRole('admin', 'utilisateur'), getUsers);
+router.get('/users', getUsers);
 
 router.get('/users/:id', getUserById);
 
