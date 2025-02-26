@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 
-
 const login = async (req, res) => {
     try {
         const { login, password } = req.body;
@@ -24,11 +23,15 @@ const login = async (req, res) => {
             return res.status(403).json({ message: "Votre mot de passe a expiré, veuillez le changer." });
         }
 
+        // Mettre à jour le dernier login
+        await User.updateLastLogin(user.id);
+
         // Stocker les infos utilisateur dans la session
         req.session.user = {
             id: user.id,
             role: user.role,
-            login: user.login
+            login: user.login,
+            dernierLogin: now
         };
 
         res.json({ message: "Connexion réussie", user: req.session.user });
