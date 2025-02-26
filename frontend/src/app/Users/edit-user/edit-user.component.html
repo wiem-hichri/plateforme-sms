@@ -1,0 +1,29 @@
+<h2 mat-dialog-title>{{ data ? 'Edit' : 'Add' }} User</h2>
+<div mat-dialog-content>
+  <form>
+    <mat-form-field>
+      <mat-label>Matricule</mat-label>
+      <input matInput [(ngModel)]="user.matricule" name="matricule">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Nom</mat-label>
+      <input matInput [(ngModel)]="user.nom" name="nom">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Prénom</mat-label>
+      <input matInput [(ngModel)]="user.prenom" name="prenom">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Login</mat-label>
+      <input matInput [(ngModel)]="user.login" name="login">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Role</mat-label>
+      <input matInput [(ngModel)]="user.role" name="role">
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-button (click)="onSave()" cdkFocusInitial>Save</button>
+</div>
