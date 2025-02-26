@@ -15,11 +15,11 @@ const User = {
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(password, salt);
 
-            const expiryDate = new Date();
-            expiryDate.setMinutes(expiryDate.getMinutes() + 5);
-
             /*const expiryDate = new Date();
-            expiryDate.setMonth(expiryDate.getMonth() + 6); // Expiration après 6 mois*/
+            expiryDate.setMinutes(expiryDate.getMinutes() + 5);*/
+
+            const expiryDate = new Date();
+            expiryDate.setMonth(expiryDate.getMonth() + 6); 
 
             const query = `INSERT INTO users (matricule, nom, prenom, login, password, role, password_expiry) VALUES (?, ?, ?, ?, ?, ?, ?)`;
             const values = [user.matricule, user.nom, user.prenom, user.login, hashedPassword, user.role, expiryDate];
@@ -31,6 +31,7 @@ const User = {
             throw new Error('Erreur lors du hachage du mot de passe : ' + error.message);
         }
     },
+    
 
     /*verifyPassword: async (id, oldPassword) => {
         const query = `SELECT password FROM users WHERE id = ?`;
@@ -67,8 +68,16 @@ const User = {
         return results.length > 0 ? results[0] : null;
     },
 
-
-    getAll: async () => {
+    updateLastLogin: async (id) => {
+        const now = new Date();
+        const query = `UPDATE users SET dernierLogin = ? WHERE id = ?`;
+        const values = [now, id];
+    
+        const [result] = await db.query(query, values);
+        return result;
+    },
+    
+     getAll: async () => {
         const [results] = await db.query("SELECT * FROM users");
         return results;
     },
