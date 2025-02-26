@@ -42,7 +42,7 @@ app.use((req, res, next) => {
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     next();
   });
-
+/* ------- */
 
 app.use('/api', authRoutes);
 app.use('/api', contactRoutes);
