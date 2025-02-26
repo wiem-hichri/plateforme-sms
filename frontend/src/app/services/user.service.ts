@@ -8,15 +8,16 @@ export interface User {
   nom: string;
   prenom: string;
   login: string;
+  password?: string; // Optional if not always provided
   role: string;
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserService {
-  private apiUrl = 'http://localhost:3000/api/users'; // Ensure this matches your backend
-  private addApiUrl = 'http://localhost:3000/api/addusers'; // Consistent with groups
+  private apiUrl = 'http://localhost:3000/api/users';
+  private addApiUrl = 'http://localhost:3000/api/addusers';
 
   constructor(private http: HttpClient) {}
 
@@ -25,9 +26,8 @@ export class UserService {
   }
 
   addUser(user: User): Observable<{ data: User }> {
-    return this.http.post<{ data: User }>(this.addApiUrl, user); 
+    return this.http.post<{ data: User }>(this.addApiUrl, user);
   }
-  
 
   updateUser(id: number, user: User): Observable<{ data: User }> {
     return this.http.put<{ data: User }>(`${this.apiUrl}/${id}`, user);

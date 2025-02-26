@@ -1,9 +1,14 @@
-module.exports = {
-  content: [
-    "./src/**/*.{html,ts}", // Ensure Tailwind scans your Angular files
-  ],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
-};
+  module.exports = {
+    content: [
+      "./src/app/pages_G/groups/groups.component.html",
+      "./src/app/pages_G/groups/groups.component.ts",
+      "./src/app/Users/user/user.component.html",
+      "./src/app/Users/user/user.component.ts",
+
+
+    ],
+    theme: {
+      extend: {},
+    },
+    plugins: [],
+  };
