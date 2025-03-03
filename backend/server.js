@@ -23,26 +23,27 @@ const sessionStore = new MySQLStore({
 
 // Middleware session
 app.use(session({
-  secret: 'JWT_SECRET', 
+  secret: 'JWT_SECRET',
   resave: false,
   saveUninitialized: false,
   store: sessionStore,
-  cookie: { maxAge: 1000 * 60 * 60 } // 1h
+  cookie: { secure: false, httpOnly: true, maxAge: 1000 * 60 * 60 }
 }));
+
+
 
 app.use(passport.initialize());
 app.use(passport.session());
-
+app.set('trust proxy', 1);
 app.use(bodyParser.json());
 
-app.use(cors()); // ✅ Enables CORS for all origins
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', 'http://localhost:4200'); // ✅ Allow only Angular frontend
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    next();
-  });
-/* ------- */
+app.use(cors({
+  origin: 'http://localhost:4200', // Allow only your Angular frontend
+  credentials: true, // Allow credentials (cookies) to be sent
+  methods: 'GET,POST,PUT,DELETE,OPTIONS',
+  allowedHeaders: 'Content-Type,Authorization'
+}));
+
 
 app.use('/api', authRoutes);
 app.use('/api', contactRoutes);

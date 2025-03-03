@@ -15,30 +15,37 @@ const login = async (req, res) => {
             return res.status(400).json({ message: "Mot de passe incorrect" });
         }
 
-        // Vérifier si le mot de passe a expiré
         const expiryDate = new Date(user.password_expiry);
-        const now = new Date();
-
-        if (now > expiryDate) {
+        if (new Date() > expiryDate) {
             return res.status(403).json({ message: "Votre mot de passe a expiré, veuillez le changer." });
         }
 
-        // Mettre à jour le dernier login
         await User.updateLastLogin(user.id);
 
-        // Stocker les infos utilisateur dans la session
+        // ✅ Explicitly set session user before sending response
         req.session.user = {
+            nom: user.nom,
+            prenom: user.prenom,
             id: user.id,
             role: user.role,
             login: user.login,
-            dernierLogin: now
+            dernierLogin: new Date()
         };
 
-        res.json({ message: "Connexion réussie", user: req.session.user });
+        // ✅ Ensure session is saved before sending response
+        req.session.save((err) => {
+            if (err) {
+                console.error("Session save error:", err);
+                return res.status(500).json({ message: "Erreur de session" });
+            }
+            res.json({ message: "Connexion réussie", user: req.session.user });
+        });
+
     } catch (error) {
         res.status(500).json({ message: "Erreur serveur", error: error.message });
     }
 };
+
 
 const logout = (req, res) => {
     req.session.destroy((err) => {
@@ -47,5 +54,18 @@ const logout = (req, res) => {
         res.json({ message: "Déconnexion réussie" });
     });
 };
+const CurrentUser = (req, res) => {
+    console.log("Session actuelle :", req.session);
 
-module.exports = { login, logout };
+    if (!req.session || !req.session.user) {
+        console.error("⚠️ Aucune session trouvée !");
+        return res.status(401).json({ message: "Non authentifié" });
+    }
+
+    res.json(req.session.user);
+};
+
+
+
+
+module.exports = { login, logout, CurrentUser };
