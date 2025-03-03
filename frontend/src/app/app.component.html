@@ -1,18 +1,18 @@
-<div id="main-wrapper">
-  <div class="nav-header">
+<div id="main-wrapper" >
+  <div class="nav-header"*ngIf="!isLoginPage">
     <a href="#" class="brand-logo">
       <i class="logo-abbr fa-brands fa-stumbleupon"></i>
       <h2 class="brand-title">Lumiere SMS</h2>
     </a>
     <div class="nav-control">
-      <div class="hamburger">
+      <div class="hamburger" >
         <span class="line"></span><span class="line"></span><span class="line"></span>
       </div>
     </div>
   </div>
 
-  <app-sidebar></app-sidebar>
-  <app-header></app-header>
+  <app-sidebar *ngIf="!isLoginPage"></app-sidebar>
+  <app-header *ngIf="!isLoginPage"></app-header>
 
   <!-- 🔥 This is where the content changes dynamically -->
   <div class="content">
