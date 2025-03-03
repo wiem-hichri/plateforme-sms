@@ -21,14 +21,20 @@ const createUser = async (req, res) => {
 
 const updatePassword = async (req, res) => {
     try {
-        const userId = req.params.id; // L'ID de l'utilisateur connecté
-        const { oldPassword, newPassword } = req.body;
+        const userId = req.params.id;
+        const { oldPassword, newPassword, confirmPassword } = req.body;
 
         // Vérifier l'ancien mot de passe
-        //await User.verifyPassword(userId, oldPassword);
+        await User.verifyPassword(userId, oldPassword);
 
-        // Mettre à jour le mot de passe
+        // Vérifier la correspondance entre newPassword et confirmPassword
+        if (newPassword !== confirmPassword) {
+            return res.status(400).json({ message: "Les nouveaux mots de passe ne correspondent pas" });
+        }
+
+        // Mettre à jour le mot de passe dans la base de données
         const result = await User.updatePassword(userId, newPassword);
+
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: "Utilisateur non trouvé" });
         }
@@ -38,6 +44,7 @@ const updatePassword = async (req, res) => {
         res.status(500).json({ message: "Erreur lors de la mise à jour du mot de passe", error: error.message });
     }
 };
+
 
 const getUsers = async (req, res) => {
     try {

@@ -1,4 +1,3 @@
-const bcrypt = require('bcrypt');
 const User = require('../models/user');
 
 const login = async (req, res) => {
@@ -10,8 +9,8 @@ const login = async (req, res) => {
             return res.status(400).json({ message: "Login incorrect" });
         }
 
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
+        // Vérification directe du mot de passe sans hachage
+        if (password !== user.password) {
             return res.status(400).json({ message: "Mot de passe incorrect" });
         }
 
@@ -22,7 +21,7 @@ const login = async (req, res) => {
 
         await User.updateLastLogin(user.id);
 
-        // ✅ Explicitly set session user before sending response
+        // ✅ Stocker les informations de l'utilisateur dans la session
         req.session.user = {
             nom: user.nom,
             prenom: user.prenom,
@@ -32,7 +31,7 @@ const login = async (req, res) => {
             dernierLogin: new Date()
         };
 
-        // ✅ Ensure session is saved before sending response
+        // ✅ Assurer l'enregistrement de la session avant d'envoyer la réponse
         req.session.save((err) => {
             if (err) {
                 console.error("Session save error:", err);
@@ -54,6 +53,8 @@ const logout = (req, res) => {
         res.json({ message: "Déconnexion réussie" });
     });
 };
+
+
 const CurrentUser = (req, res) => {
     console.log("Session actuelle :", req.session);
 
@@ -64,8 +65,6 @@ const CurrentUser = (req, res) => {
 
     res.json(req.session.user);
 };
-
-
 
 
 module.exports = { login, logout, CurrentUser };
