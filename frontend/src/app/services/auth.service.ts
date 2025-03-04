@@ -10,6 +10,20 @@ export class AuthService {
   private currentUserSubject: BehaviorSubject<any>;
   public currentUser: Observable<any>;
 
+  
+
+  public get currentUserValue(): any {
+    return this.currentUserSubject.value;
+  }
+
+  login(login: string, password: string) {
+    return this.http.post<any>('http://localhost:3000/api/auth/login', { login, password }, {
+      withCredentials: true // Required for sessions!
+    }).pipe(map(user => {
+      this.currentUserSubject.next(user);
+      return user;
+    }));
+  }
   constructor(private http: HttpClient) {
     this.currentUserSubject = new BehaviorSubject<any>(null);
     this.currentUser = this.currentUserSubject.asObservable();
@@ -31,20 +45,6 @@ export class AuthService {
       })
     );
   }
-
-  public get currentUserValue(): any {
-    return this.currentUserSubject.value;
-  }
-
-  login(login: string, password: string) {
-    return this.http.post<any>('http://localhost:3000/api/auth/login', { login, password }, {
-      withCredentials: true // Required for sessions!
-    }).pipe(map(user => {
-      this.currentUserSubject.next(user);
-      return user;
-    }));
-  }
-
   logout() {
     return this.http.post<any>('http://localhost:3000/api/auth/logout', {}, {
       withCredentials: true // Required for sessions!
