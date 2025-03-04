@@ -1,22 +1,28 @@
-<div id="main-wrapper" >
-  <div class="nav-header"*ngIf="!isLoginPage">
-    <a href="#" class="brand-logo">
-      <i class="logo-abbr fa-brands fa-stumbleupon"></i>
-      <h2 class="brand-title">Lumiere SMS</h2>
-    </a>
-    <div class="nav-control">
-      <div class="hamburger" >
-        <span class="line"></span><span class="line"></span><span class="line"></span>
+<div *ngIf="isLoginPage; else mainApp">
+  <router-outlet></router-outlet>
+</div>
+
+<ng-template #mainApp>
+  <div id="main-wrapper">
+    <div class="nav-header">
+      <a href="#" class="brand-logo">
+        <i class="logo-abbr fa-brands fa-stumbleupon"></i>
+        <h2 class="brand-title">Lumiere SMS</h2>
+      </a>
+      <div class="nav-control">
+        <div class="hamburger">
+          <span class="line"></span><span class="line"></span><span class="line"></span>
+        </div>
       </div>
     </div>
-  </div>
 
-  <app-sidebar *ngIf="!isLoginPage"></app-sidebar>
-  <app-header *ngIf="!isLoginPage"></app-header>
+    <app-sidebar></app-sidebar>
+    <app-header></app-header>
 
-  <!-- 🔥 This is where the content changes dynamically -->
-  <div class="content">
-    <router-outlet></router-outlet>
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+    
+    <app-footer></app-footer>
   </div>
-  <app-footer></app-footer>
-</div>
+</ng-template>

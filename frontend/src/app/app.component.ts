@@ -29,17 +29,14 @@ import { CommonModule } from '@angular/common';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
-  isLoginPage: boolean = false;
+export class AppComponent {
+  isLoginPage = false;
 
-  constructor(private router: Router) {}
-
-  ngOnInit() {
-    // Subscribe to router events to check the current route
-    this.router.events.pipe(
-      filter((event: RouterEvent): event is NavigationEnd => event instanceof NavigationEnd)
-    ).subscribe((event: NavigationEnd) => {
-      this.isLoginPage = event.url === '/login';
+  constructor(private router: Router) {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.isLoginPage = this.router.url === '/login';
+      }
     });
   }
 }
