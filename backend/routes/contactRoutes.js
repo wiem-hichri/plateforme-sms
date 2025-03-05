@@ -5,7 +5,7 @@ const { isAuthenticated, checkRole } = require('../middlewares/authMiddleware');
 const  {createContact, getContacts, getContactByMatricule, updateContact, deleteContact, getContactsByGroup } = require('../controllers/contactController');
 
 router.post('/addcontacts', createContact);
-router.get('/contacts', isAuthenticated, checkRole('admin'), getContacts);
+router.get('/contacts', getContacts);
 router.get('/contacts/:matricule', getContactByMatricule);
 router.get('/contacts/group/:groupName', getContactsByGroup);
 router.put('/contacts/:id', updateContact);
