@@ -36,4 +36,8 @@ export class UserService {
   deleteUser(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+  
+  updatePassword(id: number, oldPassword: string, newPassword: string, confirmPassword: string): Observable<{ message: string }> {
+    return this.http.put<{ message: string }>(`${this.apiUrl}/update-password/${id}`, { oldPassword, newPassword, confirmPassword });
+  }
 }
