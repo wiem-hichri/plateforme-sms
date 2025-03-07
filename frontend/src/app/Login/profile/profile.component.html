@@ -1,0 +1,83 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-100 p-6">
+    <div class="w-full max-w-4xl bg-white shadow-lg rounded-lg p-8 mx-auto">
+      <h2 class="text-xl font-bold mb-4">Profile Settings</h2>
+  
+      <!-- User Information Form -->
+      <form [formGroup]="profileForm" (ngSubmit)="updateProfile()" class="space-y-4">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-gray-600 text-sm font-medium">Matricule</label>
+            <input type="text" class="w-full p-2 border border-gray-300 rounded-lg" formControlName="matricule" [disabled]="true" />
+          </div>
+          <div>
+            <label class="block text-gray-600 text-sm font-medium">Nom</label>
+            <input type="text" class="w-full p-2 border border-gray-300 rounded-lg" formControlName="nom" />
+          </div>
+        </div>
+  
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-gray-600 text-sm font-medium">Prénom</label>
+            <input type="text" class="w-full p-2 border border-gray-300 rounded-lg" formControlName="prenom" />
+          </div>
+          <div>
+            <label class="block text-gray-600 text-sm font-medium">Login</label>
+            <input type="text" class="w-full p-2 border border-gray-300 rounded-lg" formControlName="login" [disabled]="true" />
+          </div>
+        </div>
+  
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-gray-600 text-sm font-medium">Email</label>
+            <input type="email" class="w-full p-2 border border-gray-300 rounded-lg" formControlName="email" />
+          </div>
+          <div>
+            <label class="block text-gray-600 text-sm font-medium">Role</label>
+            <input type="text" class="w-full p-2 border border-gray-300 rounded-lg" formControlName="role" [disabled]="true" />
+          </div>
+        </div>
+  
+        <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
+          Update Profile
+        </button>
+      </form>
+  
+      <!-- Change Password Section -->
+      <div class="mt-8 p-6 border border-red-500 rounded-lg bg-red-50">
+        <h3 class="text-xl font-semibold text-red-600 mb-2">Change Password</h3>
+        <form [formGroup]="passwordForm" (ngSubmit)="changePassword()" class="space-y-4">
+          <div>
+            <label class="block text-gray-600 text-sm font-medium">Current Password</label>
+            <input
+              [type]="showPasswords.current ? 'text' : 'password'"
+              class="w-full p-2 border border-gray-300 rounded-lg"
+              formControlName="currentPassword"
+            />
+            <button type="button" (click)="togglePasswordVisibility('current')">👁️</button>
+          </div>
+          <div>
+            <label class="block text-gray-600 text-sm font-medium">New Password</label>
+            <input
+              [type]="showPasswords.new ? 'text' : 'password'"
+              class="w-full p-2 border border-gray-300 rounded-lg"
+              formControlName="newPassword"
+            />
+            <button type="button" (click)="togglePasswordVisibility('new')">👁️</button>
+          </div>
+          <div>
+            <label class="block text-gray-600 text-sm font-medium">Confirm New Password</label>
+            <input
+              [type]="showPasswords.confirm ? 'text' : 'password'"
+              class="w-full p-2 border border-gray-300 rounded-lg"
+              formControlName="confirmPassword"
+            />
+            <button type="button" (click)="togglePasswordVisibility('confirm')">👁️</button>
+          </div>
+          <button type="submit" class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600">
+            Change Password
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+  
