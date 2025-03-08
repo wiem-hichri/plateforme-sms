@@ -1,7 +1,5 @@
 const User = require('../models/user');
 const db = require('../config/dbConnect').promise();
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const createUser = async (req, res) => {
@@ -95,38 +93,19 @@ const deleteUser = async (req, res) => {
     }
 };
 
-/*const login = async (req, res) => {
+const getAllLoginHistory = async (req, res) => {
     try {
-        const { login, password } = req.body;
-        const user = await User.getByLogin(login);
-
-        if (!user) {
-            return res.status(400).json({ message: "Login incorrect" });
-        }
-
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(400).json({ message: "Mot de passe incorrect" });
-        }
-
-        // Vérifier si le mot de passe a expiré
-        const expiryDate = new Date(user.password_expiry);
-        const now = new Date();
-
-        if (now > expiryDate) {
-            return res.status(403).json({ message: "Votre mot de passe a expiré, veuillez le changer." });
-        }
-
-        const token = jwt.sign(
-            { id: user.id, role: user.role },
-            process.env.JWT_SECRET,
-            { expiresIn: "1h" }
+        const [history] = await db.query(
+            `SELECT lh.id, lh.user_id, u.nom, u.prenom, u.login, lh.ip_address, lh.login_time 
+             FROM login_history lh 
+             JOIN users u ON lh.user_id = u.id 
+             ORDER BY lh.login_time DESC`
         );
 
-        res.json({ message: "Connexion réussie", token });
+        res.json(history);
     } catch (error) {
-        res.status(500).json({ message: "Erreur serveur", error: error.message });
+        console.error("Erreur lors de la récupération de l'historique :", error);
+        res.status(500).json({ message: "Erreur interne du serveur" });
     }
-};*/
-
-module.exports = { createUser,updatePassword, getUsers, getUserById, updateUser, deleteUser };
+};
+module.exports = { createUser,updatePassword, getUsers, getUserById, updateUser, deleteUser, getAllLoginHistory };

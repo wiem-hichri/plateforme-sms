@@ -1,5 +1,5 @@
 const User = require('../models/user');
-
+const db = require('../config/dbConnect').promise();
 const login = async (req, res) => {
     try {
         const { login, password } = req.body;
@@ -30,6 +30,15 @@ const login = async (req, res) => {
             login: user.login,
             dernierLogin: new Date()
         };
+
+        // Enregistrement de la connexion
+        const ipAddress = req.ip || req.connection.remoteAddress;
+        const userAgent = req.headers['user-agent'];
+
+        await db.query(
+            "INSERT INTO login_history (user_id, ip_address, user_agent) VALUES (?, ?, ?)",
+            [user.id, ipAddress, userAgent]
+        );
 
         // ✅ Assurer l'enregistrement de la session avant d'envoyer la réponse
         req.session.save((err) => {
