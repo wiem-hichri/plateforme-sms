@@ -16,58 +16,69 @@ export class ProfileComponent implements OnInit {
   private http = inject(HttpClient);
   private userService = inject(UserService);
 
-  profileForm: FormGroup = this.fb.group({
-    matricule: [{ value: '', disabled: true }],
-    nom: ['', Validators.required],
-    prenom: ['', Validators.required],
-    login: [{ value: '', disabled: true }],
-    email: ['', [Validators.required, Validators.email]],
-    role: [{ value: '', disabled: true }]
-  });
-
-  passwordForm: FormGroup = this.fb.group({
-    currentPassword: ['', Validators.required],
-    newPassword: ['', [Validators.required, Validators.minLength(6)]],
-    confirmPassword: ['', Validators.required]
-  });
-
+  profileForm: FormGroup;
+  passwordForm: FormGroup;
   showPasswords = { current: false, new: false, confirm: false };
 
-  ngOnInit() {
+  constructor() {
+    // Initialize forms
+    this.profileForm = this.fb.group({
+      matricule: [{ value: '', disabled: true }],
+      nom: ['', Validators.required],
+      prenom: ['', Validators.required],
+      login: [{ value: '', disabled: true }],
+      email: ['', [Validators.required, Validators.email]],
+      role: [{ value: '', disabled: true }]
+    });
+
+    this.passwordForm = this.fb.group({
+      currentPassword: ['', Validators.required],
+      newPassword: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', Validators.required]
+    });
+  }
+
+  ngOnInit(): void {
     this.loadProfile();
   }
 
-  loadProfile() {
-    this.http.get<any>('http://localhost:3000/api/users/:id').subscribe(
-      (data) => this.profileForm.patchValue(data),
-      (error) => console.error('Error fetching profile:', error)
+  // Load user profile data
+  loadProfile(): void {
+    const userId = 1;  // Replace with actual user ID
+    this.http.get<any>(`http://localhost:3000/api/auth/current-user`).subscribe(
+      data => this.profileForm.patchValue(data),
+      error => console.error('Error fetching profile:', error)
     );
   }
 
-  updateProfile() {
+  // Update user profile
+  updateProfile(): void {
     if (this.profileForm.valid) {
-      this.http.put('http://localhost:3000/api/users/1', this.profileForm.value).subscribe(
-        () => console.log('Profile Updated'),
-        (error) => console.error('Error updating profile:', error)
+      const userId = 1;  // Replace with actual user ID
+      this.http.put(`http://localhost:3000/api/auth/current-user`, this.profileForm.value).subscribe(
+        () => console.log('Profile updated successfully'),
+        error => console.error('Error updating profile:', error)
       );
     }
   }
 
-  changePassword() {
+  // Change password
+  changePassword(): void {
     const { newPassword, confirmPassword } = this.passwordForm.value;
     if (this.passwordForm.valid && newPassword === confirmPassword) {
-      const userId = 1; // Replace with the actual user ID
+      const userId = 1;  // Replace with actual user ID
       const { currentPassword } = this.passwordForm.value;
       this.userService.updatePassword(userId, currentPassword, newPassword, confirmPassword).subscribe(
-        () => console.log('Password Updated Successfully'),
-        (error) => console.error('Error updating password:', error)
+        () => console.log('Password updated successfully'),
+        error => console.error('Error updating password:', error)
       );
     } else {
       console.log('Passwords do not match');
     }
   }
 
-  togglePasswordVisibility(field: 'current' | 'new' | 'confirm') {
+  // Toggle password visibility
+  togglePasswordVisibility(field: 'current' | 'new' | 'confirm'): void {
     this.showPasswords[field] = !this.showPasswords[field];
   }
 }

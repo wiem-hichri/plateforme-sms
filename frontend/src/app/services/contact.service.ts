@@ -18,16 +18,24 @@ export class ContactService {
 
   // ✅ Ensure this function is included
   addContact(contact: any): Observable<any> {
-    return this.http.post<any>(this.addapiUrl, contact);
+    return this.http.post<any>(this.addapiUrl, contact,{
+      withCredentials: true 
+    })
   }
   updateContact(contact: Contact): Observable<Contact> {
-    return this.http.put<Contact>(`${this.apiUrl}/${contact.id}`, contact); // ✅ Use ID instead of matricule
+    return this.http.put<Contact>(`${this.apiUrl}/${contact.id}`, contact,{
+      withCredentials: true 
+    }); // ✅ Use ID instead of matricule
   }
   deleteContact(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`); // ✅ Uses ID instead of matricule
+    return this.http.delete<void>(`${this.apiUrl}/${id}`,{
+      withCredentials: true 
+    }); // ✅ Uses ID instead of matricule
   }
   getGroupes(): Observable<any[]> {
-    return this.http.get<any[]>('http://localhost:3000/api/groupes'); // ✅ Adjust API URL if needed
+    return this.http.get<any[]>('http://localhost:3000/api/groupes',{
+      withCredentials: true 
+    }); // ✅ Adjust API URL if needed
   }
   
   
