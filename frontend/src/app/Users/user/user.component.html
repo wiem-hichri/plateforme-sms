@@ -30,11 +30,14 @@
               (click)="deleteUser(user.id)">Delete</button>
             <button class="bg-yellow-500 text-white px-3 py-1 rounded-md"
               (click)="openEditUserDialog(user)">Edit</button>
+            <button 
+              *ngIf="canViewPassword(user)" 
+              class="bg-purple-500 text-white px-3 py-1 rounded-md"
+              (click)="openPasswordPopup(user)"
+            >
+              Show Password
+            </button>
           </div>
-        </div>
-        <div *ngIf="expandedUserId === user.id" class="mt-2 border-t pt-2">
-          <p><strong>Matricule:</strong> {{ user.matricule }}</p>
-          <p><strong>Password:</strong> {{ user.password }}</p>
         </div>
       </li>
     </ul>

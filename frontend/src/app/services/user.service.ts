@@ -38,6 +38,6 @@ export class UserService {
   }
   
   updatePassword(id: number, oldPassword: string, newPassword: string, confirmPassword: string): Observable<{ message: string }> {
-    return this.http.put<{ message: string }>(`${this.apiUrl}/update-password/${id}`, { oldPassword, newPassword, confirmPassword });
+    return this.http.put<{ message: string }>(`${this.apiUrl}/password/${id}`, { oldPassword, newPassword, confirmPassword });
   }
 }
