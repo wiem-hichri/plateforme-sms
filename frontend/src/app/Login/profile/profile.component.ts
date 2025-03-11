@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
 
 @Component({
@@ -14,6 +15,7 @@ import { UserService } from '../../services/user.service';
 export class ProfileComponent implements OnInit {
   private fb = inject(FormBuilder);
   private http = inject(HttpClient);
+  private authService = inject(AuthService);
   private userService = inject(UserService);
 
   profileForm: FormGroup;
@@ -42,42 +44,51 @@ export class ProfileComponent implements OnInit {
     this.loadProfile();
   }
 
-  // Load user profile data
   loadProfile(): void {
-    const userId = 1;  // Replace with actual user ID
-    this.http.get<any>(`http://localhost:3000/api/auth/current-user`).subscribe(
-      data => this.profileForm.patchValue(data),
-      error => console.error('Error fetching profile:', error)
+    this.authService.fetchCurrentUser().subscribe(
+      (user) => {
+        if (user) {
+          this.profileForm.patchValue({
+            matricule: user.matricule,
+            id:user.id,
+            nom: user.nom,
+            prenom: user.prenom,
+            login: user.login,
+            email: user.email,
+            role: user.role
+          });
+        }
+      },
+      (error) => console.error('Error fetching profile:', error)
     );
   }
 
-  // Update user profile
   updateProfile(): void {
     if (this.profileForm.valid) {
-      const userId = 1;  // Replace with actual user ID
-      this.http.put(`http://localhost:3000/api/auth/current-user`, this.profileForm.value).subscribe(
+      this.http.put(`http://localhost:3000/api/users/:id`, this.profileForm.getRawValue()).subscribe(
         () => console.log('Profile updated successfully'),
         error => console.error('Error updating profile:', error)
       );
     }
   }
 
-  // Change password
   changePassword(): void {
-    const { newPassword, confirmPassword } = this.passwordForm.value;
+    const { currentPassword, newPassword, confirmPassword } = this.passwordForm.value;
+
     if (this.passwordForm.valid && newPassword === confirmPassword) {
-      const userId = 1;  // Replace with actual user ID
-      const { currentPassword } = this.passwordForm.value;
-      this.userService.updatePassword(userId, currentPassword, newPassword, confirmPassword).subscribe(
-        () => console.log('Password updated successfully'),
-        error => console.error('Error updating password:', error)
-      );
+      this.authService.currentUser.subscribe(user => {
+        if (user) {
+          this.userService.updatePassword(user.id, currentPassword, newPassword, confirmPassword).subscribe(
+            () => console.log('Password updated successfully'),
+            error => console.error('Error updating password:', error)
+          );
+        }
+      });
     } else {
       console.log('Passwords do not match');
     }
   }
 
-  // Toggle password visibility
   togglePasswordVisibility(field: 'current' | 'new' | 'confirm'): void {
     this.showPasswords[field] = !this.showPasswords[field];
   }
