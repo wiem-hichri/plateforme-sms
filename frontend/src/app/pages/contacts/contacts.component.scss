@@ -46,22 +46,7 @@ h2 {
   margin-bottom: 1rem;
 }
 
-// Button styling
-button {
-  background: $primary-color !important;
-  color: $text-color !important;
-  font-weight: bold;
-  border-radius: 6px;
-  padding: 12px 20px;
-  margin-bottom: 1rem;
-  transition: all 0.3s ease;
-  border: none;
-  cursor: pointer;
 
-  &:hover {
-    background: $hover-color !important;
-  }
-}
 
 // Table styling
 table {

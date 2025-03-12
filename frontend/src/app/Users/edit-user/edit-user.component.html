@@ -1,29 +1,17 @@
-<h2 mat-dialog-title>{{ data ? 'Edit' : 'Add' }} User</h2>
-<div mat-dialog-content>
-  <form>
-    <mat-form-field>
-      <mat-label>Matricule</mat-label>
-      <input matInput [(ngModel)]="user.matricule" name="matricule">
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Nom</mat-label>
-      <input matInput [(ngModel)]="user.nom" name="nom">
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Prénom</mat-label>
-      <input matInput [(ngModel)]="user.prenom" name="prenom">
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Login</mat-label>
-      <input matInput [(ngModel)]="user.login" name="login">
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Role</mat-label>
-      <input matInput [(ngModel)]="user.role" name="role">
-    </mat-form-field>
-  </form>
-</div>
-<div mat-dialog-actions>
-  <button mat-button (click)="onCancel()">Cancel</button>
-  <button mat-button (click)="onSave()" cdkFocusInitial>Save</button>
+<div class="modal-overlay">
+  <div class="modal-card">
+    <h3>{{ data ? 'Modifier' : 'Ajouter' }} un Utilisateur</h3>
+    <form>
+      <input type="text" [(ngModel)]="user.matricule" name="matricule" placeholder="Matricule">
+      <input type="text" [(ngModel)]="user.nom" name="nom" placeholder="Nom">
+      <input type="text" [(ngModel)]="user.prenom" name="prenom" placeholder="Prénom">
+      <input type="text" [(ngModel)]="user.login" name="login" placeholder="Login">
+      <input type="text" [(ngModel)]="user.role" name="role" placeholder="Rôle">
+
+      <div class="modal-actions">
+        <button type="button" class="cancel-btn" (click)="onCancel()">Annuler</button>
+        <button type="button" class="submit-btn" (click)="onSave()">Enregistrer</button>
+      </div>
+    </form>
+  </div>
 </div>

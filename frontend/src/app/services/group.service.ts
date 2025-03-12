@@ -13,7 +13,7 @@ export interface Group {
 export class GroupService {
   private apiUrl = 'http://localhost:3000/api/groupes';
   private addApiUrl = 'http://localhost:3000/api/addgroupes';
-
+  private updateApiUrl = 'http://localhost:3000/api/groupes'; // ✅ Add update endpoint
 
   constructor(private http: HttpClient) {}
 
@@ -27,5 +27,9 @@ export class GroupService {
 
   deleteGroup(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  updateGroup(group: Group): Observable<{ data: Group }> {
+    return this.http.put<{ data: Group }>(`${this.updateApiUrl}/${group.id}`, group);
   }
 }

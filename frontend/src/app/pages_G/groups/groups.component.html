@@ -29,14 +29,23 @@
         <!-- Actions -->
         <div class="mt-4 flex justify-end">
           <button 
-          *ngIf="groupe.id !== undefined"
-          class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg shadow-md flex items-center gap-2"
-          (click)="deleteGroup(groupe.id)">
-          <i class="fas fa-trash-alt"></i> 
-        </button>
-        
+    mat-icon-button 
+    class="edit-btn"
+    *ngIf="groupe.id !== undefined"
+    (click)="openEditGroupModal(groupe)">
+    <mat-icon class="text-blue-600">edit</mat-icon>
+  </button>
+          <button 
+            mat-icon-button 
+            class="delete-btn"
+            *ngIf="groupe.id !== undefined"
+            (click)="deleteGroup(groupe.id)">
+            <mat-icon class="text-red-600">delete</mat-icon>
+          </button>
         </div>
-
+        
+        
+        
       </div>
     </div>
 

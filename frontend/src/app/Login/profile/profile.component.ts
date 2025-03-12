@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
@@ -14,7 +14,6 @@ import { UserService } from '../../services/user.service';
 })
 export class ProfileComponent implements OnInit {
   private fb = inject(FormBuilder);
-  private http = inject(HttpClient);
   private authService = inject(AuthService);
   private userService = inject(UserService);
 
@@ -23,13 +22,12 @@ export class ProfileComponent implements OnInit {
   showPasswords = { current: false, new: false, confirm: false };
 
   constructor() {
-    // Initialize forms
     this.profileForm = this.fb.group({
+      id: [{ value: '', disabled: true }], // Make sure the ID is stored
       matricule: [{ value: '', disabled: true }],
       nom: ['', Validators.required],
       prenom: ['', Validators.required],
       login: [{ value: '', disabled: true }],
-      email: ['', [Validators.required, Validators.email]],
       role: [{ value: '', disabled: true }]
     });
 
@@ -49,8 +47,8 @@ export class ProfileComponent implements OnInit {
       (user) => {
         if (user) {
           this.profileForm.patchValue({
+            id: user.id, // Store user ID
             matricule: user.matricule,
-            id:user.id,
             nom: user.nom,
             prenom: user.prenom,
             login: user.login,
@@ -65,9 +63,23 @@ export class ProfileComponent implements OnInit {
 
   updateProfile(): void {
     if (this.profileForm.valid) {
-      this.http.put(`http://localhost:3000/api/users/:id`, this.profileForm.getRawValue()).subscribe(
-        () => console.log('Profile updated successfully'),
-        error => console.error('Error updating profile:', error)
+      const updatedUser = this.profileForm.getRawValue(); // Extract form values
+      const userId = updatedUser.id; // Extract ID
+
+      if (!userId) {
+        console.error('User ID is missing!');
+        return;
+      }
+
+      this.userService.updateUser(userId, updatedUser).subscribe(
+        () => {
+          console.log('Profile updated successfully');
+          alert('Profile updated successfully!');
+        },
+        (error) => {
+          console.error('Error updating profile:', error);
+          alert('Error updating profile');
+        }
       );
     }
   }
@@ -80,7 +92,7 @@ export class ProfileComponent implements OnInit {
         if (user) {
           this.userService.updatePassword(user.id, currentPassword, newPassword, confirmPassword).subscribe(
             () => console.log('Password updated successfully'),
-            error => console.error('Error updating password:', error)
+            (error) => console.error('Error updating password:', error)
           );
         }
       });
