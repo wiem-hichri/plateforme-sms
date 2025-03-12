@@ -24,6 +24,7 @@ const login = async (req, res) => {
         // ✅ Stocker les informations de l'utilisateur dans la session
         req.session.user = {
             nom: user.nom,
+            matricule: user.matricule,
             prenom: user.prenom,
             id: user.id,
             role: user.role,
