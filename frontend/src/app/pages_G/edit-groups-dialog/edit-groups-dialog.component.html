@@ -1,0 +1,15 @@
+<div class="modal-overlay">
+    <div class="modal-card">
+      <h3>Modifier un Groupe</h3>
+      <form>
+        <input type="text" [(ngModel)]="groupe.id" name="id" placeholder="ID" disabled>
+        <input type="text" [(ngModel)]="groupe.nom" name="nom" placeholder="Nom du Groupe">
+  
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" (click)="closeDialog()">Annuler</button>
+          <button type="button" class="submit-btn" (click)="saveGroup()">Enregistrer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
