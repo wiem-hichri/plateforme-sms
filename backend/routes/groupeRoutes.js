@@ -1,12 +1,13 @@
 const express = require('express');
+const { isAuthentificated, checkRole } = require('../middlewares/authMiddleware');
 const { createGroupe, getGroupes, getGroupeById, updateGroupe, deleteGroupe } = require('../controllers/groupeController');
 const router = express.Router();
 
-router.post('/addgroupes', createGroupe);
-router.get('/groupes', getGroupes);
-router.get('/groupes/:id', getGroupeById);
-router.put('/groupes/:id', updateGroupe);
-router.delete('/groupes/:id', deleteGroupe);
+router.post('/addgroupes',isAuthentificated, checkRole( 'super-administrateur','administrateur'), createGroupe);
+router.get('/groupes',isAuthentificated, checkRole( 'super-administrateur','administrateur'), getGroupes);
+router.get('/groupes/:id',isAuthentificated, checkRole( 'super-administrateur','administrateur'), getGroupeById);
+router.put('/groupes/:id',isAuthentificated, checkRole( 'super-administrateur','administrateur'), updateGroupe);
+router.delete('/groupes/:id',isAuthentificated, checkRole( 'super-administrateur','administrateur'), deleteGroupe);
 
 
 module.exports = router;

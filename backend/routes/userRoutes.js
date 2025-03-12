@@ -1,23 +1,23 @@
 const express = require('express');
 const router = express.Router();
 //const passport = require('../config/passport');
-const { isAuthenticated, checkRole } = require('../middlewares/authMiddleware');
+const { isAuthentificated, checkRole } = require('../middlewares/authMiddleware');
 const  {createUser,updatePassword, getUsers, getUserById, updateUser, deleteUser, getAllLoginHistory } = require('../controllers/userController');
 
 
-router.post('/addusers', createUser);
+router.post('/addusers',isAuthentificated, checkRole( 'super-administrateur','administrateur'), createUser);
 
-router.get('/users', getUsers);
+router.get('/users',isAuthentificated, checkRole( 'super-administrateur','administrateur'), getUsers);
 
-router.get('/users/:id', getUserById);
+router.get('/users/:id',isAuthentificated, checkRole( 'super-administrateur','administrateur'), getUserById);
 
-router.put('/users/:id', updateUser);
+router.put('/users/:id',isAuthentificated, checkRole( 'super-administrateur','administrateur'), updateUser);
 
-router.delete('/users/:id', deleteUser);
+router.delete('/users/:id',isAuthentificated, checkRole( 'super-administrateur','administrateur'), deleteUser);
 
-router.put('/users/password/:id', updatePassword);
+router.put('/users/password/:id',isAuthentificated, checkRole( 'super-administrateur','administrateur'), updatePassword);
 
-router.get('/login-history', getAllLoginHistory);
+router.get('/login-history',isAuthentificated, checkRole( 'super-administrateur'), getAllLoginHistory);
 
 
 

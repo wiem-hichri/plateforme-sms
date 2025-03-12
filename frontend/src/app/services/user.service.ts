@@ -22,22 +22,22 @@ export class UserService {
   constructor(private http: HttpClient) {}
 
   getUsers(): Observable<{ data: User[] }> {
-    return this.http.get<{ data: User[] }>(this.apiUrl);
+    return this.http.get<{ data: User[] }>(this.apiUrl,{withCredentials: true });
   }
 
   addUser(user: User): Observable<{ data: User }> {
-    return this.http.post<{ data: User }>(this.addApiUrl, user);
+    return this.http.post<{ data: User }>(this.addApiUrl, user,{withCredentials: true });
   }
 
   updateUser(id: number, user: User): Observable<{ data: User }> {
-    return this.http.put<{ data: User }>(`${this.apiUrl}/${id}`, user);
+    return this.http.put<{ data: User }>(`${this.apiUrl}/${id}`, user,{withCredentials: true });
   }
 
   deleteUser(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    return this.http.delete<void>(`${this.apiUrl}/${id}`,{withCredentials: true });
   }
   
   updatePassword(id: number, oldPassword: string, newPassword: string, confirmPassword: string): Observable<{ message: string }> {
-    return this.http.put<{ message: string }>(`${this.apiUrl}/password/${id}`, { oldPassword, newPassword, confirmPassword });
+    return this.http.put<{ message: string }>(`${this.apiUrl}/password/${id}`, { oldPassword, newPassword, confirmPassword },{withCredentials: true });
   }
 }

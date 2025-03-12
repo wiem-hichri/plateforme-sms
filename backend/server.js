@@ -21,20 +21,20 @@ const sessionStore = new MySQLStore({
   port: process.env.DB_PORT
 });
 
+app.set('trust proxy', 1);
+
 // Middleware session
 app.use(session({
   secret: 'JWT_SECRET',
   resave: false,
   saveUninitialized: false,
   store: sessionStore,
-  cookie: { secure: false, httpOnly: true, sameSite: 'lax', maxAge: 1000 * 60 * 60 }
+  cookie: { secure: false, httpOnly: false, sameSite: 'lax', maxAge: 1000 * 60 * 60 }
 }));
-
 
 
 app.use(passport.initialize());
 app.use(passport.session());
-app.set('trust proxy', 1);
 app.use(bodyParser.json());
 
 app.use(cors({

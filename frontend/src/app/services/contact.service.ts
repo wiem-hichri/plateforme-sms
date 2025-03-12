@@ -13,7 +13,7 @@ export class ContactService {
   constructor(private http: HttpClient)   {}
 
   getContacts(): Observable<any> {
-    return this.http.get<any>(this.apiUrl);
+    return this.http.get<any>(this.apiUrl,{withCredentials: true });
   }
 
   // ✅ Ensure this function is included
