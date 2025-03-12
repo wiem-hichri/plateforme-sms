@@ -1,11 +1,20 @@
 const db = require('../config/dbConnect').promise();
 
 const Contact = {
-    create: async (contact) => {
+    create: async (contact, userId) => {
         const query = `INSERT INTO contacts (matricule, nom, prenom, telephone_personnel, telephone_professionnel, site, service, cin) 
                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
         const values = [contact.matricule, contact.nom, contact.prenom, contact.telephone_personnel, contact.telephone_professionnel, contact.site, contact.service, contact.cin];
+
         const [result] = await db.query(query, values);
+        const contactId = result.insertId;
+
+        // 🔹 Associer automatiquement ce contact à l'utilisateur
+        if (userId) {
+            const associationQuery = `INSERT INTO user_contact (user_id, contact_id) VALUES (?, ?)`;
+            await db.query(associationQuery, [userId, contactId]);
+        }
+
         return result;
     },
 

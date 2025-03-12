@@ -4,11 +4,12 @@ const Groupe = require('../models/groupe');
 
 const createContact = async (req, res) => {
     try {
-        const contact = req.body;
-        const result = await Contact.create(contact);
-        res.status(201).json({ message: 'Contact créé avec succès', contactId: result.insertId });
+        const { userId, contact } = req.body;
+        const result= await Contact.create(contact, userId);
+        res.status(201).json({ message: "Contact ajouté avec succées.", contactId: result.insertId });
+    
     } catch (error) {
-        res.status(500).json({ message: 'Erreur lors de la création du contact', error: error.message });
+        res.status(500).json({ error: error.message });
     }
 };
 

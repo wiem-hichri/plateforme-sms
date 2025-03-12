@@ -78,8 +78,8 @@ const User = {
     },
 
     update: async (id, user) => {
-        const query = `UPDATE users SET matricule=?, nom=?, prenom=?, login=?, password=?, role=? WHERE id=?`;
-        const values = [user.matricule, user.nom, user.prenom, user.login, user.password, user.role, id];
+        const query = `UPDATE users SET matricule=?, nom=?, prenom=?, login=?,  role=? WHERE id=?`;
+        const values = [user.matricule, user.nom, user.prenom, user.login,  user.role, id];
 
         const [result] = await db.query(query, values);
         return result;

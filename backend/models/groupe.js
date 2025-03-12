@@ -1,10 +1,14 @@
 const db = require('../config/dbConnect').promise();
 
 const Groupe = {
-    create: async (groupe) => {
+      create: async (groupe, userId) => {
         const query = `INSERT INTO groupes (nom) VALUES (?)`;
-        const values = [groupe.nom];
-        const [result] = await db.query(query, values);
+        const [result] = await db.query(query, [groupe.nom]);
+        
+        // 🔹 Associer le groupe à l'utilisateur
+        const groupId = result.insertId;
+        await db.query(`INSERT INTO user_groupe (user_id, groupe_id) VALUES (?, ?)`, [userId, groupId]);
+
         return result;
     },
 
