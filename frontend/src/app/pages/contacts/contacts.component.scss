@@ -90,7 +90,13 @@ table {
 .filter-wrapper {
   margin-bottom: 10px;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between; // ✅ Moves button left & search right
+  align-items: center;
+  width: 100%;
+
+  button {
+    order: -1; // ✅ Ensures the button stays on the left
+  }
 
   input {
     padding: 8px;
