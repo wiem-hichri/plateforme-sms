@@ -7,7 +7,9 @@
       "./src/app/dashboard/dashboard.component.html",
       "./src/app/dashboard/dashboard.component.ts",
       "./src/app/Login/profile/profile.component.html",
-      "./src/app/Login/profile/profile.component.ts"
+      "./src/app/Login/profile/profile.component.ts",  
+       "./src/app/pages/not-found/not-found.component.html",
+      "./src/app/pages/not-found/not-found.component.ts"
 
     ],
     theme: {
