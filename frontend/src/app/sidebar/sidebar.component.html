@@ -1,54 +1,68 @@
-<div class="deznav">
-  <div class="deznav-scroll">
-    <!-- ✅ "Nouveau Message" button stays visible for all users -->
-    <a class="add-project-sidebar btn btn-primary" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#addProjectSidebar">
-      + Envoi Message
-    </a>
-
-    <!-- ✅ Only hide links if the role is EXACTLY "utilisateur" -->
+ <!--**********************************
+          Sidebar start
+      ***********************************-->
+      <div class="deznav">
+        <div class="deznav-scroll">
+    <a class="add-project-sidebar btn btn-primary" href="javascript:void(0)"  data-bs-toggle="modal" data-bs-target="#addProjectSidebar" >+ Envoi Message</a>
     <ul class="metismenu" id="menu" *ngIf="currentUserRole !== 'utilisateur'">
-      <li>
-        <a routerLink="/dashboard" routerLinkActive="active">
+      <li><a routerLink="/dashboard" routerLinkActive="active" href="/dashboard">
           <i class="flaticon-layout"></i>
           <span class="nav-text">Dashboard</span>
         </a>
-      </li>
-      <li>
-        <a routerLink="/contacts" routerLinkActive="active">
-          <i class="flaticon-contract"></i>
-          <span class="nav-text">Contacts</span>
-        </a>
-      </li>
-      <li>
-        <a routerLink="/groups" routerLinkActive="active">
-          <i class="flaticon-table"></i>
-          <span class="nav-text">Groups</span>
-        </a>
-      </li>
-      <li>
-        <a routerLink="/user" routerLinkActive="active">
-          <i class="flaticon-web"></i>
-          <span class="nav-text">Users</span>
-        </a>
-      </li>
-      <li>
-        <a href="#">
-          <i class="flaticon-monitor"></i>
-          <span class="nav-text">Model SMS</span>
-        </a>
-      </li>
-      <li>
-        <a href="#">
+                </li>
+          
+                <li><a routerLink="/contacts" routerLinkActive="active" href="/contacts">
+                    <i class="flaticon-contract"></i>
+                    <span class="nav-text">Contacts</span>
+                  </a>
+                          </li>
+                          <li><a  routerLink="/groups" routerLinkActive="active" href="/groups">
+                    <i class="flaticon-table"></i>
+                    <span class="nav-text">Groups</span>
+                  </a>
+                          </li>
+                          <li><a  routerLink="/user" routerLinkActive="active" href="/user">
+                            <i class="flaticon-web"></i>
+                            <span class="nav-text">Users</span>
+                          </a>
+                                  </li>
+                          <li><a  href="#">
+                            <i class="flaticon-monitor"></i>
+                              <span class="nav-text">Model  SMS</span>
+                            </a>
+                                    </li>
+                <li><a  href="#">
           <i class="flaticon-bar-chart-1"></i>
           <span class="nav-text">Rapports</span>
         </a>
-      </li>
-      <li>
-        <a href="#">
-          <i class="flaticon-admin"></i>
-          <span class="nav-text">Paramètres</span>
+                </li>
+                <li><a href="#">
+                    <i class="flaticon-admin"></i>
+                    <span class="nav-text">Parametres</span>
+                  </a>
+                </li>
+                   
+                <!--- <li><a  href="#">
+          <i class="flaticon-table"></i>
+          <span class="nav-text">Table</span>
         </a>
-      </li>
-    </ul>
+                </li>
+                
+                <li><a  href="#">
+          <i class="flaticon-plugin"></i>
+          <span class="nav-text">Plugins</span>
+        </a>
+                </li>
+               
+             
+                <li><a  href="#">
+          <i class="flaticon-newsletter"></i>
+          <span class="nav-text">Pages</span>
+        </a>
+                </li>
+            </ul>
   </div>
-</div>
+    </div>
+    **********************************
+        Sidebar end
+    ***********************************-->
