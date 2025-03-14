@@ -1,52 +1,57 @@
-<div class="min-h-screen flex items-center justify-center bg-gray-100 p-6">
+<div class="min-h-screen flex flex-col items-center bg-gray-100 p-6 mt-16">
   <div class="w-full max-w-4xl bg-white shadow-lg rounded-lg p-8 mx-auto">
-    <h2 class="text-xl font-bold mb-4">Users List</h2>
 
-    <input
-      type="text"
-      class="w-full px-4 py-2 mb-4 border rounded-md"
-      placeholder="Filter par nom ou matricule"
-      [(ngModel)]="filterValue"
-    />
+    <!-- 🛑 Sticky Header (Title + Filter + Add Button) -->
+    <div class="sticky top-0 bg-white z-10 pb-4">
+      <h2 class="text-xl font-bold mb-2">Users List</h2>
+      
+      <input
+        type="text"
+        class="w-full px-4 py-2 border rounded-md"
+        placeholder="Filter par nom ou matricule"
+        [(ngModel)]="filterValue"
+      />
 
-    <button class="bg-blue-500 text-white px-4 py-2 rounded-md mb-4"
-      (click)="openAddUserDialog()">+ Ajouter User</button>
+      <button 
+        class="bg-blue-500 text-white px-4 py-2 rounded-md mt-3 w-full"
+        (click)="openAddUserDialog()">+ Ajouter User
+      </button>
+    </div>
 
-    <ul role="list" class="divide-y divide-gray-100">
-      <li *ngFor="let user of filteredUsers" class="flex justify-between gap-x-6 py-5">
-        <div class="flex min-w-0 gap-x-4">
-          <div class="size-12 flex-none rounded-full bg-gray-50">
-            <img src="../../../assets/img/man (1).png" alt="User Image">
+    <!-- 🖱️ Scrollable User List -->
+    <div class="overflow-y-auto max-h-[60vh] mt-4">
+      <ul role="list" class="divide-y divide-gray-100">
+        <li *ngFor="let user of filteredUsers" class="flex justify-between gap-x-6 py-5">
+          <div class="flex min-w-0 gap-x-4">
+            <div class="size-12 flex-none rounded-full bg-gray-50">
+              <img src="../../../assets/img/man (1).png" alt="User Image">
+            </div>
+            <div class="min-w-0 flex-auto">
+              <p class="text-sm font-semibold text-gray-900">{{ user.nom }} {{ user.prenom }}</p>
+              <p class="mt-1 truncate text-xs text-gray-500">{{ user.login }}</p>
+            </div>
           </div>
-          <div class="min-w-0 flex-auto">
-            <p class="text-sm font-semibold text-gray-900">{{ user.nom }} {{ user.prenom }}</p>
-            <p class="mt-1 truncate text-xs text-gray-500">{{ user.login }}</p>
-          </div>
-        </div>
-        <div class="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
-          <p class="text-sm text-gray-900">{{ user.role }}</p>
-          <div class="mt-1 flex items-center gap-x-1.5">
-            <!--<button class="bg-red-500 text-white px-3 py-1 rounded-md mr-2"
-              (click)="">Delete</button>-->
+          <div class="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
+            <p class="text-sm text-gray-900">{{ user.role }}</p>
+            <div class="mt-1 flex items-center gap-x-1.5">
               <button mat-icon-button class="delete-btn" (click)="deleteUser(user.id)"> 
-                <mat-icon>delete</mat-icon>
+                <mat-icon class="text-red-600">delete</mat-icon>
               </button>
-            <!--<button class="bg-yellow-500 text-white px-3 py-1 rounded-md"
-              (click)="openEditUserDialog(user)">Edit</button>-->
               <button mat-icon-button class="edit-btn" (click)="openEditUserDialog(user)">
-                <mat-icon>edit</mat-icon>
+                <mat-icon class="text-yellow-600">edit</mat-icon>
               </button>
               <button 
-              *ngIf="canViewPassword(user)" 
-              mat-icon-button 
-              class="text-purple-500" 
-              (click)="openPasswordPopup(user)"
-            >
-              <mat-icon>visibility</mat-icon>
-            </button>
+                *ngIf="canViewPassword(user)" 
+                mat-icon-button 
+                class="text-purple-500" 
+                (click)="openPasswordPopup(user)">
+                <mat-icon>visibility</mat-icon>
+              </button>
+            </div>
           </div>
-        </div>
-      </li>
-    </ul>
+        </li>
+      </ul>
+    </div>
+
   </div>
 </div>

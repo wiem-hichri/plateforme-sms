@@ -44,7 +44,31 @@ const Contact = {
         const query = "SELECT * FROM contacts WHERE service = ?";
         const [results] = await db.query(query, [groupName]);
         return results;
-    }
+    },
+
+
+    addMultipleContacts: async (contacts, callback) => {
+        const query = `
+          INSERT INTO contacts (matricule, nom, prenom, telephone_personnel, telephone_professionnel, service, cin, site) 
+          VALUES ?
+        `;
+      
+        const values = contacts.map(contact => [
+          contact.matricule,
+          contact.nom,
+          contact.prenom,
+          contact.telephone_personnel,
+          contact.telephone_professionnel,
+          contact.service,
+          contact.cin,
+          contact.site,
+        ]);
+      
+        db.query(query, [values], callback);
+      }
+
+
+
 
 };
 

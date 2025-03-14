@@ -1,51 +1,49 @@
-<div class="min-h-screen flex items-center justify-center bg-gray-100 p-6">
+<div class="min-h-screen flex flex-col items-center bg-gray-100 p-6 mt-16"> 
   <div class="w-full max-w-4xl bg-white shadow-lg rounded-lg p-8 mx-auto">
 
-    <!-- 🔥 Stylish Header -->
+    <!-- 🔥 Sticky Header -->
     <div class="container">
-      <div class="flex justify-between items-center border-b pb-4 mb-6 bg-gradient-to-r from-red-500 to-white-400 text-white p-4 rounded-lg">
-        <h2 class="text-3xl font-semibold"> Groupes</h2>
-        <button 
-          class="bg-white text-gray-800 hover:bg-gray-100 font-bold py-2 px-5 rounded-lg shadow-md transition-all flex items-center gap-2" 
-          (click)="openAddGroupModal()">
-          ➕ Nouveau Groupe
-        </button>
+      <div class="sticky top-0 bg-gradient-to-r from-red-500 to-white-400 text-white p-4 rounded-lg shadow-md z-50">
+        <div class="flex justify-between items-center border-b pb-4">
+          <h2 class="text-3xl font-semibold">Groupes</h2>
+          <button 
+            class="bg-white text-gray-800 hover:bg-gray-100 font-bold py-2 px-5 rounded-lg shadow-md transition-all flex items-center gap-2" 
+            (click)="openAddGroupModal()">
+            ➕ Nouveau Groupe
+          </button>
+        </div>
       </div>
     </div>
 
-    <!-- 🎨 Group Cards Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div *ngFor="let groupe of groups" 
-           class="relative bg-gradient-to-b from-orange-100 to-white shadow-md rounded-lg p-6 border border-orange-300 hover:scale-105 transition-all duration-300">
-        
-        
+    <!-- 🎨 Scrollable Group Cards Grid -->
+    <div class="overflow-y-auto max-h-[60vh] mt-4 px-2">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div *ngFor="let groupe of groups" 
+             class="relative bg-gradient-to-b from-orange-100 to-white shadow-md rounded-lg p-6 border border-orange-300 hover:scale-105 transition-all duration-300">
+          
+          <!-- Group Name -->
+          <h3 class="text-xl font-semibold text-gray-800 relative z-10">{{ groupe.nom }}</h3>
+          <p class="text-gray-600 text-sm">📌 ID: {{ groupe.id }}</p>
 
-        <!-- Group Name (Text on Top of Icon) -->
-        <h3 class="text-xl font-semibold text-gray-800 relative z-10">{{ groupe.nom }}</h3>
+          <!-- Actions -->
+          <div class="mt-4 flex justify-end">
+            <button 
+              mat-icon-button 
+              class="edit-btn"
+              *ngIf="groupe.id !== undefined"
+              (click)="openEditGroupModal(groupe)">
+              <mat-icon class="text-blue-600">edit</mat-icon>
+            </button>
+            <button 
+              mat-icon-button 
+              class="delete-btn"
+              *ngIf="groupe.id !== undefined"
+              (click)="deleteGroup(groupe.id)">
+              <mat-icon class="text-red-600">delete</mat-icon>
+            </button>
+          </div>
 
-        <!-- Group Details -->
-        <p class="text-gray-600 text-sm">📌 ID: {{ groupe.id }}</p>
-
-        <!-- Actions -->
-        <div class="mt-4 flex justify-end">
-          <button 
-    mat-icon-button 
-    class="edit-btn"
-    *ngIf="groupe.id !== undefined"
-    (click)="openEditGroupModal(groupe)">
-    <mat-icon class="text-blue-600">edit</mat-icon>
-  </button>
-          <button 
-            mat-icon-button 
-            class="delete-btn"
-            *ngIf="groupe.id !== undefined"
-            (click)="deleteGroup(groupe.id)">
-            <mat-icon class="text-red-600">delete</mat-icon>
-          </button>
         </div>
-        
-        
-        
       </div>
     </div>
 

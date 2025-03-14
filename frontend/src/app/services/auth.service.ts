@@ -29,6 +29,11 @@ export class AuthService {
   getCurrentUserRole(): string {
     return this.currentUserValue?.role || '';
   }
+  /** ✅ Get the ID of the currently logged-in user */
+getCurrentUserId(): number | null {
+  return this.currentUserValue?.id || null;
+}
+
 
   /** ✅ Fetch the current user from the backend */
   fetchCurrentUser() {
