@@ -9,7 +9,7 @@ import { NotFoundComponent } from './pages/not-found/not-found.component'; // âœ
 
 export const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'contacts', component: ContactsComponent },
   { path: 'groups', component: GroupsComponent },
