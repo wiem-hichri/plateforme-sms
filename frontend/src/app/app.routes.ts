@@ -5,14 +5,17 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './Login/login/login.component';
 import { UsersComponent } from './Users/user/user.component';
 import { ProfileComponent } from './Login/profile/profile.component';
-import { AuthGuard } from './auth.guard';
+import { NotFoundComponent } from './pages/not-found/not-found.component'; // ✅ Import NotFoundComponent
 
 export const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
-  { path: '', redirectTo: '/login', pathMatch: 'full' },  // Redirect to login by default
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: 'dashboard', component: DashboardComponent },
-  { path: 'contacts', component: ContactsComponent},
-  { path: 'groups', component: GroupsComponent},
+  { path: 'contacts', component: ContactsComponent },
+  { path: 'groups', component: GroupsComponent },
   { path: 'user', component: UsersComponent },
-  { path: 'profile', component: ProfileComponent}
+  { path: 'profile', component: ProfileComponent },
+
+  // ✅ Catch all unknown routes and show 404 page
+  { path: '**', component: NotFoundComponent }
 ];

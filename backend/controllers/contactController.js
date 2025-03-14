@@ -87,4 +87,22 @@ const getContactsByGroup = async (req, res) => {
     }
 };
 
-module.exports = { createContact, getContacts, getContactByMatricule, updateContact, deleteContact, getContactsByGroup };
+
+const importContacts = (req, res) => {
+    const contacts = req.body;
+  
+    if (!Array.isArray(contacts) || contacts.length === 0) {
+      return res.status(400).json({ message: 'Invalid data' });
+    }
+  
+    Contact.addMultipleContacts(contacts, (err, result) => {
+      if (err) {
+        console.error('❌ Error inserting contacts:', err);
+        return res.status(500).json({ message: 'Database error' });
+      }
+      res.json({ message: '✅ Contacts imported successfully', inserted: result.affectedRows });
+    });
+};
+
+
+module.exports = { createContact, getContacts, getContactByMatricule, updateContact, deleteContact, getContactsByGroup, importContacts };

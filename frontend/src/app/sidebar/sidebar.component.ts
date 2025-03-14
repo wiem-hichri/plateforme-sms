@@ -1,12 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule, NgIf } from '@angular/common'; // ✅ Import NgIf
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, NgIf], // ✅ Add NgIf here
   templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.scss'
+  styleUrls: ['./sidebar.component.scss'],
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
+  currentUserRole: string | null = null;
 
+  constructor(private authService: AuthService) {}
+
+  ngOnInit() {
+    this.authService.currentUser.subscribe((user) => {
+      this.currentUserRole = user?.role || ''; // Default to empty string if user is null
+    });
+  }
 }

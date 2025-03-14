@@ -1,13 +1,19 @@
 <div class="page-wrapper">
   <div class="container">
-    <h2>Contacts</h2>
     <div class="filter-wrapper">
       
-   <button mat-raised-button color="primary" (click)="openAddContactModal()">+ Nouveau Contact</button> 
+   <button mat-raised-button color="primary" (click)="openAddContactModal()">+</button> 
+   <button mat-raised-button color="primary" (click)="exportToExcel()">
+    <mat-icon>arrow_upward</mat-icon>
+  </button>
+    <input type="file" (change)="importExcel($event)" accept=".xlsx, .xls" />
+
+
       <input type="text" [(ngModel)]="filterValue" (keyup)="applyFilter()" placeholder="🔍 Rechercher " />
 
   </div>
   
+
 
     <div class="table-wrapper">
       <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">

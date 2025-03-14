@@ -1,32 +1,36 @@
-  import { Component } from '@angular/core';
-  import { Router } from '@angular/router';
-  import { AuthService } from '../../services/auth.service';
-  import { FormsModule } from '@angular/forms';
-  import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { LoginErrorDialogComponent } from './login-error-dialog.component';
 
-  @Component({
-    selector: 'app-login',
-    standalone: true,
-    imports: [CommonModule, FormsModule],
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.scss']
-  })
-  export class LoginComponent {
-    login: string = '';
-    password: string = '';
+@Component({
+  selector: 'app-login',
+  standalone: true,
+  imports: [CommonModule, FormsModule, MatDialogModule, LoginErrorDialogComponent],
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss'],
+})
+export class LoginComponent {
+  login: string = '';
+  password: string = '';
 
-    constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, public dialog: MatDialog) {}
 
-    onSubmit() {
-      this.authService.login(this.login, this.password).subscribe(
-        (response) => {
-          // Handle successful login
-          this.router.navigate(['/dashboard']); // Redirect to dashboard or another route
-        },
-        (error) => {
-          // Handle login error
-          console.error('Login failed', error);
-        }
-      );
-    }
+  onSubmit() {
+    this.authService.login(this.login, this.password).subscribe(
+      (response) => {
+        // ✅ Successful login → Navigate to dashboard
+        this.router.navigate(['/dashboard']).then(() => {
+          window.location.reload();
+        });
+      },
+      (error) => {
+        // ❌ Failed login → Show popup
+        this.dialog.open(LoginErrorDialogComponent);
+      }
+    );
   }
+}

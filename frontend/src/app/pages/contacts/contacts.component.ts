@@ -9,6 +9,8 @@ import { ContactService } from '../../services/contact.service';
 import { Contact } from '../../models/contact.model';
 import { AddContactDialogComponent } from '../contact-dialog/contact-dialog.component';
 import { EditContactDialogComponent } from '../edit-contact-dialog/edit-contact-dialog.component';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-contacts',
@@ -107,6 +109,57 @@ export class ContactsComponent implements OnInit {
       );
     }
   }
+
+  exportToExcel() {
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.dataSource.data);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Contacts');
+  
+    // Create a buffer and save the file
+    const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const data: Blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+  
+    saveAs(data, 'Contacts.xlsx'); // ✅ File is saved as "Contacts.xlsx"
+  }
+
+  importExcel(event: any) {
+    const target: DataTransfer = <DataTransfer>event.target;
+    
+    if (target.files.length !== 1) {
+      alert("Please upload a single Excel file.");
+      return;
+    }
+
+    const reader: FileReader = new FileReader();
+    
+    reader.onload = (e: any) => {
+      const binaryString: string = e.target.result;
+      const workbook: XLSX.WorkBook = XLSX.read(binaryString, { type: 'binary' });
+
+      const sheetName: string = workbook.SheetNames[0]; // Get first sheet
+      const sheet: XLSX.WorkSheet = workbook.Sheets[sheetName];
+
+      // ✅ Convert sheet to JSON format
+      const contacts: Contact[] = XLSX.utils.sheet_to_json(sheet);
+
+      console.log('Parsed Excel Data:', contacts);
+
+      // ✅ Send data to backend
+      this.contactService.addMultipleContacts(contacts).subscribe(
+        (res) => {
+          alert('Contacts imported successfully!');
+          console.log('Server Response:', res);
+        },
+        (err) => {
+          console.error('Error importing contacts:', err);
+        }
+      );
+    };
+
+    reader.readAsBinaryString(target.files[0]);
+  }
 }
+
+
 /* 
 */
