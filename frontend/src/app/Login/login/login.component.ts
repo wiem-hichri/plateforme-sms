@@ -16,21 +16,42 @@ import { LoginErrorDialogComponent } from './login-error-dialog.component';
 export class LoginComponent {
   login: string = '';
   password: string = '';
+  showPopup: boolean = false;
+  popupMessage: string = '';
+  expired: boolean = false;
 
   constructor(private authService: AuthService, private router: Router, public dialog: MatDialog) {}
 
   onSubmit() {
     this.authService.login(this.login, this.password).subscribe(
       (response) => {
-        // ✅ Successful login → Navigate to dashboard
-        this.router.navigate(['/dashboard']).then(() => {
-          window.location.reload();
-        });
+        if (response.expired || response.warning) {
+          this.showPopup = true;
+          this.popupMessage = response.expired
+            ? "Votre mot de passe a expiré. Veuillez le réinitialiser."
+            : response.warning;
+          this.expired = response.expired;
+
+          if (response.expired) {
+            return;
+          }
+        }
+
+        this.router.navigate(['/dashboard']).then(() => window.location.reload());
       },
       (error) => {
-        // ❌ Failed login → Show popup
-        this.dialog.open(LoginErrorDialogComponent);
+        this.showPopup = true;
+        this.popupMessage = "Login ou mot de passe incorrect.";
+        this.expired = false;
       }
     );
+  }
+
+  closePopup() {
+    this.showPopup = false;
+  }
+
+  goToResetPassword() {
+    this.router.navigate(['/reset-password']);
   }
 }

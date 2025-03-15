@@ -5,7 +5,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './Login/login/login.component';
 import { UsersComponent } from './Users/user/user.component';
 import { ProfileComponent } from './Login/profile/profile.component';
-import { NotFoundComponent } from './pages/not-found/not-found.component'; // ✅ Import NotFoundComponent
+import { NotFoundComponent } from './pages/not-found/not-found.component';
 
 export const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -15,7 +15,5 @@ export const appRoutes: Routes = [
   { path: 'groups', component: GroupsComponent },
   { path: 'user', component: UsersComponent },
   { path: 'profile', component: ProfileComponent },
-
-  // ✅ Catch all unknown routes and show 404 page
   { path: '**', component: NotFoundComponent }
 ];
