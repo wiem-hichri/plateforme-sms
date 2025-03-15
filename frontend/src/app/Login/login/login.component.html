@@ -21,3 +21,17 @@
     <img src="../../../assets/img/truck.jpg" alt="Lumiere Logistique" />
   </div>
 </div>
+
+<!-- Popup Message -->
+<div *ngIf="showPopup" class="popup-overlay">
+  <div class="popup-box">
+    <p>{{ popupMessage }}</p>
+
+    <!-- ✅ Reset button now works correctly -->
+    <button *ngIf="expired" class="reset-btn" (click)="goToResetPassword()">Réinitialiser</button>
+
+    <button (click)="closePopup()">OK</button>
+  </div>
+</div>
+
+
