@@ -15,6 +15,8 @@ const User = {
 
             const expiryDate = new Date();
             expiryDate.setMonth(expiryDate.getMonth() + 6); // Expiration du mot de passe dans 6 mois
+            /*const expiryDate = new Date(); // Date actuelle
+            expiryDate.setMinutes(expiryDate.getMinutes() + 3);*/     
 
             const query = `INSERT INTO users (matricule, nom, prenom, login, password, role, password_expiry) VALUES (?, ?, ?, ?, ?, ?, ?)`;
             const values = [user.matricule, user.nom, user.prenom, user.login, password, user.role, expiryDate];

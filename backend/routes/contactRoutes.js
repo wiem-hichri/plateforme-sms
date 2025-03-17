@@ -7,11 +7,11 @@ const  {createContact, getContacts, getContactByMatricule, updateContact, delete
 
 router.post('/addcontacts',isAuthentificated, checkRole( 'super-administrateur','administrateur'), createContact);
 router.get('/contacts',isAuthentificated, checkRole( 'super-administrateur','administrateur'), getContacts);
-router.get('/contacts/:matricule',isAuthentificated, checkRole( 'super-administrateur','administrateur'), getContactByMatricule);
+router.get('/contacts/:matricule', getContactByMatricule);
 router.get('/contacts/group/:groupName',isAuthentificated, checkRole( 'super-administrateur','administrateur'), getContactsByGroup);
 router.put('/contacts/:id',isAuthentificated,isAuthentificated, checkRole( 'super-administrateur','administrateur'), updateContact);
 router.delete('/contacts/:id',isAuthentificated, checkRole( 'super-administrateur','administrateur'), deleteContact);
-router.post('/import-contacts',importContacts);
+router.post('/import-contacts',isAuthentificated, checkRole( 'super-administrateur','administrateur') ,importContacts);
 
 
 module.exports = router;
