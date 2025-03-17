@@ -4,12 +4,11 @@ import { AuthService } from '../../services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { LoginErrorDialogComponent } from './login-error-dialog.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatDialogModule, LoginErrorDialogComponent],
+  imports: [CommonModule, FormsModule, MatDialogModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
