@@ -7,6 +7,14 @@ const authRoutes = require('./routes/authRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 const groupeRoutes = require('./routes/groupeRoutes');
 const userRoutes = require('./routes/userRoutes');
+const modelRoutes = require('./routes/modelRoutes');
+const variableRoutes = require('./routes/variableRoutes');
+const modelVariableRoutes = require('./routes/modelVariableRoutes');
+const contactGroupeRoutes = require('./routes/contactGroupeRoutes');
+const replaceVariables = require("./utils");
+const  { getContactByMatricule } = require('./controllers/contactController');
+ 
+
 const cors = require('cors');
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session); // pour stocker les sessions en DB
@@ -49,6 +57,43 @@ app.use('/api', authRoutes);
 app.use('/api', contactRoutes);
 app.use('/api', groupeRoutes);
 app.use('/api', userRoutes);
+app.use('/api', modelRoutes);
+app.use('/api', variableRoutes);
+app.use('/model-variable', modelVariableRoutes);
+app.use('/contact-groupe', contactGroupeRoutes);
+
+
+
+/*app.post("/generate-message", (req, res) => {
+  const { template, data } = req.body;
+
+  if (!template || !data) {
+      return res.status(400).json({ error: "Template et données requis." });
+  }
+
+  const messageFinal = replaceVariables(template, data);
+  res.json({ message: messageFinal });
+});*/
+// Route pour générer un message SMS dynamique
+app.post("/generate-sms", async (req, res) => {
+  const { template, matricule } = req.body;
+
+  if (!template || !matricule) {
+      return res.status(400).json({ error: "Template et matricule requis." });
+  }
+
+  // Récupérer le contact
+  const contact = await getContactByMatricule(matricule);
+  if (!contact) {
+      return res.status(404).json({ error: "Contact non trouvé." });
+  }
+
+  // Remplacement des variables
+  const messageFinal = replaceVariables(template, contact);
+
+  res.json({ message: messageFinal });
+});
+
 
 
 
