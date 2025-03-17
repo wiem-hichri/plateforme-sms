@@ -1,5 +1,7 @@
 const ModelSMS = require('../models/model_sms');
 const Contact = require('../models/contact');
+const ContactGroupe = require('../models/contactGroupe');
+
 
 
 const createModel = async (req, res) => {
@@ -112,8 +114,55 @@ const generateSMS = async (req, res) => {
         });
     }
 };
+const sendMessageToGroup = async (req, res) => {
+    try {
+        const { groupId } = req.params;  
+        const { template } = req.body; // Le message à envoyer
+
+        if (!template) {
+            return res.status(400).json({ status: "error", message: "Le champ 'template' est requis" });
+        }
+
+        // Récupérer tous les contacts du groupe
+        const contacts = await ContactGroupe.getContactsByGroup(groupId);
+
+        if (!contacts || contacts.length === 0) {
+            return res.status(404).json({ status: "error", message: `Aucun contact trouvé pour le groupId ${groupId}` });
+        }
+
+        // Fonction de remplacement des variables dynamiques dans le message
+        const replaceVariables = (template, data) => {
+            return template.replace(/{{(.*?)}}/g, (match, key) => {
+                return data[key.trim()] || match; // Si une variable est absente, on garde le placeholder
+            });
+        };
+
+        // Générer un message personnalisé pour chaque contact
+        const messages = contacts.map(contact => ({
+            matricule: contact.matricule,
+            telephone: contact.telephone_personnel, // Numéro de téléphone du contact
+            message: replaceVariables(template, contact)
+        }));
+
+        return res.status(200).json({
+            status: "success",
+            group: groupId,
+            totalContacts: contacts.length,
+            messages
+        });
+
+    } catch (error) {
+        console.error("Erreur serveur :", error);
+        return res.status(500).json({ 
+            status: "error", 
+            message: "Erreur lors de l'envoi des messages", 
+            error: error.message 
+        });
+    }
+};
 
 
 
 
-module.exports = { createModel, getAllModels, getModelById, updateModel, deleteModel, generateSMS };
+
+module.exports = { createModel, getAllModels, getModelById, updateModel, deleteModel, generateSMS, sendMessageToGroup };
