@@ -24,8 +24,13 @@ const Contact = {
     },
 
     getByMatricule: async (matricule) => {
-        const [results] = await db.query("SELECT * FROM contacts WHERE matricule = ?", [matricule]);
-        return results.length > 0 ? results[0] : null;
+        try {
+            const [results] = await db.query("SELECT * FROM contacts WHERE matricule = ?", [matricule]);
+            return results.length > 0 ? results[0] : null;
+        } catch (error) {
+            console.error("Erreur lors de la récupération du contact:", error);
+            throw error;
+        }
     },
 
     update: async (id, contact) => {

@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-//const passport = require('../config/passport');
 const { isAuthentificated, checkRole } = require('../middlewares/authMiddleware');
 const  {createUser,updatePassword, getUsers, getUserById, updateUser, deleteUser, getAllLoginHistory } = require('../controllers/userController');
 
@@ -11,11 +10,11 @@ router.get('/users',isAuthentificated, checkRole( 'super-administrateur','admini
 
 router.get('/users/:id',isAuthentificated, checkRole( 'super-administrateur','administrateur'), getUserById);
 
-router.put('/users/:id',isAuthentificated, checkRole( 'super-administrateur','administrateur'), updateUser);
+router.put('/users/:id',isAuthentificated, checkRole( 'super-administrateur','administrateur','utilisateur'), updateUser);
 
 router.delete('/users/:id',isAuthentificated, checkRole( 'super-administrateur','administrateur'), deleteUser);
 
-router.put('/users/password/:id',isAuthentificated, checkRole( 'super-administrateur','administrateur'), updatePassword);
+router.put('/users/password/:id',isAuthentificated, checkRole( 'super-administrateur','administrateur','utilisateur'), updatePassword);
 
 router.get('/login-history',isAuthentificated, checkRole( 'super-administrateur'), getAllLoginHistory);
 

@@ -27,17 +27,29 @@ const getContacts = async (req, res) => {
 
 const getContactByMatricule = async (req, res) => {
     try {
-        const contactMatricule = req.params.matricule;
-        const contact = await Contact.getByMatricule(contactMatricule);
-        if (!contact) {
-            return res.status(404).json({ message: 'Contact non trouvé' });
+        const { matricule } = req.params; // Récupérer le matricule depuis l'URL
+        if (!matricule) {
+            return res.status(400).json({ status: "error", message: "Matricule requis" });
         }
-        res.json({
+
+        const contact = await Contact.getByMatricule(matricule);
+
+        if (!contact) {
+            return res.status(404).json({ status: "error", message: "Contact non trouvé" });
+        }
+
+        return res.status(200).json({
             status: "success",
             data: contact,
         });
+
     } catch (error) {
-        res.status(500).json({ message: 'Erreur lors de la récupération du contact', error: error.message });
+        console.error("Erreur serveur:", error);
+        return res.status(500).json({ 
+            status: "error", 
+            message: "Erreur lors de la récupération du contact", 
+            error: error.message 
+        });
     }
 };
 

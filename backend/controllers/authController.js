@@ -1,5 +1,7 @@
 const User = require('../models/user');
 const db = require('../config/dbConnect').promise();
+
+
 const login = async (req, res) => {
     try {
         const { login, password } = req.body;
@@ -31,6 +33,7 @@ const login = async (req, res) => {
         req.session.user = {
             id: user.id,
             nom: user.nom,
+            matricule: user.matricule,
             prenom: user.prenom,
             role: user.role,
             login: user.login,
