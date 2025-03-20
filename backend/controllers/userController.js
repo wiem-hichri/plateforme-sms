@@ -96,12 +96,13 @@ const deleteUser = async (req, res) => {
 const getAllLoginHistory = async (req, res) => {
     try {
         const [history] = await db.query(
-            `SELECT lh.id, lh.user_id, u.nom, u.prenom, u.login, lh.ip_address, lh.login_time 
+            `SELECT lh.id, lh.user_id, u.nom, u.prenom, u.login, lh.ip_address, lh.user_agent, lh.login_time 
              FROM login_history lh 
              JOIN users u ON lh.user_id = u.id 
              ORDER BY lh.login_time DESC`
         );
 
+        console.log("Login History Data:", history); // Debugging log
         res.json(history);
     } catch (error) {
         console.error("Erreur lors de la récupération de l'historique :", error);

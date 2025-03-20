@@ -16,7 +16,7 @@ router.delete('/users/:id',isAuthentificated, checkRole( 'super-administrateur',
 
 router.put('/users/password/:id',isAuthentificated, checkRole( 'super-administrateur','administrateur','utilisateur'), updatePassword);
 
-router.get('/login-history',isAuthentificated, checkRole( 'super-administrateur'), getAllLoginHistory);
+router.get('/login-history', getAllLoginHistory);
 
 
 

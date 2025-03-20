@@ -1,0 +1,37 @@
+<div class="min-h-screen flex flex-col items-center bg-gray-100 p-6 mt-16"> 
+    <div class="w-full max-w-5xl bg-white shadow-lg rounded-lg p-8 mx-auto">
+  
+      <!-- 🔥 Sticky Header -->
+      <div class="container">
+        <div class="sticky top-0 bg-gradient-to-r from-red-500 to-white-400 text-white p-4 rounded-lg shadow-md z-50">
+          <h2 class="text-3xl font-semibold">📜 Historique des Connexions</h2>
+        </div>
+      </div>
+  
+      <!-- 🎨 Scrollable Table -->
+      <div class="overflow-y-auto max-h-[60vh] mt-4 px-2">
+        <div class="overflow-x-auto">
+          <table class="min-w-full bg-white shadow-md rounded-lg border border-gray-300">
+            <thead>
+              <tr class="bg-gradient-to-r from-orange-400 to-orange-600 text-white text-left">
+                <th class="p-3 border">Utilisateur</th>
+                <th class="p-3 border">Adresse IP</th>
+                <th class="p-3 border">Agent Utilisateur</th>
+                <th class="p-3 border">Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let log of loginHistory" class="hover:bg-orange-100 transition-all">
+                <td class="p-3 border">{{ log.nom }} {{ log.prenom }}</td>
+                <td class="p-3 border">{{ log.ip_address }}</td>
+                <td class="p-3 border truncate max-w-xs">{{ log.user_agent }}</td>
+                <td class="p-3 border">{{ log.login_time | date:'yyyy-MM-dd HH:mm' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+  
+    </div>
+  </div>
+  

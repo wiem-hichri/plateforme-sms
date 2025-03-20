@@ -1,6 +1,10 @@
 const User = require('../models/user');
 const db = require('../config/dbConnect').promise();
 
+const getClientIP = (req) => {
+    const forwarded = req.headers['x-forwarded-for'];
+    return forwarded ? forwarded.split(',')[0] : req.socket.remoteAddress;
+};
 
 const login = async (req, res) => {
     try {
@@ -40,9 +44,16 @@ const login = async (req, res) => {
             dernierLogin: new Date()
         };
 
+        const ipAddress = getClientIP(req);
+        const userAgent = req.headers['user-agent'];
+
+        console.log("User ID:", user.id);
+        console.log("IP Address:", ipAddress);
+        console.log("User Agent:", userAgent);
+
         await db.query(
             "INSERT INTO login_history (user_id, ip_address, user_agent) VALUES (?, ?, ?)",
-            [user.id, req.ip || req.connection.remoteAddress, req.headers['user-agent']]
+            [user.id, ipAddress, userAgent]
         );
 
         req.session.save((err) => {
@@ -59,10 +70,10 @@ const login = async (req, res) => {
         });
 
     } catch (error) {
+        console.error("Login error:", error);
         res.status(500).json({ message: "Erreur serveur", error: error.message });
     }
 };
-
 
 
 

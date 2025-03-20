@@ -1,0 +1,34 @@
+<div class="min-h-screen flex flex-col items-center bg-gray-100 p-6 mt-16"> 
+    <div class="w-full max-w-4xl bg-white shadow-lg rounded-lg p-8 mx-auto">
+  
+      <!-- 🔥 Sticky Header -->
+      <div class="container">
+        <div class="sticky top-0 bg-gradient-to-r from-red-500 to-white-400 text-white p-4 rounded-lg shadow-md z-50">
+          <h2 class="text-3xl font-semibold">⚙️ Paramètres</h2>
+        </div>
+      </div>
+  
+      <!-- 🎨 Scrollable Settings Options -->
+      <div class="overflow-y-auto max-h-[60vh] mt-4 px-2">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
+          
+          <!-- 🔗 Login History Link -->
+          <div class="relative bg-gradient-to-b from-orange-100 to-white shadow-md rounded-lg p-6 border border-orange-300 hover:scale-105 transition-all duration-300">
+            <h3 class="text-xl font-semibold text-gray-800">🔍 Historique des Connexions</h3>
+            <p class="text-gray-600 text-sm">Voir toutes les connexions des utilisateurs.</p>
+            <div class="mt-4 flex justify-end">
+              <a routerLink="/login-history "href='/login-history' 
+                 class="text-blue-600 hover:underline font-semibold">
+                ➡️ Accéder
+              </a>
+            </div>
+          </div>
+  
+          <!-- 🛑 More settings can be added here -->
+          
+        </div>
+      </div>
+  
+    </div>
+  </div>
+  
