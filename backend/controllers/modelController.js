@@ -1,5 +1,9 @@
 const ModelSMS = require('../models/model_sms');
 const Contact = require('../models/contact');
+const ContactGroupe = require('../models/contactGroupe');
+const ModeleSMS = require('../models/model_sms');
+
+
 
 
 const createModel = async (req, res) => {
@@ -112,8 +116,76 @@ const generateSMS = async (req, res) => {
         });
     }
 };
+const sendMessageToGroup = async (req, res) => {
+    try {
+        const { groupId } = req.params;  
+        const { modeleId } = req.body;
+
+        if (!modeleId) {
+            return res.status(400).json({ status: "error", message: "Le champ 'modeleId' est requis" });
+        }
+
+        // 🔹 Récupérer le modèle de SMS depuis la base de données
+        const modele = await ModeleSMS.getById(modeleId);
+        if (!modele) {
+            return res.status(404).json({ status: "error", message: `Modèle de SMS non trouvé pour l'ID ${modeleId}` });
+        }
+
+        const template = modele.contenu; // Contenu du modèle de SMS
+        console.log("📝 Modèle de SMS récupéré :", template); // Debug
+
+        // 🔹 Récupérer tous les contacts du groupe
+        const contacts = await ContactGroupe.getContactsByGroup(groupId);
+        if (!contacts || contacts.length === 0) {
+            return res.status(404).json({ status: "error", message: `Aucun contact trouvé pour le groupId ${groupId}` });
+        }
+
+        console.log("📋 Contacts récupérés :", contacts); // Debug
+
+        // 🔹 Fonction améliorée pour remplacer les variables dynamiques
+        const replaceVariables = (template, data) => {
+            return template.replace(/{{(.*?)}}/g, (match, key) => {
+                const valeur = data[key.trim()]; // Supprimer les espaces
+                if (valeur !== undefined) {
+                    return valeur; // Remplace par la vraie valeur
+                } else {
+                    console.warn(`⚠️ Clé introuvable : ${key.trim()}`);
+                    return match; // Garder le placeholder si la clé est introuvable
+                }
+            });
+        };
+
+        // 🔹 Générer un message personnalisé pour chaque contact
+        const messages = contacts.map(contact => {
+            console.log("🔍 Contact en cours de traitement :", contact); // Debug
+            return {
+                matricule: contact.matricule,
+                telephone: contact.telephone_personnel,
+                message: replaceVariables(template, contact)
+            };
+        });
+
+        return res.status(200).json({
+            status: "success",
+            modeleId,
+            group: groupId,
+            totalContacts: contacts.length,
+            messages
+        });
+
+    } catch (error) {
+        console.error("❌ Erreur serveur :", error);
+        return res.status(500).json({ 
+            status: "error", 
+            message: "Erreur lors de l'envoi des messages", 
+            error: error.message 
+        });
+    }
+};
 
 
 
 
-module.exports = { createModel, getAllModels, getModelById, updateModel, deleteModel, generateSMS };
+
+
+module.exports = { createModel, getAllModels, getModelById, updateModel, deleteModel, generateSMS, sendMessageToGroup };
