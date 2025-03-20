@@ -9,7 +9,15 @@
       "./src/app/Login/profile/profile.component.html",
       "./src/app/Login/profile/profile.component.ts",  
        "./src/app/pages/not-found/not-found.component.html",
-      "./src/app/pages/not-found/not-found.component.ts"
+      "./src/app/pages/not-found/not-found.component.ts",
+      "./src/app/parametre/parametre-board/parametre-board.component.html",
+      "./src/app/parametre/parametre-board/parametre-board.component.ts",
+      "./src/app/parametre/login-history/login-history.component.html",
+      "./src/app/parametre/login-history/login-history.component.ts",
+
+
+
+
 
     ],
     theme: {
