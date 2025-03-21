@@ -7,6 +7,7 @@ import { UsersComponent } from './Users/user/user.component';
 import { ProfileComponent } from './Login/profile/profile.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import {LoginHistoryComponent}from './parametre/login-history/login-history.component';
+import {SmsModelsComponent} from './models/sms-models/sms-models.component';
 import { ParametreBoardComponent } from './parametre/parametre-board/parametre-board.component';
 
 export const appRoutes: Routes = [
@@ -19,5 +20,6 @@ export const appRoutes: Routes = [
   { path: 'profile', component: ProfileComponent },
   { path: 'login-history', component: LoginHistoryComponent },
   {path: 'parametre', component: ParametreBoardComponent },
+  {path : 'sms-models', component: SmsModelsComponent },
   { path: '**', component: NotFoundComponent }
 ];

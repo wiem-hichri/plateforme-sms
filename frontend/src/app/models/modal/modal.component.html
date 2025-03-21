@@ -1,0 +1,17 @@
+<div *ngIf="model" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
+    <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+      <h3 class="text-2xl font-semibold mb-4">{{ model.id ? 'Modifier' : 'Ajouter' }} Modèle</h3>
+  
+      <label class="block mb-2">Nom du Modèle</label>
+      <input type="text" [(ngModel)]="model.nom" class="w-full border rounded-lg p-2 mb-4" />
+  
+      <label class="block mb-2">Contenu du SMS</label>
+      <textarea [(ngModel)]="model.contenu" class="w-full border rounded-lg p-2 mb-4"></textarea>
+  
+      <div class="flex justify-end gap-2">
+        <button class="bg-gray-500 text-white px-4 py-2 rounded-lg" (click)="close.emit()">Annuler</button>
+        <button class="bg-blue-500 text-white px-4 py-2 rounded-lg" (click)="saveModel()">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+  
