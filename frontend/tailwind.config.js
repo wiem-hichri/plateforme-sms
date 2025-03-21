@@ -14,7 +14,10 @@
       "./src/app/parametre/parametre-board/parametre-board.component.ts",
       "./src/app/parametre/login-history/login-history.component.html",
       "./src/app/parametre/login-history/login-history.component.ts",
-
+      "./src/app/modeles/sms-models/sms-models.component.html",
+      "./src/app/modeles/sms-models/sms-models.component.ts",
+      "./src/app/modeles/modal/modal.component.html",
+      "./src/app/modeles/modal/modal.component.ts",
 
 
 
