@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
-import { ContactService } from '../../services/contact.service'; // ✅ Import service
+import { ContactService } from '../../services/contact.service';
+import { GroupService, Group } from '../../services/group.service'; // Import GroupService
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-add-contact-dialog',
@@ -11,7 +12,7 @@ import { ContactService } from '../../services/contact.service'; // ✅ Import s
   templateUrl: './contact-dialog.component.html',
   styleUrls: ['./contact-dialog.component.scss']
 })
-export class AddContactDialogComponent {
+export class AddContactDialogComponent implements OnInit {
   newContact = {
     matricule: '',
     nom: '',
@@ -22,12 +23,28 @@ export class AddContactDialogComponent {
     cin: '',
     site: ''
   };
-  groupes: any[] = []; 
+  groupes: Group[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<AddContactDialogComponent>,
-    private contactService: ContactService // ✅ Inject ContactService
+    private contactService: ContactService,
+    private groupService: GroupService // Inject GroupService
   ) {}
+
+  ngOnInit() {
+    this.fetchGroups();
+  }
+
+  fetchGroups() {
+    this.groupService.getGroups().subscribe(
+      (response) => {
+        this.groupes = response.data || [];
+      },
+      (error) => {
+        console.error('Error fetching groups:', error);
+      }
+    );
+  }
 
   closeDialog() {
     this.dialogRef.close();
@@ -38,7 +55,7 @@ export class AddContactDialogComponent {
       this.contactService.addContact(this.newContact).subscribe(
         (response) => {
           console.log('Contact added successfully:', response);
-          this.dialogRef.close(this.newContact); // ✅ Close dialog & refresh
+          this.dialogRef.close(this.newContact);
         },
         (error) => {
           console.error('Error adding contact:', error);
