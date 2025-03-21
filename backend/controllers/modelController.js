@@ -1,8 +1,8 @@
-const ModelSMS = require('../models/model_sms');
 const Contact = require('../models/contact');
 const ContactGroupe = require('../models/contactGroupe');
 const ModeleSMS = require('../models/model_sms');
-
+const xlsx = require('xlsx');
+const db = require('../config/dbConnect').promise();
 
 
 
@@ -185,7 +185,87 @@ const sendMessageToGroup = async (req, res) => {
 
 
 
+const sendConfidentialMessage = async (req, res) => {
+    try {
+        const { modeleId } = req.params;
+
+        // Vérification du fichier
+        if (!req.file) {
+            return res.status(400).json({ status: "error", message: "Fichier Excel requis" });
+        }
+
+        // Vérification de l'ID du modèle
+        if (!modeleId) {
+            return res.status(400).json({ status: "error", message: "Le champ 'modeleId' est requis" });
+        }
+
+        // 🔹 1. Récupérer le modèle de SMS
+        const modele = await ModeleSMS.getById(modeleId);
+        if (!modele) {
+            return res.status(404).json({ status: "error", message: `Modèle de SMS non trouvé pour l'ID ${modeleId}` });
+        }
+
+        const template = modele.contenu; // Contenu du modèle de SMS
+
+        // 🔹 2. Lire les données du fichier Excel
+        const workbook = xlsx.readFile(req.file.path);
+        const sheetName = workbook.SheetNames[0];
+        const data = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
+
+        if (data.length === 0) {
+            return res.status(400).json({ status: "error", message: "Le fichier Excel est vide." });
+        }
+
+        // 🔹 3. Remplacer les variables dans le modèle de SMS
+        const replaceVariables = (template, contact) => {
+            return template.replace(/{{(.*?)}}/g, (match, key) => {
+                // Récupérer la valeur de la variable dynamique à partir du contact
+                const trimmedKey = key.trim();
+                return contact[trimmedKey] || match; // Si la variable n'est pas trouvée, garder le placeholder
+            });
+        };
+
+        // 🔹 4. Validation des données dans le fichier Excel
+        const validatedData = data.filter(contact => {
+            if (!contact.Matricule || !contact.Telephone) {
+                console.log("Données invalides pour un contact", contact);
+                return false; // Ignore les contacts mal formés
+            }
+            return true;
+        });
+
+        if (validatedData.length === 0) {
+            return res.status(400).json({ status: "error", message: "Aucun contact valide trouvé dans le fichier." });
+        }
+
+        // 🔹 5. Générer les messages personnalisés
+        const messages = validatedData.map(contact => ({
+            matricule: contact.Matricule,
+            telephone: contact.Telephone,
+            message: replaceVariables(template, contact) // Utilisation de 'template' avec les variables dynamiques remplacées
+        }));
+
+        return res.status(200).json({
+            status: "success",
+            modeleId,
+            totalContacts: validatedData.length,
+            messages
+        });
+
+    } catch (error) {
+        console.error("Erreur serveur :", error);
+        return res.status(500).json({
+            status: "error",
+            message: "Erreur lors de l'envoi des messages",
+            error: error.message
+        });
+    }
+};
 
 
 
-module.exports = { createModel, getAllModels, getModelById, updateModel, deleteModel, generateSMS, sendMessageToGroup };
+
+
+
+
+module.exports = { createModel, getAllModels, getModelById, updateModel, deleteModel, generateSMS, sendMessageToGroup, sendConfidentialMessage };
