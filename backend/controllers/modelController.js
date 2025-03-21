@@ -1,67 +1,69 @@
 const Contact = require('../models/contact');
 const ContactGroupe = require('../models/contactGroupe');
-const ModeleSMS = require('../models/model_sms');
+const ModelSMS = require('../models/model_sms');
 const xlsx = require('xlsx');
 const db = require('../config/dbConnect').promise();
 
 
 
-const createModel = async (req, res) => {
+const createModelSMS = async (req, res) => {
+    const { nom, contenu } = req.body;
+    const user_id = req.session.user.id; 
     try {
-        const { nom, contenu } = req.body;
-        const result = await ModeleSMS.create({ nom, contenu });
-        res.status(201).json({ message: "Modèle ajouté avec succès.", modelId: result.insertId });
+        const result = await ModelSMS.create({ user_id, nom, contenu });
+        res.status(201).json({ message: "Modèle de SMS créé", result });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ message: "Erreur lors de la création", error });
+    }
+};
+const getAllModelsByUser = async (req, res) => {
+    const user_id = req.session.user.id;
+    try {
+        const models = await ModelSMS.getAllByUser(user_id);
+        res.status(200).json(models);
+    } catch (error) {
+        res.status(500).json({ message: "Erreur lors de la récupération", error });
     }
 };
 
 const getAllModels = async (req, res) => {
+    const user_id = req.session.user.id; 
+    const role = req.session.user.role; 
+
     try {
-        const models = await ModeleSMS.getAll();
-        res.json({ status: "success", data: models });
+        const models = await ModelSMS.getAll(user_id, role);
+        res.status(200).json(models);
     } catch (error) {
-        res.status(500).json({ message: "Erreur lors de la récupération des modèles", error: error.message });
+        res.status(500).json({ message: "Erreur lors de la récupération", error });
     }
 };
 
-const getModelById = async (req, res) => {
-    try {
-        const modelId = req.params.id;
-        const model = await ModeleSMS.getById(modelId);
-        if (!model) {
-            return res.status(404).json({ message: "Modèle non trouvé" });
-        }
-        res.json({ status: "success", data: model });
-    } catch (error) {
-        res.status(500).json({ message: "Erreur lors de la récupération du modèle", error: error.message });
-    }
-};
 
-const updateModel = async (req, res) => {
+const updateModelSMS = async (req, res) => {
+    const { id } = req.params;
+    const { nom, contenu } = req.body;
+    const user_id = req.session.user.id;
     try {
-        const modelId = req.params.id;
-        const newData = req.body;
-        const result = await ModeleSMS.update(modelId, newData);
+        const result = await ModelSMS.update(id, user_id, { nom, contenu });
         if (result.affectedRows === 0) {
-            return res.status(404).json({ message: "Modèle non trouvé" });
+            return res.status(404).json({ message: 'Modèle non trouvé' });
         }
-        res.status(200).json({ message: "Modèle mis à jour avec succès" });
+        res.status(200).json({ message: "Modèle de SMS mis à jour", result });
     } catch (error) {
-        res.status(500).json({ message: "Erreur lors de la mise à jour du modèle", error: error.message });
+        res.status(500).json({ message: "Erreur lors de la mise à jour", error });
     }
 };
-
-const deleteModel = async (req, res) => {
+const deleteModelSMS = async (req, res) => {
+    const { id } = req.params;
+    const user_id = req.session.user.id;
     try {
-        const modelId = req.params.id;
-        const result = await ModeleSMS.delete(modelId);
+        const result = await ModelSMS.delete(id, user_id);
         if (result.affectedRows === 0) {
-            return res.status(404).json({ message: "Modèle non trouvé" });
+            return res.status(404).json({ message: 'Modèle non trouvé' });
         }
-        res.status(200).json({ message: "Modèle supprimé avec succès" });
+        res.status(200).json({ message: "Modèle de SMS supprimé", result });
     } catch (error) {
-        res.status(500).json({ message: "Erreur lors de la suppression du modèle", error: error.message });
+        res.status(500).json({ message: "Erreur lors de la suppression", error });
     }
 };
 
@@ -268,4 +270,4 @@ const sendConfidentialMessage = async (req, res) => {
 
 
 
-module.exports = { createModel, getAllModels, getModelById, updateModel, deleteModel, generateSMS, sendMessageToGroup, sendConfidentialMessage };
+module.exports = { createModelSMS, getAllModels,getAllModelsByUser, updateModelSMS, deleteModelSMS, generateSMS, sendMessageToGroup, sendConfidentialMessage };
