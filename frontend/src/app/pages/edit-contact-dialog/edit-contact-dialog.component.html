@@ -10,12 +10,10 @@
       <input type="text" [(ngModel)]="contact.cin" name="cin" placeholder="CIN">
       <input type="text" [(ngModel)]="contact.site" name="site" placeholder="Site">
 
+      <!-- Dropdown for Service -->
       <select [(ngModel)]="contact.service" name="service">
         <option value="" disabled selected>Choisir un service</option>
-        <option value="Transporteurs_Externes">Transporteurs_Externes</option>
-        <option value="Transport">Transport</option>
-        <option value="Transporteurs_Internes">Transporteurs_Internes</option>
-        <option value="Logistique">Logistique</option>
+        <option *ngFor="let groupe of groupes" [value]="groupe.nom">{{ groupe.nom }}</option>
       </select>
 
       <div class="modal-actions">
