@@ -9,7 +9,7 @@ const db = require('../config/dbConnect').promise();
 const createModel = async (req, res) => {
     try {
         const { nom, contenu } = req.body;
-        const result = await ModelSMS.create({ nom, contenu });
+        const result = await ModeleSMS.create({ nom, contenu });
         res.status(201).json({ message: "Modèle ajouté avec succès.", modelId: result.insertId });
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -18,7 +18,7 @@ const createModel = async (req, res) => {
 
 const getAllModels = async (req, res) => {
     try {
-        const models = await ModelSMS.getAll();
+        const models = await ModeleSMS.getAll();
         res.json({ status: "success", data: models });
     } catch (error) {
         res.status(500).json({ message: "Erreur lors de la récupération des modèles", error: error.message });
@@ -28,7 +28,7 @@ const getAllModels = async (req, res) => {
 const getModelById = async (req, res) => {
     try {
         const modelId = req.params.id;
-        const model = await ModelSMS.getById(modelId);
+        const model = await ModeleSMS.getById(modelId);
         if (!model) {
             return res.status(404).json({ message: "Modèle non trouvé" });
         }
@@ -42,7 +42,7 @@ const updateModel = async (req, res) => {
     try {
         const modelId = req.params.id;
         const newData = req.body;
-        const result = await ModelSMS.update(modelId, newData);
+        const result = await ModeleSMS.update(modelId, newData);
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: "Modèle non trouvé" });
         }
@@ -55,7 +55,7 @@ const updateModel = async (req, res) => {
 const deleteModel = async (req, res) => {
     try {
         const modelId = req.params.id;
-        const result = await ModelSMS.delete(modelId);
+        const result = await ModeleSMS.delete(modelId);
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: "Modèle non trouvé" });
         }
