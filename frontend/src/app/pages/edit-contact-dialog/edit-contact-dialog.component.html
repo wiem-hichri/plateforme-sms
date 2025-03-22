@@ -1,24 +1,50 @@
 <div class="modal-overlay">
   <div class="modal-card">
     <h3>Modifier un Contact</h3>
-    <form>
+    <form #editContactForm="ngForm">
       <input type="text" [(ngModel)]="contact.matricule" name="matricule" placeholder="Matricule" disabled>
-      <input type="text" [(ngModel)]="contact.nom" name="nom" placeholder="Nom">
+
+      <input type="text" [(ngModel)]="contact.nom" name="nom" placeholder="Nom" required>
+      <div *ngIf="editContactForm.controls['nom']?.invalid && editContactForm.controls['nom']?.touched">
+        <small *ngIf="editContactForm.controls['nom']?.errors?.['required']">Nom is required.</small>
+      </div>
+
       <input type="text" [(ngModel)]="contact.prenom" name="prenom" placeholder="Prénom">
-      <input type="text" [(ngModel)]="contact.telephone_personnel" name="telephone_personnel" placeholder="Téléphone Personnel">
-      <input type="text" [(ngModel)]="contact.telephone_professionnel" name="telephone_professionnel" placeholder="Téléphone Professionnel">
-      <input type="text" [(ngModel)]="contact.cin" name="cin" placeholder="CIN">
-      <input type="text" [(ngModel)]="contact.site" name="site" placeholder="Site">
+
+      <input type="text" [(ngModel)]="contact.telephone_personnel" name="telephone_personnel" placeholder="Téléphone Personnel" pattern="[0-9]{8}">
+      <div *ngIf="editContactForm.controls['telephone_personnel']?.invalid && editContactForm.controls['telephone_personnel']?.touched">
+        <small *ngIf="editContactForm.controls['telephone_personnel']?.errors?.['pattern']">Invalid phone number.</small>
+      </div>
+
+      <input type="text" [(ngModel)]="contact.telephone_professionnel" name="telephone_professionnel" placeholder="Téléphone Professionnel" pattern="[0-9]{8}">
+      <div *ngIf="editContactForm.controls['telephone_professionnel']?.invalid && editContactForm.controls['telephone_professionnel']?.touched">
+        <small *ngIf="editContactForm.controls['telephone_professionnel']?.errors?.['pattern']">Invalid phone number.</small>
+      </div>
+
+      <input type="text" [(ngModel)]="contact.cin" name="cin" placeholder="CIN" pattern="[0-9]{8}">
+      <div *ngIf="editContactForm.controls['cin']?.invalid && editContactForm.controls['cin']?.touched">
+        <small *ngIf="editContactForm.controls['cin']?.errors?.['pattern']">Invalid CIN.</small>
+      </div>
+
+      <input type="text" [(ngModel)]="contact.site" name="site" placeholder="Site" required minlength="3" maxlength="50">
+      <div *ngIf="editContactForm.controls['site']?.invalid && editContactForm.controls['site']?.touched">
+        <small *ngIf="editContactForm.controls['site']?.errors?.['required']">Site is required.</small>
+        <small *ngIf="editContactForm.controls['site']?.errors?.['minlength']">Site must be at least 3 characters long.</small>
+        <small *ngIf="editContactForm.controls['site']?.errors?.['maxlength']">Site cannot be more than 50 characters long.</small>
+      </div>
 
       <!-- Dropdown for Service -->
-      <select [(ngModel)]="contact.service" name="service">
+      <select [(ngModel)]="contact.service" name="service" required>
         <option value="" disabled selected>Choisir un service</option>
         <option *ngFor="let groupe of groupes" [value]="groupe.nom">{{ groupe.nom }}</option>
       </select>
+      <div *ngIf="editContactForm.controls['service']?.invalid && editContactForm.controls['service']?.touched">
+        <small *ngIf="editContactForm.controls['service']?.errors?.['required']">Service is required.</small>
+      </div>
 
       <div class="modal-actions">
         <button type="button" class="cancel-btn" (click)="closeDialog()">Annuler</button>
-        <button type="button" class="submit-btn" (click)="saveContact()">Enregistrer</button>
+        <button type="button" class="submit-btn" (click)="saveContact()" [disabled]="editContactForm.invalid">Enregistrer</button>
       </div>
     </form>
   </div>

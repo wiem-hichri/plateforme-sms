@@ -2,20 +2,21 @@
   <div class="w-full max-w-4xl bg-white shadow-lg rounded-lg p-8 mx-auto">
 
     <!-- 🛑 Sticky Header (Title + Filter + Add Button) -->
-    <div class="sticky top-0 bg-white z-10 pb-4">
+    <div class="sticky top-0 bg-white z-10 pb-4 flex justify-between items-center">
       <h2 class="text-xl font-bold mb-2">Users List</h2>
-      
-      <input
-        type="text"
-        class="w-full px-4 py-2 border rounded-md"
-        placeholder="Filter par nom ou matricule"
-        [(ngModel)]="filterValue"
-      />
 
-      <button 
-        class="bg-blue-500 text-white px-4 py-2 rounded-md mt-3 w-full"
-        (click)="openAddUserDialog()">+ Ajouter User
-      </button>
+      <div class="flex w-full justify-between items-center mt-3">
+        <input
+          type="text"
+          class="w-1/3 px-4 py-2 border rounded-md"
+          placeholder="Filter par nom ou matricule"
+          [(ngModel)]="filterValue"
+        />
+        <button
+          class="bg-blue-500 text-white px-4 py-2 rounded-md w-1/4"
+          (click)="openAddUserDialog()">+ Ajouter User
+        </button>
+      </div>
     </div>
 
     <!-- 🖱️ Scrollable User List -->
@@ -34,16 +35,16 @@
           <div class="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
             <p class="text-sm text-gray-900">{{ user.role }}</p>
             <div class="mt-1 flex items-center gap-x-1.5">
-              <button mat-icon-button class="delete-btn" (click)="deleteUser(user.id)"> 
+              <button *ngIf="canEditOrDeleteUser(user)" mat-icon-button class="delete-btn" (click)="deleteUser(user.id)">
                 <mat-icon class="text-red-600">delete</mat-icon>
               </button>
-              <button mat-icon-button class="edit-btn" (click)="openEditUserDialog(user)">
+              <button *ngIf="canEditOrDeleteUser(user)" mat-icon-button class="edit-btn" (click)="openEditUserDialog(user)">
                 <mat-icon class="text-yellow-600">edit</mat-icon>
               </button>
-              <button 
-                *ngIf="canViewPassword(user)" 
-                mat-icon-button 
-                class="text-purple-500" 
+              <button
+                *ngIf="canViewPassword(user)"
+                mat-icon-button
+                class="text-purple-500"
                 (click)="openPasswordPopup(user)">
                 <mat-icon>visibility</mat-icon>
               </button>

@@ -1,21 +1,51 @@
-<h3>Ajouter un Contact</h3>
-<form (ngSubmit)="addContact()">
-  <input type="text" [(ngModel)]="newContact.matricule" name="matricule" placeholder="Matricule" required>
-  <input type="text" [(ngModel)]="newContact.nom" name="nom" placeholder="Nom" required>
-  <input type="text" [(ngModel)]="newContact.prenom" name="prenom" placeholder="Prénom">
-  <input type="text" [(ngModel)]="newContact.telephone_personnel" name="telephone_personnel" placeholder="Téléphone Personnel">
-  <input type="text" [(ngModel)]="newContact.telephone_professionnel" name="telephone_professionnel" placeholder="Téléphone Professionnel">
-  <input type="text" [(ngModel)]="newContact.cin" name="cin" placeholder="CIN">
-  <input type="text" [(ngModel)]="newContact.site" name="site" placeholder="Site">
+<div class="modal-overlay">
+  <div class="modal-card">
+    <h3>Ajouter un Contact</h3>
+    <form (ngSubmit)="addContact()" #contactForm="ngForm">
+      <input type="text" [(ngModel)]="newContact.matricule" name="matricule" placeholder="Matricule" required minlength="3" maxlength="10">
+      <div *ngIf="contactForm.controls['matricule']?.invalid && contactForm.controls['matricule']?.touched">
+        <small *ngIf="contactForm.controls['matricule']?.errors?.['required']">Matricule is required.</small>
+        <small *ngIf="contactForm.controls['matricule']?.errors?.['minlength']">Matricule must be at least 3 characters long.</small>
+        <small *ngIf="contactForm.controls['matricule']?.errors?.['maxlength']">Matricule cannot be more than 10 characters long.</small>
+      </div>
 
-  <!-- Dropdown for Service -->
-  <select [(ngModel)]="newContact.service" name="service">
-    <option value="" disabled selected>Choisir un service</option>
-    <option *ngFor="let groupe of groupes" [value]="groupe.nom">{{ groupe.nom }}</option>
-  </select>
+      <input type="text" [(ngModel)]="newContact.nom" name="nom" placeholder="Nom" required>
+      <div *ngIf="contactForm.controls['nom']?.invalid && contactForm.controls['nom']?.touched">
+        <small *ngIf="contactForm.controls['nom']?.errors?.['required']">Nom is required.</small>
+      </div>
 
-  <div class="modal-actions">
-    <button type="button" class="cancel-btn" (click)="closeDialog()">Annuler</button>
-    <button type="submit" class="submit-btn">Ajouter</button>
+      <input type="text" [(ngModel)]="newContact.prenom" name="prenom" placeholder="Prénom">
+
+      <input type="text" [(ngModel)]="newContact.telephone_personnel" name="telephone_personnel" placeholder="Téléphone Personnel" pattern="[0-9]{8}">
+      <div *ngIf="contactForm.controls['telephone_personnel']?.invalid && contactForm.controls['telephone_personnel']?.touched">
+        <small *ngIf="contactForm.controls['telephone_personnel']?.errors?.['pattern']">Invalid phone number.</small>
+      </div>
+
+      <input type="text" [(ngModel)]="newContact.telephone_professionnel" name="telephone_professionnel" placeholder="Téléphone Professionnel" pattern="[0-9]{8}">
+      <div *ngIf="contactForm.controls['telephone_professionnel']?.invalid && contactForm.controls['telephone_professionnel']?.touched">
+        <small *ngIf="contactForm.controls['telephone_professionnel']?.errors?.['pattern']">Invalid phone number.</small>
+      </div>
+
+      <input type="text" [(ngModel)]="newContact.cin" name="cin" placeholder="CIN" pattern="[0-9]{8}">
+      <div *ngIf="contactForm.controls['cin']?.invalid && contactForm.controls['cin']?.touched">
+        <small *ngIf="contactForm.controls['cin']?.errors?.['pattern']">Invalid CIN.</small>
+      </div>
+
+      <input type="text" [(ngModel)]="newContact.site" name="site" placeholder="Site">
+
+      <!-- Dropdown for Service -->
+      <select [(ngModel)]="newContact.service" name="service" required>
+        <option value="" disabled selected>Choisir un service</option>
+        <option *ngFor="let groupe of groupes" [value]="groupe.nom">{{ groupe.nom }}</option>
+      </select>
+      <div *ngIf="contactForm.controls['service']?.invalid && contactForm.controls['service']?.touched">
+        <small *ngIf="contactForm.controls['service']?.errors?.['required']">Service is required.</small>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="cancel-btn" (click)="closeDialog()">Annuler</button>
+        <button type="submit" class="submit-btn" [disabled]="contactForm.invalid">Ajouter</button>
+      </div>
+    </form>
   </div>
-</form>
+</div>
