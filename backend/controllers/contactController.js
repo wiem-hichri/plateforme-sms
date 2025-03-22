@@ -106,14 +106,31 @@ const importContacts = (req, res) => {
       return res.status(400).json({ message: 'Invalid data' });
     }
   
-    Contact.addMultipleContacts(contacts, (err, result) => {
-      if (err) {
-        console.error('❌ Error inserting contacts:', err);
-        return res.status(500).json({ message: 'Database error' });
+    // Fetch existing contacts from the database
+    Contact.getAll().then((existingContacts) => {
+      const existingMatricules = existingContacts.map(contact => contact.matricule);
+  
+      // Filter out contacts that already exist
+      const newContacts = contacts.filter(contact => !existingMatricules.includes(contact.matricule));
+  
+      if (newContacts.length === 0) {
+        return res.json({ message: 'All contacts already exist.', importedCount: 0 });
       }
-      res.json({ message: '✅ Contacts imported successfully', inserted: result.affectedRows });
+  
+      // Add new contacts to the database
+      Contact.addMultipleContacts(newContacts, (err, result) => {
+        if (err) {
+          console.error('❌ Error inserting contacts:', err);
+          return res.status(500).json({ message: 'Database error' });
+        }
+        res.json({ message: '✅ Contacts imported successfully', importedCount: result.affectedRows });
+      });
+    }).catch((error) => {
+      console.error('Error fetching existing contacts:', error);
+      res.status(500).json({ message: 'Error fetching existing contacts' });
     });
-};
+  };
+  
 
 
 module.exports = { createContact, getContacts, getContactByMatricule, updateContact, deleteContact, getContactsByGroup, importContacts };
