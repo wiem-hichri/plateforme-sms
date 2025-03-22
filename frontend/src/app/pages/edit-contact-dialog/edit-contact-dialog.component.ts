@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ContactService } from '../../services/contact.service';
 import { Contact } from '../../models/contact.model';
-import { GroupService, Group } from '../../services/group.service'; // Import GroupService
+import { GroupService, Group } from '../../services/group.service';
 
 @Component({
   selector: 'app-edit-contact-dialog',
@@ -21,7 +21,7 @@ export class EditContactDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<EditContactDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { contact: Contact },
     private contactService: ContactService,
-    private groupService: GroupService // Inject GroupService
+    private groupService: GroupService
   ) {
     this.contact = { ...data.contact };
   }
@@ -50,6 +50,7 @@ export class EditContactDialogComponent implements OnInit {
       (updatedContact) => {
         console.log('Contact updated successfully:', updatedContact);
         this.dialogRef.close(updatedContact);
+        window.location.reload(); // Reload the page
       },
       (error) => {
         console.error('Error updating contact:', error);

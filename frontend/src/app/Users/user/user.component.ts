@@ -23,7 +23,7 @@ export class UsersComponent implements OnInit {
   loggedInUserRole: string = '';
 
   constructor(
-    private userService: UserService, 
+    private userService: UserService,
     private authService: AuthService,
     public dialog: MatDialog
   ) {}
@@ -40,18 +40,16 @@ export class UsersComponent implements OnInit {
     this.userService.getUsers().subscribe(
       (response) => {
         this.users = (Array.isArray(response) ? response : response?.data || [])
-          .filter(user => this.normalizeRole(user.role) !== 'super-administrateur'); // ✅ HIDE SUPER ADMINS HERE-
+          .filter(user => this.normalizeRole(user.role) !== 'super-administrateur');
       },
       (error) => console.error('Error fetching Users:', error)
     );
   }
 
-  /** ✅ Normalize role names to avoid case/whitespace issues */
   private normalizeRole(role: string | undefined): string {
     return role ? role.trim().toLowerCase() : '';
   }
 
-  /** ✅ Apply filtering (Super Admins are already removed in fetchUsers) */
   get filteredUsers(): User[] {
     return this.users.filter(user =>
       user.nom.toLowerCase().includes(this.filterValue.toLowerCase()) ||
@@ -65,8 +63,15 @@ export class UsersComponent implements OnInit {
   }
 
   deleteUser(id?: number) {
-    if (id !== undefined && confirm('Are you sure you want to delete this user?')) {
-      this.userService.deleteUser(id).subscribe(() => this.fetchUsers());
+    if (id !== undefined) {
+      const userToDelete = this.users.find(user => user.id === id);
+      if (userToDelete && this.canEditOrDeleteUser(userToDelete)) {
+        if (confirm('Are you sure you want to delete this user?')) {
+          this.userService.deleteUser(id).subscribe(() => this.fetchUsers());
+        }
+      } else {
+        alert('You do not have permission to delete this user.');
+      }
     }
   }
 
@@ -81,28 +86,43 @@ export class UsersComponent implements OnInit {
   }
 
   openEditUserDialog(user: User) {
-    const dialogRef = this.dialog.open(EditUserComponent, { width: '400px', data: user });
+    if (this.canEditOrDeleteUser(user)) {
+      const dialogRef = this.dialog.open(EditUserComponent, { width: '400px', data: user });
 
-    dialogRef.afterClosed().subscribe((updatedUser: User | undefined) => {
-      if (updatedUser) {
-        this.userService.updateUser(updatedUser.id!, updatedUser).subscribe(() => this.fetchUsers());
-      }
-    });
+      dialogRef.afterClosed().subscribe((updatedUser: User | undefined) => {
+        if (updatedUser) {
+          this.userService.updateUser(updatedUser.id!, updatedUser).subscribe(() => this.fetchUsers());
+        }
+      });
+    } else {
+      alert('You do not have permission to edit this user.');
+    }
   }
 
   openPasswordPopup(user: User) {
-    this.dialog.open(PasswordPopupComponent, {
-      width: '300px',
-      data: { matricule: user.matricule, password: user.password }
-    });
+    if (this.canViewPassword(user)) {
+      this.dialog.open(PasswordPopupComponent, {
+        width: '300px',
+        data: { matricule: user.matricule, password: user.password }
+      });
+    } else {
+      alert('You do not have permission to view this password.');
+    }
   }
 
-  /** ✅ Restrict password viewing for Admins */
   canViewPassword(user: User): boolean {
     const userRole = this.normalizeRole(user.role);
     return !(
-      this.loggedInUserRole === 'administrateur' && 
-      (userRole === 'administrateur' || userRole === 'super administrateur')
+      this.loggedInUserRole === 'administrateur' &&
+      (userRole === 'administrateur' || userRole === 'super-administrateur')
+    );
+  }
+
+  canEditOrDeleteUser(user: User): boolean {
+    const userRole = this.normalizeRole(user.role);
+    return !(
+      this.loggedInUserRole === 'administrateur' &&
+      userRole === 'administrateur'
     );
   }
 }

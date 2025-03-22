@@ -23,7 +23,7 @@ export class ProfileComponent implements OnInit {
 
   constructor() {
     this.profileForm = this.fb.group({
-      id: [{ value: '', disabled: true }], // Make sure the ID is stored
+      id: [{ value: '', disabled: true }],
       matricule: [{ value: '', disabled: true }],
       nom: ['', Validators.required],
       prenom: ['', Validators.required],
@@ -47,7 +47,7 @@ export class ProfileComponent implements OnInit {
       (user) => {
         if (user) {
           this.profileForm.patchValue({
-            id: user.id, // Store user ID
+            id: user.id,
             matricule: user.matricule,
             nom: user.nom,
             prenom: user.prenom,
@@ -63,8 +63,8 @@ export class ProfileComponent implements OnInit {
 
   updateProfile(): void {
     if (this.profileForm.valid) {
-      const updatedUser = this.profileForm.getRawValue(); // Extract form values
-      const userId = updatedUser.id; // Extract ID
+      const updatedUser = this.profileForm.getRawValue();
+      const userId = updatedUser.id;
 
       if (!userId) {
         console.error('User ID is missing!');
@@ -91,13 +91,17 @@ export class ProfileComponent implements OnInit {
       this.authService.currentUser.subscribe(user => {
         if (user) {
           this.userService.updatePassword(user.id, currentPassword, newPassword, confirmPassword).subscribe(
-            () => console.log('Password updated successfully'),
+            () => {
+              console.log('Password updated successfully');
+              alert('Password changed successfully!');
+            },
             (error) => console.error('Error updating password:', error)
           );
         }
       });
     } else {
       console.log('Passwords do not match');
+      alert('Passwords do not match');
     }
   }
 
