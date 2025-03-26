@@ -8,7 +8,9 @@ const contactRoutes = require('./routes/contactRoutes');
 const groupeRoutes = require('./routes/groupeRoutes');
 const userRoutes = require('./routes/userRoutes');
 const modelRoutes = require('./routes/modelRoutes');
+const missionRoutes = require('./routes/missionRoutes');
 const contactGroupeRoutes = require('./routes/contactGroupeRoutes');
+const puceRoutes = require('./routes/puceRoutes');
 const replaceVariables = require("./utils");
 const  { getContactByMatricule } = require('./controllers/contactController');
  
@@ -57,6 +59,11 @@ app.use('/api', groupeRoutes);
 app.use('/api', userRoutes);
 app.use('/api', modelRoutes);
 app.use('/contact-groupe', contactGroupeRoutes);
+app.use('/api', missionRoutes);
+app.use('/api', puceRoutes);
+
+
+
 
 
 
