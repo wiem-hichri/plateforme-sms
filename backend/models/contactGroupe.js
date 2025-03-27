@@ -5,7 +5,6 @@ const ContactGroupe = {
         const values = groupIds.map(groupId => [contactId, groupId]);
         const query = `INSERT INTO contact_groupe (contact_id, groupe_id) VALUES ?`;
         const [result] = await db.query(query, [values]);
-        return result;
     },
 
     // Récupérer les groupes associés à un contact
