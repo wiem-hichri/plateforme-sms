@@ -10,6 +10,8 @@ import { AuthService } from './auth.service'; // ✅ Import AuthService
 export class ContactService {
   private apiUrl = 'http://localhost:3000/api/contacts';  
   private addapiUrl = 'http://localhost:3000/api/addcontacts';
+  private Url = 'http://localhost:3000/contact-groupe';  
+
 
   constructor(private http: HttpClient, private authService: AuthService) {} // ✅ Inject AuthService
 
@@ -42,5 +44,8 @@ export class ContactService {
 
   addMultipleContacts(contacts: Contact[]): Observable<any> {
     return this.http.post<any>('http://localhost:3000/api/import-contacts', contacts, { withCredentials: true });
+  }
+  associateContactToGroups(contactId: number, groupIds: number[]): Observable<any> {
+    return this.http.post(`${this.Url}/contacts/${contactId}/groups`, { groupIds });
   }
 }
