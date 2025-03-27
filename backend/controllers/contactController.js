@@ -5,7 +5,7 @@ const createContact = async (req, res) => {
     try {
         const { userId, contact } = req.body;
         const result= await Contact.create(contact, userId);
-        res.status(201).json({ message: "Contact ajouté avec succées.", contactId: result.insertId });
+        res.status(201).json({ message: "Contact ajouté avec succées.", contactId: result.id });
     
     } catch (error) {
         res.status(500).json({ error: error.message });
