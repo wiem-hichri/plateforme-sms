@@ -15,7 +15,7 @@ const Contact = {
             await db.query(associationQuery, [userId, contactId]);
         }
 
-        return result;
+        return {id: contactId, ...Contact};
     },
 
     getAll: async () => {
