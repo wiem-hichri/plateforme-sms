@@ -1,10 +1,10 @@
 const db = require('../config/dbConnect').promise();
 
 const ContactGroupe = {
-    // Associer un contact à un groupe
-    associateContactToGroup: async (contactId, groupId) => {
-        const query = `INSERT INTO contact_groupe (contact_id, groupe_id) VALUES (?, ?)`;
-        const [result] = await db.query(query, [contactId, groupId]);
+    associateContactToGroups: async (contactId, groupIds) => {
+        const values = groupIds.map(groupId => [contactId, groupId]);
+        const query = `INSERT INTO contact_groupe (contact_id, groupe_id) VALUES ?`;
+        const [result] = await db.query(query, [values]);
         return result;
     },
 

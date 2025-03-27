@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators'; // ✅ Import map operator
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -13,12 +13,12 @@ export class SmsModelService {
 
   getAll(): Observable<any[]> {
     return this.http.get<any>(`${this.apiUrl}`, { withCredentials: true })
-      .pipe(map(response => response.data)); // ✅ Extract 'data' if it's inside an object
+      .pipe(map(response => response));
   }
 
   getById(id: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}`, { withCredentials: true })
-      .pipe(map(response => response.data)); // ✅ Extract 'data'
+      .pipe(map(response => response));
   }
 
   create(model: any): Observable<any> {

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { ContactService } from '../../services/contact.service';
-import { GroupService, Group } from '../../services/group.service'; // Import GroupService
+import { GroupService, Group } from '../../services/group.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -21,14 +21,15 @@ export class AddContactDialogComponent implements OnInit {
     telephone_professionnel: '',
     service: '',
     cin: '',
-    site: ''
+    site: '',
+    groups: [] as number[] // Explicitly type as an array of numbers
   };
-  groupes: Group[] = [];
+  groupes: Group[] = []; // Explicitly type as an array of Group
 
   constructor(
     public dialogRef: MatDialogRef<AddContactDialogComponent>,
     private contactService: ContactService,
-    private groupService: GroupService // Inject GroupService
+    private groupService: GroupService
   ) {}
 
   ngOnInit() {
@@ -46,21 +47,27 @@ export class AddContactDialogComponent implements OnInit {
     );
   }
 
-  closeDialog() {
-    this.dialogRef.close();
-  }
-
   addContact() {
-    if (this.newContact.matricule && this.newContact.nom) {
+    if (this.newContact.matricule && this.newContact.nom && this.newContact.service && this.newContact.groups.length >= 0) {
       this.contactService.addContact(this.newContact).subscribe(
         (response) => {
-          console.log('Contact added successfully:', response);
-          this.dialogRef.close(this.newContact);
+          const contactId = response.contactId;
+          this.contactService.associateContactToGroups(contactId, this.newContact.groups).subscribe(
+            () => {
+              console.log('Contact associated with groups successfully.');
+              this.dialogRef.close(this.newContact);
+            },
+            (error) => {
+              console.error('Error associating contact with groups:', error);
+            }
+          );
         },
         (error) => {
           console.error('Error adding contact:', error);
         }
       );
+    } else {
+      console.error('Missing required contact fields or groups');
     }
   }
 }

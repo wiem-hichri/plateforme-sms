@@ -2,19 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { SmsModelService } from '../../services/model.service';
 import { CommonModule } from '@angular/common';
 import { ModalComponent } from '../modal/modal.component';
-import { FormsModule } from '@angular/forms'; // ✅ Import FormsModule
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-sms-models',
   standalone: true,
-  imports: [CommonModule, ModalComponent, FormsModule], // ✅ Ensure FormsModule is imported
+  imports: [CommonModule, ModalComponent, FormsModule],
   templateUrl: './sms-models.component.html',
   styleUrls: ['./sms-models.component.scss']
 })
 export class SmsModelsComponent implements OnInit {
   models: any[] = [];
   showModal = false;
-  selectedModel: any = { nom: '', contenu: '' }; // ✅ Ensure it's initialized
+  selectedModel: any = { nom: '', contenu: '' };
 
   constructor(private smsModelService: SmsModelService) {}
 
@@ -24,17 +24,17 @@ export class SmsModelsComponent implements OnInit {
 
   loadModels() {
     this.smsModelService.getAll().subscribe(models => {
-      this.models = models; // ✅ Assign models properly
+      this.models = models;
     });
   }
 
   openAddModal() {
-    this.selectedModel = { nom: '', contenu: '' }; // ✅ Initialize new model
+    this.selectedModel = { nom: '', contenu: '' };
     this.showModal = true;
   }
 
   openEditModal(model: any) {
-    this.selectedModel = { ...model }; // ✅ Clone model to prevent unwanted updates
+    this.selectedModel = { ...model };
     this.showModal = true;
   }
 

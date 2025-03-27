@@ -1,15 +1,20 @@
 const ContactGroupe = require('../models/contactGroupe');
 
 // Associer un contact à un groupe
-const associateContactToGroup = async (req, res) => {
+
+const associateContactToGroups = async (req, res) => {
+    const { contactId } = req.params;
+    const { groupIds } = req.body;
+
     try {
-        const { contactId, groupId } = req.body;
-        await ContactGroupe.associateContactToGroup(contactId, groupId);
-        res.status(201).json({ message: "Contact associé au groupe avec succès." });
+        const result = await ContactGroupe.associateContactToGroups(contactId, groupIds);
+        res.status(200).json({ message: 'Contact associated with groups successfully.', affectedRows: result.affectedRows });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ message: 'Error associating contact with groups', error: error.message });
     }
 };
+
+
 
 // Récupérer les groupes associés à un contact
 const getGroupsByContact = async (req, res) => {
@@ -44,4 +49,4 @@ const deleteAssociation = async (req, res) => {
     }
 };
 
-module.exports = { associateContactToGroup, getGroupsByContact, getContactsByGroup, deleteAssociation };
+module.exports = { associateContactToGroups, getGroupsByContact, getContactsByGroup, deleteAssociation };
