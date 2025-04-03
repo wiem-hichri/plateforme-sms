@@ -18,6 +18,9 @@
       "./src/app/modeles/sms-models/sms-models.component.ts",
       "./src/app/modeles/modal/modal.component.html",
       "./src/app/modeles/modal/modal.component.ts",
+      "./src/app/puces/puce/puce.component.html",
+      "./src/app/puces/puce/puce.component.ts"
+
 
 
 

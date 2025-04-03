@@ -1,7 +1,7 @@
 <div class="deznav">
   <div class="deznav-scroll">
     <a class="add-project-sidebar btn btn-primary" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#addProjectSidebar">+ Envoi Message</a>
-    <ul class="metismenu" id="menu" *ngIf="currentUserRole !== 'utilisateur'">
+    <ul class="metismenu" id="menu" >
       <li><a routerLink="/dashboard" routerLinkActive="active" href="/dashboard">
           <i class="flaticon-layout"></i>
           <span class="nav-text">Dashboard</span>
@@ -20,7 +20,7 @@
         </a>
       </li>
 
-      <li><a routerLink="/user" routerLinkActive="active" href="/user">
+      <li *ngIf="currentUserRole !== 'utilisateur'"><a routerLink="/user" routerLinkActive="active" href="/user">
           <i class="flaticon-web"></i>
           <span class="nav-text">Users</span>
         </a>
@@ -31,14 +31,19 @@
           <span class="nav-text">Model SMS</span>
         </a>
       </li>
+      <li *ngIf="currentUserRole !== 'utilisateur'"><a routerLink="/puce" routerLinkActive="active" href="/puce">
+        <i class="flaticon-table"></i>
+        <span class="nav-text">Puce</span>
+      </a>
+    </li>
 
-      <li><a href="#">
+      <li *ngIf="currentUserRole !== 'utilisateur'"><a href="#">
           <i class="flaticon-bar-chart-1"></i>
           <span class="nav-text">Rapports</span>
         </a>
       </li>
 
-      <li *ngIf="currentUserRole !== 'administrateur'">
+      <li *ngIf="currentUserRole == 'super-administrateur'" >
         <a routerLink="/parametre" routerLinkActive="active" href="/parametre">
           <i class="flaticon-admin"></i>
           <span class="nav-text">Parametres</span>

@@ -1,0 +1,12 @@
+<h1 mat-dialog-title>Select Contacts</h1>
+<div mat-dialog-content>
+  <ul>
+    <li *ngFor="let contact of data.contacts">
+      <mat-checkbox [(ngModel)]="contact.selected">{{ contact.nom }}  ||  {{ contact.site }}</mat-checkbox>
+    </li>
+  </ul>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="confirmSelection()">Approve</button>
+  <button mat-button (click)="dialogRef.close()">Cancel</button>
+</div>

@@ -6,6 +6,9 @@ import { EditGroupDialogComponent } from '../edit-groups-dialog/edit-groups-dial
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { ContactService } from '../../services/contact.service';
+import { ContactListDialogComponent } from '../../pages/contact-list-dialog/contact-list-dialog.component';
+import { GroupContactsDialogComponent } from '../group-contacts-dialog/group-contacts-dialog.component';
 
 @Component({
   selector: 'app-groups',
@@ -16,8 +19,13 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class GroupsComponent implements OnInit {
   groups: Group[] = [];
+  selectedGroupContacts: any[] = []; // Define the property here
 
-  constructor(private groupService: GroupService, public dialog: MatDialog) {}
+  constructor(
+    private groupService: GroupService,
+    private contactService: ContactService,
+    public dialog: MatDialog
+  ) {}
 
   ngOnInit() {
     this.fetchGroups();
@@ -83,5 +91,78 @@ export class GroupsComponent implements OnInit {
         }
       );
     }
+  }
+
+  openContactListDialog(groupId: number, action: 'add' | 'remove') {
+    if (groupId !== undefined) {
+      this.contactService.getContacts().subscribe(
+        (response) => {
+          const contacts = response.data.map((contact: any) => ({
+            ...contact,
+            selected: false
+          }));
+          const dialogRef = this.dialog.open(ContactListDialogComponent, {
+            width: '400px',
+            data: { contacts, groupId, action },
+          });
+
+          dialogRef.afterClosed().subscribe((selectedContactIds: number[] | undefined) => {
+            if (selectedContactIds) {
+              if (action === 'add') {
+                this.associateContactsToGroup(selectedContactIds, groupId);
+              } else {
+                this.disassociateContactsFromGroup(selectedContactIds, groupId);
+              }
+            }
+          });
+        },
+        (error: any) => {
+          console.error('❌ Error fetching contacts:', error);
+        }
+      );
+    }
+  }
+
+  associateContactsToGroup(contactIds: number[], groupId: number) {
+    contactIds.forEach(contactId => {
+      this.contactService.associateContactToGroup(contactId, [groupId]).subscribe(
+        () => {
+          console.log('✅ Contact associated with group:', contactId, groupId);
+          this.fetchGroupContacts(groupId);
+        },
+        (error: any) => {
+          console.error('❌ Error associating contact with group:', error);
+        }
+      );
+    });
+  }
+
+  disassociateContactsFromGroup(contactIds: number[], groupId: number) {
+    contactIds.forEach(contactId => {
+      this.contactService.disassociateContactFromGroup(contactId, groupId).subscribe(
+        () => {
+          console.log('✅ Contact disassociated from group:', contactId, groupId);
+          this.fetchGroupContacts(groupId);
+        },
+        (error: any) => {
+          console.error('❌ Error disassociating contact from group:', error);
+        }
+      );
+    });
+  }
+
+  fetchGroupContacts(groupId: number) {
+    this.contactService.getContactsByGroup(groupId).subscribe(
+      (response) => {
+        this.selectedGroupContacts = response.data;
+      },
+      (error: any) => {
+        console.error('❌ Error fetching group contacts:', error);
+      }
+    );
+  }
+
+  viewGroupContacts(groupId: number) {
+    this.fetchGroupContacts(groupId);
   }
 }

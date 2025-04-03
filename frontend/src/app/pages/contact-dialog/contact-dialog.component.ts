@@ -52,7 +52,7 @@ export class AddContactDialogComponent implements OnInit {
       this.contactService.addContact(this.newContact).subscribe(
         (response) => {
           const contactId = response.contactId;
-          this.contactService.associateContactToGroups(contactId, this.newContact.groups).subscribe(
+          this.contactService.associateContactToGroup(contactId, this.newContact.groups).subscribe(
             () => {
               console.log('Contact associated with groups successfully.');
               this.dialogRef.close(this.newContact);
