@@ -45,7 +45,15 @@ export class ContactService {
   addMultipleContacts(contacts: Contact[]): Observable<any> {
     return this.http.post<any>('http://localhost:3000/api/import-contacts', contacts, { withCredentials: true });
   }
-  associateContactToGroups(contactId: number, groupIds: number[]): Observable<any> {
+  associateContactToGroup(contactId: number, groupIds: number[]): Observable<any> {
     return this.http.post(`${this.Url}/contacts/${contactId}/groups`, { groupIds });
+  }
+  
+  disassociateContactFromGroup(contactId: number, groupId: number): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/disassociate`, { contactId, groupId }, { withCredentials: true });
+  }
+
+  getContactsByGroup(groupId: number): Observable<{ data: any[] }> {
+    return this.http.get<{ data: any[] }>(`${this.apiUrl}/group/${groupId}`, { withCredentials: true });
   }
 }

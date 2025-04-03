@@ -9,6 +9,7 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
 import {LoginHistoryComponent}from './parametre/login-history/login-history.component';
 import {SmsModelsComponent} from './models/sms-models/sms-models.component';
 import { ParametreBoardComponent } from './parametre/parametre-board/parametre-board.component';
+import { PuceComponent } from './puces/puce/puce.component';
 
 export const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -21,5 +22,6 @@ export const appRoutes: Routes = [
   { path: 'login-history', component: LoginHistoryComponent },
   {path: 'parametre', component: ParametreBoardComponent },
   {path : 'sms-models', component: SmsModelsComponent },
+  {path : 'puce', component: PuceComponent },
   { path: '**', component: NotFoundComponent }
 ];
