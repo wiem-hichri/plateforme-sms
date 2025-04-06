@@ -1,7 +1,5 @@
 const ContactGroupe = require('../models/contactGroupe');
 
-// Associer un contact à un groupe
-
 const associateContactToGroups = async (req, res) => {
     const { contactId } = req.params;
     const { groupIds } = req.body;
@@ -14,9 +12,6 @@ const associateContactToGroups = async (req, res) => {
     }
 };
 
-
-
-// Récupérer les groupes associés à un contact
 const getGroupsByContact = async (req, res) => {
     try {
         const contactId = req.params.contactId;
@@ -27,7 +22,6 @@ const getGroupsByContact = async (req, res) => {
     }
 };
 
-// Récupérer les contacts associés à un groupe
 const getContactsByGroup = async (req, res) => {
     try {
         const groupId = req.params.groupId;
@@ -38,7 +32,6 @@ const getContactsByGroup = async (req, res) => {
     }
 };
 
-// Supprimer une association entre un contact et un groupe
 const deleteAssociation = async (req, res) => {
     try {
         const { contactId, groupId } = req.body;

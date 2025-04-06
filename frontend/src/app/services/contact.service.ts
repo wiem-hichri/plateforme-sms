@@ -1,33 +1,31 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Contact } from '../models/contact.model'; 
-import { AuthService } from './auth.service'; // ✅ Import AuthService
+import { Contact } from '../models/contact.model';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ContactService {
-  private apiUrl = 'http://localhost:3000/api/contacts';  
-  private addapiUrl = 'http://localhost:3000/api/addcontacts';
-  private Url = 'http://localhost:3000/contact-groupe';  
+  private apiUrl = 'http://localhost:3000/api/contacts';
+  private addApiUrl = 'http://localhost:3000/api/addcontacts';
+  private contactGroupeUrl = 'http://localhost:3000/contact-groupe';
 
-
-  constructor(private http: HttpClient, private authService: AuthService) {} // ✅ Inject AuthService
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
   getContacts(): Observable<any> {
     return this.http.get<any>(this.apiUrl, { withCredentials: true });
   }
 
-  // ✅ Fixed: Use 'this.authService' instead of 'this.AuthService'
   addContact(contact: any): Observable<any> {
-    const userId = this.authService.getCurrentUserId(); // ✅ Correct usage
+    const userId = this.authService.getCurrentUserId();
 
     if (!userId) {
       throw new Error('User not authenticated');
     }
 
-    return this.http.post<any>(this.addapiUrl, { userId, contact }, { withCredentials: true });
+    return this.http.post<any>(this.addApiUrl, { userId, contact }, { withCredentials: true });
   }
 
   updateContact(contact: Contact): Observable<Contact> {
@@ -38,22 +36,23 @@ export class ContactService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`, { withCredentials: true });
   }
 
-  getGroupes(): Observable<any[]> {
-    return this.http.get<any[]>('http://localhost:3000/api/groupes', { withCredentials: true });
+  getGroups(): Observable<any[]> {
+    return this.http.get<any[]>('http://localhost:3000/api/groups', { withCredentials: true });
   }
 
   addMultipleContacts(contacts: Contact[]): Observable<any> {
     return this.http.post<any>('http://localhost:3000/api/import-contacts', contacts, { withCredentials: true });
   }
+
   associateContactToGroup(contactId: number, groupIds: number[]): Observable<any> {
-    return this.http.post(`${this.Url}/contacts/${contactId}/groups`, { groupIds });
+    return this.http.post(`${this.contactGroupeUrl}/contacts/${contactId}/groups`, { groupIds });
   }
-  
+
   disassociateContactFromGroup(contactId: number, groupId: number): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/disassociate`, { contactId, groupId }, { withCredentials: true });
+    return this.http.request<void>('DELETE', `${this.contactGroupeUrl}/delete`, { body: { contactId, groupId }, withCredentials: true });
   }
 
   getContactsByGroup(groupId: number): Observable<{ data: any[] }> {
-    return this.http.get<{ data: any[] }>(`${this.apiUrl}/group/${groupId}`, { withCredentials: true });
+    return this.http.get<{ data: any[] }>(`${this.contactGroupeUrl}/group/${groupId}/contacts`, { withCredentials: true });
   }
 }
