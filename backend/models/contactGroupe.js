@@ -5,10 +5,9 @@ const ContactGroupe = {
         const values = groupIds.map(groupId => [contactId, groupId]);
         const query = `INSERT INTO contact_groupe (contact_id, groupe_id) VALUES ?`;
         const [result] = await db.query(query, [values]);
-   return result;
+        return result;
     },
 
-    // Récupérer les groupes associés à un contact
     getGroupsByContact: async (contactId) => {
         const query = `
             SELECT g.* FROM groupes g
@@ -18,7 +17,6 @@ const ContactGroupe = {
         return results;
     },
 
-    // Récupérer les contacts associés à un groupe
     getContactsByGroup: async (groupId) => {
         const query = `
             SELECT c.* FROM contacts c
@@ -28,7 +26,6 @@ const ContactGroupe = {
         return results;
     },
 
-    // Supprimer une association entre un contact et un groupe
     deleteAssociation: async (contactId, groupId) => {
         const query = `DELETE FROM contact_groupe WHERE contact_id = ? AND groupe_id = ?`;
         const [result] = await db.query(query, [contactId, groupId]);
