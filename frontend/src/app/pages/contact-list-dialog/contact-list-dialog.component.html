@@ -1,11 +1,20 @@
-<h1 mat-dialog-title>Select Contacts</h1>
+<h1 mat-dialog-title>{{ action === 'add' ? 'Add Contacts' : 'Remove Contacts' }}</h1>
+
 <div mat-dialog-content>
+  <mat-form-field appearance="outline" class="w-full mb-4">
+    <mat-label>Search contacts</mat-label>
+    <input matInput [(ngModel)]="searchTerm" (input)="onSearchChange()" placeholder="Search by name or site">
+  </mat-form-field>
+
   <ul>
-    <li *ngFor="let contact of data.contacts">
-      <mat-checkbox [(ngModel)]="contact.selected">{{ contact.nom }}  ||  {{ contact.site }}</mat-checkbox>
+    <li *ngFor="let contact of filteredContacts">
+      <mat-checkbox [(ngModel)]="contact.selected" *ngIf="action === 'add' || contact.selected">
+        {{ contact.nom }} || {{ contact.site }}
+      </mat-checkbox>
     </li>
   </ul>
 </div>
+
 <div mat-dialog-actions>
   <button mat-button (click)="confirmSelection()">Approve</button>
   <button mat-button (click)="dialogRef.close()">Cancel</button>

@@ -8,6 +8,14 @@ const Puce = {
 
         const [result] = await db.query(query, values);
         return result;
+    },getAllContacts: async () => {
+        const [results] = await db.query("SELECT id, nom FROM contacts");
+        return results;
+    },
+
+    getAllMissions: async () => {
+        const [results] = await db.query("SELECT id, type_mission FROM missions");
+        return results;
     },
 
     getAll: async () => {

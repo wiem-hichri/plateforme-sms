@@ -1,16 +1,17 @@
-// puce-modal.component.ts
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormsModule } from '@angular/forms'; // Importez FormsModule ici
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-puce-modal',
   standalone: true,
-  imports: [FormsModule], // Ajoutez FormsModule ici
+  imports: [FormsModule],
   templateUrl: './puce-modal.component.html',
   styleUrls: ['./puce-modal.component.scss']
 })
 export class PuceModalComponent {
   @Input() puce: any = {};
+  @Input() contacts: any[] = [];
+  @Input() missions: any[] = [];
   @Output() save = new EventEmitter<any>();
   @Output() close = new EventEmitter<void>();
 
