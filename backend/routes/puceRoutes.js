@@ -1,8 +1,21 @@
 const express = require('express');
 const router = express.Router();
 const { isAuthentificated, checkRole } = require('../middlewares/authMiddleware');
-const { createPuce, getPuces, getPuceById, updatePuce, deletePuce, assignPuceToContact, assignPuceToMission, unassignPuceFromContact, unassignPuceFromMission } = require('../controllers/puceController');
+const {
+  createPuce,
+  getPuces,
+  getPuceById,
+  updatePuce,
+  deletePuce,
+  assignPuceToContact,
+  assignPuceToMission,
+  unassignPuceFromContact,
+  unassignPuceFromMission,
+  getContacts,  // Import the getContacts function
+  getMissions    // Import the getMissions function
+} = require('../controllers/puceController');
 
+// Puce-related routes
 router.post('/addpuce', isAuthentificated, checkRole('super-administrateur', 'administrateur'), createPuce);
 router.get('/puces', isAuthentificated, checkRole('super-administrateur', 'administrateur'), getPuces);
 router.get('/puces/:id', isAuthentificated, getPuceById);
@@ -12,5 +25,9 @@ router.post('/assign-puceToContact', isAuthentificated, checkRole('super-adminis
 router.post('/unassign-puceFromContact', isAuthentificated, checkRole('super-administrateur', 'administrateur'), unassignPuceFromContact);
 router.post('/assign-puceToMission', isAuthentificated, checkRole('super-administrateur', 'administrateur'), assignPuceToMission);
 router.post('/unassign-puceFromMission', isAuthentificated, checkRole('super-administrateur', 'administrateur'), unassignPuceFromMission);
+
+// Routes for fetching contacts and missions
+router.get('/contacts', isAuthentificated, checkRole('super-administrateur', 'administrateur'), getContacts);
+router.get('/missions', isAuthentificated, checkRole('super-administrateur', 'administrateur'), getMissions);
 
 module.exports = router;

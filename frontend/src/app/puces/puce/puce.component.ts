@@ -1,4 +1,3 @@
-// puce.component.ts
 import { Component, OnInit } from '@angular/core';
 import { PuceService } from '../../services/puce.service';
 import { CommonModule } from '@angular/common';
@@ -14,6 +13,8 @@ import { PuceModalComponent } from '../puce-modal/puce-modal.component';
 })
 export class PuceComponent implements OnInit {
   puces: any[] = [];
+  contacts: any[] = [];
+  missions: any[] = [];
   selectedPuce: any = null;
   showModal = false;
 
@@ -21,6 +22,8 @@ export class PuceComponent implements OnInit {
 
   ngOnInit() {
     this.loadPuces();
+    this.loadContacts();
+    this.loadMissions();
   }
 
   loadPuces() {
@@ -30,6 +33,28 @@ export class PuceComponent implements OnInit {
       },
       (error) => {
         console.error('Error loading puces', error);
+      }
+    );
+  }
+
+  loadContacts() {
+    this.puceService.getContacts().subscribe(
+      (response: any) => {
+        this.contacts = response.data;
+      },
+      (error) => {
+        console.error('Error loading contacts', error);
+      }
+    );
+  }
+
+  loadMissions() {
+    this.puceService.getMissions().subscribe(
+      (response: any) => {
+        this.missions = response.data;
+      },
+      (error) => {
+        console.error('Error loading missions', error);
       }
     );
   }

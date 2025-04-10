@@ -110,5 +110,35 @@ const unassignPuceFromMission = async (req, res) => {
         res.status(500).json({ message: "Erreur lors de la dissociation de la puce", error: error.message });
     }
 };
+const getContacts = async (req, res) => {
+    try {
+        const contacts = await Puce.getAllContacts();
+        res.json({ status: "success", data: contacts });
+    } catch (error) {
+        res.status(500).json({ message: 'Erreur lors de la récupération des contacts', error: error.message });
+    }
+};
 
-module.exports = { createPuce, getPuces, getPuceById, updatePuce, deletePuce, assignPuceToContact, assignPuceToMission, unassignPuceFromContact, unassignPuceFromMission };
+const getMissions = async (req, res) => {
+    try {
+        const missions = await Puce.getAllMissions();
+        res.json({ status: "success", data: missions });
+    } catch (error) {
+        res.status(500).json({ message: 'Erreur lors de la récupération des missions', error: error.message });
+    }
+};
+
+
+module.exports = {
+    createPuce,
+    getPuces,
+    getPuceById,
+    updatePuce,
+    deletePuce,
+    assignPuceToContact,
+    assignPuceToMission,
+    unassignPuceFromContact,
+    unassignPuceFromMission,
+    getContacts,
+    getMissions
+};

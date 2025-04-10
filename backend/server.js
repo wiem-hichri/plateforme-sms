@@ -14,6 +14,7 @@ const puceRoutes = require('./routes/puceRoutes');
 const replaceVariables = require("./utils");
 const  { getContactByMatricule } = require('./controllers/contactController');
  
+const smsRoutes = require('./routes/smsRoutes');
 
 const cors = require('cors');
 const session = require('express-session');
@@ -61,6 +62,7 @@ app.use('/api', modelRoutes);
 app.use('/contact-groupe', contactGroupeRoutes);
 app.use('/api', missionRoutes);
 app.use('/api', puceRoutes);
+app.use('/api', smsRoutes);
 
 
 
