@@ -1,6 +1,7 @@
 const db = require('../config/dbConnect').promise();
 
 const SMS = {
+
   smsCount: () => {
     return db.query('SELECT COUNT(*) as count FROM outbox');
   },
@@ -13,21 +14,20 @@ const SMS = {
   },
 
   getSMS: () => {
-    return db.query(`SELECT * FROM outbox ORDER BY SendingDateTime DESC LIMIT 1`);
+    return db.query(`SELECT * FROM outbox ORDER BY SendingDateTime ASC LIMIT 1`);
   },
 
   deleteSMS: (id) => {
     return db.query(`
         DELETE FROM outbox
         WHERE ID = (
-            SELECT ID FROM outbox ORDER BY SendingDateTime DESC LIMIT 1
+            SELECT ID FROM outbox ORDER BY SendingDateTime ASC LIMIT 1
         )
     `);
 },
 
-
 smsSent: async () => {
-  const [rows] = await db.query(`SELECT * FROM outbox ORDER BY SendingDateTime DESC LIMIT 1`);
+  const [rows] = await db.query(`SELECT * FROM outbox ORDER BY SendingDateTime ASC LIMIT 1`);
   
   if (rows.length === 0) {
       throw new Error('No message found in outbox.');
@@ -49,11 +49,10 @@ smsSent: async () => {
 
   // Delete from outbox after inserting into sentitems
   await db.query(`
-      DELETE FROM outbox WHERE ID = (
-          SELECT ID FROM (
-              SELECT ID FROM outbox ORDER BY SendingDateTime DESC LIMIT 1
-          ) AS temp
-      )
+      DELETE FROM outbox
+        WHERE ID = (
+            SELECT ID FROM outbox ORDER BY SendingDateTime ASC LIMIT 1
+        )
   `);
 
   return message;

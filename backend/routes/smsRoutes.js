@@ -8,7 +8,7 @@ const { smsCount,
 
 router.get('/count', smsCount);
 router.post('/insert', insertSMS);
-router.get('/recent', getSMS);
+router.get('/firstIn', getSMS);
 router.delete('/delete', deleteSMS);
 router.post('/sent',smsSent)
 
