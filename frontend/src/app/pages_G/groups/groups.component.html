@@ -46,14 +46,14 @@
               mat-icon-button
               class="add-contact-btn"
               *ngIf="groupe.id !== undefined"
-              (click)="openContactListDialog(groupe.id, 'add')">
+              (click)="openAddContactDialog(groupe.id)">
               <mat-icon class="text-green-600">add</mat-icon>
             </button>
             <button
               mat-icon-button
               class="remove-contact-btn"
               *ngIf="groupe.id !== undefined"
-              (click)="openContactListDialog(groupe.id, 'remove')">
+              (click)="openRemoveContactDialog(groupe.id)">
               <mat-icon class="text-yellow-600">remove</mat-icon>
             </button>
           </div>

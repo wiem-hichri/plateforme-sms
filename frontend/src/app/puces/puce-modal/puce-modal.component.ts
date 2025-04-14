@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-puce-modal',
   standalone: true,
-  imports: [FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './puce-modal.component.html',
   styleUrls: ['./puce-modal.component.scss']
 })
@@ -15,8 +16,11 @@ export class PuceModalComponent {
   @Output() save = new EventEmitter<any>();
   @Output() close = new EventEmitter<void>();
 
+  operateurs: string[] = ['Orange', 'Ooredoo', 'TunisieTelecom'];
+  etats: string[] = ['Active', 'Suspendue', 'Expiré'];
+
   onSave() {
-    this.save.emit(this.puce);
+    this.save.emit(this.puce);  // Emit the entire puce object
   }
 
   onClose() {
