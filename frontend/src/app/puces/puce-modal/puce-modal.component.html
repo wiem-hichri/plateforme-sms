@@ -1,39 +1,62 @@
-<div class="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-  <div class="bg-white rounded-lg w-full max-w-md p-6">
-    <h2 class="text-2xl font-bold mb-4">{{ puce.id ? 'Modifier' : 'Ajouter' }} Puce</h2>
-    <form (ngSubmit)="onSave()">
-      <div class="mb-4">
-        <label class="block text-gray-700">Numéro</label>
-        <input type="text" [(ngModel)]="puce.numero" name="numero" class="w-full px-3 py-2 border rounded-lg" required>
-      </div>
-      <div class="mb-4">
-        <label class="block text-gray-700">Opérateur</label>
-        <input type="text" [(ngModel)]="puce.operateur" name="operateur" class="w-full px-3 py-2 border rounded-lg" required>
-      </div>
-      <div class="mb-4">
-        <label class="block text-gray-700">État</label>
-        <input type="text" [(ngModel)]="puce.etat" name="etat" class="w-full px-3 py-2 border rounded-lg" required>
-      </div>
-      <div class="mb-4">
-        <label class="block text-gray-700">Quota</label>
-        <input type="text" [(ngModel)]="puce.quota" name="quota" class="w-full px-3 py-2 border rounded-lg" required>
-      </div>
-      <div class="mb-4">
-        <label class="block text-gray-700">Contact</label>
-        <select [(ngModel)]="puce.contact_id" name="contact_id" class="w-full px-3 py-2 border rounded-lg">
-          <option *ngFor="let contact of contacts" [value]="contact.id">{{ contact.nom }}</option>
-        </select>
-      </div>
-      <div class="mb-4">
-        <label class="block text-gray-700">Mission</label>
-        <select [(ngModel)]="puce.mission_id" name="mission_id" class="w-full px-3 py-2 border rounded-lg">
-          <option *ngFor="let mission of missions" [value]="mission.id">{{ mission.type_mission }}</option>
-        </select>
-      </div>
-      <div class="flex justify-end">
-        <button type="button" (click)="onClose()" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Annuler</button>
-        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Enregistrer</button>
-      </div>
-    </form>
+<div class="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-end">
+  <div class="w-[640px] h-full bg-white shadow-xl flex flex-col">
+    <!-- Header -->
+    <div class="flex justify-between items-center bg-blue-500 text-white px-4 py-3">
+      <h2 class="text-xl font-semibold">{{ puce.id ? 'Modifier' : 'Ajouter' }} Puce</h2>
+      <button (click)="onClose()" class="text-white text-lg font-bold">✖</button>
+    </div>
+
+    <!-- Scrollable Form -->
+    <div class="flex-1 overflow-y-auto px-6 py-4">
+      <form class="space-y-4">
+        <div>
+          <label class="block text-gray-700">Numéro</label>
+          <input type="text" [(ngModel)]="puce.numero" name="numero" class="w-full border rounded px-3 py-2" required />
+        </div>
+
+        <div>
+          <label class="block text-gray-700">Opérateur</label>
+          <select [(ngModel)]="puce.operateur" name="operateur" class="w-full border rounded px-3 py-2" required>
+            <option *ngFor="let op of operateurs" [value]="op">{{ op }}</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-gray-700">État</label>
+          <select [(ngModel)]="puce.etat" name="etat" class="w-full border rounded px-3 py-2" required>
+            <option *ngFor="let etat of etats" [value]="etat">{{ etat }}</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-gray-700">Quota</label>
+          <input type="text" [(ngModel)]="puce.quota" name="quota" class="w-full border rounded px-3 py-2" required />
+        </div>
+
+        <div>
+          <label class="block text-gray-700">Contact</label>
+          <select [(ngModel)]="puce.contact_id" name="contact_id" class="w-full border rounded px-3 py-2" required>
+            <option *ngFor="let contact of contacts" [value]="contact.id">{{ contact.nom }}</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-gray-700">Mission</label>
+          <select [(ngModel)]="puce.mission_id" name="mission_id" class="w-full border rounded px-3 py-2" required>
+            <option *ngFor="let mission of missions" [value]="mission.id">{{ mission.type_mission }}</option>
+          </select>
+        </div>
+      </form>
+    </div>
+
+    <!-- Footer Buttons -->
+    <div class="flex justify-end gap-2 px-6 py-4 border-t">
+      <button type="button" (click)="onClose()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+        Annuler
+      </button>
+      <button type="button" (click)="onSave()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+        Sauvegarder
+      </button>
+    </div>
   </div>
 </div>

@@ -18,11 +18,13 @@ const createGroupe = async (req, res) => {
 
 const getGroupes = async (req, res) => {
     try {
-        const groupes = await Groupe.getAll();
-        res.json({ status: "Success", data: groupes });
+        const userId = req.session.user.id;
+        const role = req.session.user.role;
 
+        const groupes = await Groupe.getAll(userId, role);
+        res.json({ status: "success", data: groupes });
     } catch (error) {
-        res.status(500).json({ message: 'Erreur lors de la récupération des groupes', error: error.message });
+        res.status(500).json({ message: "Erreur lors de la récupération des groupes", error: error.message });
     }
 };
 

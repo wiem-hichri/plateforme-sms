@@ -19,7 +19,9 @@
       "./src/app/modeles/modal/modal.component.html",
       "./src/app/modeles/modal/modal.component.ts",
       "./src/app/puces/puce/puce.component.html",
-      "./src/app/puces/puce/puce.component.ts"
+      "./src/app/puces/puce/puce.component.ts",
+      "./src/app/pages/rm-contact-list-dialog/rm-contact-list-dialog.component.html",
+      "./src/app/pages/contact-list-dialog/contact-list-dialog.component.html"
 
 
 

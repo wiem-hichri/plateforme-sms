@@ -5,18 +5,18 @@ import { FormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
-  selector: 'app-add-contact-dialog',
+  selector: 'app-remove-contact-dialog',
   standalone: true,
   imports: [CommonModule, FormsModule, MatCheckboxModule],
-  templateUrl: './contact-list-dialog.component.html',
-  styleUrls: ['./contact-list-dialog.component.scss']
+  templateUrl: './rm-contact-list-dialog.component.html',
+  styleUrls: ['./rm-contact-list-dialog.component.scss']
 })
-export class AddContactDialogComponent {
+export class RemoveContactDialogComponent {
   searchTerm: string = '';
   filteredContacts: any[];
 
   constructor(
-    public dialogRef: MatDialogRef<AddContactDialogComponent>,
+    public dialogRef: MatDialogRef<RemoveContactDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { contacts: any[] }
   ) {
     this.filteredContacts = this.data.contacts;
@@ -29,7 +29,7 @@ export class AddContactDialogComponent {
     );
   }
 
-  addContacts() {
+  removeContacts() {
     const selectedContacts = this.data.contacts
       .filter(contact => contact.selected)
       .map(contact => contact.id);

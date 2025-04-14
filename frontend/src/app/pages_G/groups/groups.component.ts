@@ -7,8 +7,8 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ContactService } from '../../services/contact.service';
-import { ContactListDialogComponent } from '../../pages/contact-list-dialog/contact-list-dialog.component';
-import { GroupContactsDialogComponent } from '../group-contacts-dialog/group-contacts-dialog.component';
+import { AddContactDialogComponent } from '../../pages/contact-list-dialog/contact-list-dialog.component';
+import { RemoveContactDialogComponent } from '../../pages/rm-contact-list-dialog/rm-contact-list-dialog.component';
 
 @Component({
   selector: 'app-groups',
@@ -49,11 +49,8 @@ export class GroupsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((newGroup: Group | undefined) => {
       if (newGroup) {
-        console.log('New group added:', newGroup);
         this.groups.push(newGroup);
         this.fetchGroups();
-      } else {
-        console.log('No group added.');
       }
     });
   }
@@ -91,47 +88,23 @@ export class GroupsComponent implements OnInit {
     }
   }
 
-  openContactListDialog(groupId: number, action: 'add' | 'remove') {
+  openAddContactDialog(groupId: number) {
     this.contactService.getContacts().subscribe(
       (response) => {
         const allContacts = response.data;
-  
-        let contacts: any[] = [];
-  
-        if (action === 'add') {
-          // Show all contacts, mark the already associated ones as checked
-          contacts = allContacts.map((contact: any) => ({
-            ...contact,
-            selected: this.selectedGroupContacts.some(c => c.id === contact.id)
-          }));
-        } else if (action === 'remove') {
-          // Show only contacts that are already associated
-          contacts = this.selectedGroupContacts.map((contact: any) => ({
-            ...contact,
-            selected: true
-          }));
-        }
-  
-        const dialogRef = this.dialog.open(ContactListDialogComponent, {
+        const contacts = allContacts.map((contact: any) => ({
+          ...contact,
+          selected: this.selectedGroupContacts.some((c) => c.id === contact.id),
+        }));
+
+        const dialogRef = this.dialog.open(AddContactDialogComponent, {
           width: '400px',
-          data: { contacts, groupId, action },
+          data: { contacts, groupId },
         });
-  
+
         dialogRef.afterClosed().subscribe((selectedContactIds: number[] | undefined) => {
           if (selectedContactIds && selectedContactIds.length > 0) {
-            if (action === 'add') {
-              selectedContactIds.forEach(contactId => {
-                this.contactService.associateContactToGroup(contactId, [groupId]).subscribe(() => {
-                  this.fetchGroupContacts(groupId);
-                });
-              });
-            } else if (action === 'remove') {
-              selectedContactIds.forEach(contactId => {
-                this.contactService.disassociateContactFromGroup(contactId, groupId).subscribe(() => {
-                  this.fetchGroupContacts(groupId);
-                });
-              });
-            }
+            this.associateContactsToGroup(selectedContactIds, groupId);
           }
         });
       },
@@ -140,11 +113,27 @@ export class GroupsComponent implements OnInit {
       }
     );
   }
-  
-  
+
+  openRemoveContactDialog(groupId: number) {
+    const contacts = this.selectedGroupContacts.map((contact: any) => ({
+      ...contact,
+      selected: false,
+    }));
+
+    const dialogRef = this.dialog.open(RemoveContactDialogComponent, {
+      width: '400px',
+      data: { contacts, groupId },
+    });
+
+    dialogRef.afterClosed().subscribe((selectedContactIds: number[] | undefined) => {
+      if (selectedContactIds && selectedContactIds.length > 0) {
+        this.disassociateContactsFromGroup(selectedContactIds, groupId);
+      }
+    });
+  }
 
   associateContactsToGroup(contactIds: number[], groupId: number) {
-    contactIds.forEach(contactId => {
+    contactIds.forEach((contactId) => {
       this.contactService.associateContactToGroup(contactId, [groupId]).subscribe(
         () => {
           this.fetchGroupContacts(groupId);
@@ -157,7 +146,7 @@ export class GroupsComponent implements OnInit {
   }
 
   disassociateContactsFromGroup(contactIds: number[], groupId: number) {
-    contactIds.forEach(contactId => {
+    contactIds.forEach((contactId) => {
       this.contactService.disassociateContactFromGroup(contactId, groupId).subscribe(
         () => {
           this.fetchGroupContacts(groupId);

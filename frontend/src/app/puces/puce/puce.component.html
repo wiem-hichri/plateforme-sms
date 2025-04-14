@@ -1,50 +1,51 @@
-<!-- puce.component.html -->
 <div class="min-h-screen flex flex-col items-center bg-gray-100 p-6 mt-16">
-    <div class="w-full max-w-5xl bg-white shadow-lg rounded-lg p-8 mx-auto">
-      <!-- 🔥 Sticky Header -->
-      <div class="container">
-        <div class="sticky top-0 bg-gradient-to-r from-blue-500 to-white-400 text-white p-4 rounded-lg shadow-md z-50">
-          <h2 class="text-3xl font-semibold">📜 Gestion des Puces</h2>
-        </div>
-      </div>
-  
-      <!-- 🎨 Scrollable Table -->
-      <div class="overflow-y-auto max-h-[60vh] mt-4 px-2">
-        <div class="overflow-x-auto">
-          <table class="min-w-full bg-white shadow-md rounded-lg border border-gray-300">
-            <thead>
-              <tr class="bg-gradient-to-r from-blue-400 to-blue-600 text-white text-left">
-                <th class="p-3 border">Numéro</th>
-                <th class="p-3 border">Opérateur</th>
-                <th class="p-3 border">État</th>
-                <th class="p-3 border">Quota</th>
-                <th class="p-3 border">Contact</th>
-                <th class="p-3 border">Mission</th>
-                <th class="p-3 border">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let puce of puces" class="hover:bg-blue-100 transition-all">
-                <td class="p-3 border">{{ puce.numero }}</td>
-                <td class="p-3 border">{{ puce.operateur }}</td>
-                <td class="p-3 border">{{ puce.etat }}</td>
-                <td class="p-3 border">{{ puce.quota }}</td>
-                <td class="p-3 border">{{ puce.contact_id }}</td>
-                <td class="p-3 border">{{ puce.mission_id }}</td>
-                <td class="p-3 border flex gap-2">
-                  <button (click)="modifierPuce(puce)" class="bg-blue-500 text-white px-3 py-1 rounded">Modifier</button>
-                  <button (click)="supprimerPuce(puce.id)" class="bg-red-500 text-white px-3 py-1 rounded">Supprimer</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-  
-      <button (click)="ajouterPuce()" class="bg-green-500 text-white px-4 py-2 rounded mt-4">Ajouter Puce</button>
-  
-      <!-- Modal -->
-      <app-puce-modal *ngIf="showModal" [puce]="selectedPuce" (save)="onSavePuce($event)" (close)="closeModal()"></app-puce-modal>
+  <div class="w-full max-w-6xl bg-white shadow-lg rounded-lg p-8 mx-auto">
+    <div class="sticky top-0 bg-gradient-to-r from-blue-500 to-white-400 text-white p-4 rounded-lg shadow-md z-50">
+      <h2 class="text-3xl font-semibold">📜 Gestion des Puces</h2>
+    </div>
+
+    <div class="overflow-y-auto max-h-[60vh] mt-4 px-2">
+      <table class="min-w-full bg-white shadow-md rounded-lg border border-gray-300">
+        <thead>
+          <tr class="bg-gradient-to-r from-blue-400 to-blue-600 text-white text-left">
+            <th class="p-3 border">Numéro</th>
+            <th class="p-3 border">Opérateur</th>
+            <th class="p-3 border">État</th>
+            <th class="p-3 border">Quota</th>
+            <th class="p-3 border">Contact & Mission</th>
+            <th class="p-3 border">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let puce of puces" class="hover:bg-blue-100 transition-all">
+            <td class="p-3 border">{{ puce.numero }}</td>
+            <td class="p-3 border">{{ puce.operateur }}</td>
+            <td class="p-3 border">{{ puce.etat }}</td>
+            <td class="p-3 border">{{ puce.quota }}</td>
+            <td class="p-3 border">
+              <strong>📞</strong> {{ puce.contact_name }}<br>
+              <strong>🛠️</strong> {{ puce.mission_name }}
+            </td>
+            <td class="p-3 border flex gap-2">
+              <button (click)="modifierPuce(puce)" class="bg-blue-500 text-white px-3 py-1 rounded">Modifier</button>
+              <button (click)="supprimerPuce(puce.id!)" class="bg-red-500 text-white px-3 py-1 rounded">Supprimer</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <button (click)="ajouterPuce()" class="bg-green-500 text-white px-4 py-2 rounded mt-4">Ajouter Puce</button>
+
+    <div *ngIf="showModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-end z-50">
+      <app-puce-modal
+        class="w-full sm:w-[400px] bg-white h-full shadow-xl p-4"
+        [puce]="selectedPuce"
+        [contacts]="contacts"
+        [missions]="missions"
+        (save)="onSavePuce($event)"
+        (close)="closeModal()"
+      ></app-puce-modal>
     </div>
   </div>
-  
+</div>

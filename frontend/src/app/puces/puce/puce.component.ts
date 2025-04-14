@@ -4,6 +4,18 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PuceModalComponent } from '../puce-modal/puce-modal.component';
 
+interface Puce {
+  id?: number;
+  numero: string;
+  operateur: string;
+  etat: string;
+  quota: string;
+  contact_id: number;
+  mission_id: number;
+  contact_name?: string;
+  mission_name?: string;
+}
+
 @Component({
   selector: 'app-puce',
   standalone: true,
@@ -12,102 +24,70 @@ import { PuceModalComponent } from '../puce-modal/puce-modal.component';
   styleUrls: ['./puce.component.scss']
 })
 export class PuceComponent implements OnInit {
-  puces: any[] = [];
+  puces: Puce[] = [];
   contacts: any[] = [];
   missions: any[] = [];
-  selectedPuce: any = null;
+  selectedPuce: Puce | null = null;
   showModal = false;
 
   constructor(private puceService: PuceService) {}
 
   ngOnInit() {
-    this.loadPuces();
-    this.loadContacts();
-    this.loadMissions();
+    this.loadAll();
   }
 
-  loadPuces() {
-    this.puceService.getPuces().subscribe(
-      (response: any) => {
-        this.puces = response.data;
-      },
-      (error) => {
-        console.error('Error loading puces', error);
-      }
-    );
-  }
-
-  loadContacts() {
-    this.puceService.getContacts().subscribe(
-      (response: any) => {
-        this.contacts = response.data;
-      },
-      (error) => {
-        console.error('Error loading contacts', error);
-      }
-    );
-  }
-
-  loadMissions() {
-    this.puceService.getMissions().subscribe(
-      (response: any) => {
-        this.missions = response.data;
-      },
-      (error) => {
-        console.error('Error loading missions', error);
-      }
-    );
-  }
-
-  modifierPuce(puce: any) {
-    this.selectedPuce = { ...puce };
-    this.showModal = true;
+  loadAll() {
+    this.puceService.getContacts().subscribe((res) => {
+      this.contacts = res.data;
+      this.puceService.getMissions().subscribe((res2) => {
+        this.missions = res2.data;
+        this.puceService.getPuces().subscribe((res3) => {
+          this.puces = res3.data.map((puce: any) => ({
+            ...puce,
+            contact_name: this.contacts.find(c => c.id === puce.contact_id)?.nom || '—',
+            mission_name: this.missions.find(m => m.id === puce.mission_id)?.type_mission || '—'
+          }));
+        });
+      });
+    });
   }
 
   ajouterPuce() {
-    this.selectedPuce = {};
+    this.selectedPuce = {
+      numero: '',
+      operateur: '',
+      etat: '',
+      quota: '',
+      contact_id: 0,
+      mission_id: 0
+    };
+    this.showModal = true;
+  }
+
+  modifierPuce(puce: Puce) {
+    this.selectedPuce = { ...puce };
     this.showModal = true;
   }
 
   supprimerPuce(id: number) {
     if (confirm('Voulez-vous vraiment supprimer cette puce ?')) {
-      this.puceService.supprimerPuce(id).subscribe(
-        () => {
-          this.loadPuces();
-        },
-        (error) => {
-          console.error('Error deleting puce', error);
-        }
-      );
+      this.puceService.supprimerPuce(id).subscribe(() => this.loadAll());
     }
   }
 
-  onSavePuce(puce: any) {
-    if (puce.id) {
-      this.puceService.updatePuce(puce.id, puce).subscribe(
-        () => {
-          this.loadPuces();
-          this.closeModal();
-        },
-        (error) => {
-          console.error('Error updating puce', error);
-        }
-      );
-    } else {
-      this.puceService.createPuce(puce).subscribe(
-        () => {
-          this.loadPuces();
-          this.closeModal();
-        },
-        (error) => {
-          console.error('Error creating puce', error);
-        }
-      );
-    }
+  onSavePuce(puce: Puce) {
+    const request = puce.id
+      ? this.puceService.updatePuce(puce.id, puce)
+      : this.puceService.createPuce(puce);
+
+    request.subscribe(() => {
+      this.loadAll();
+      this.closeModal();
+    });
   }
 
   closeModal() {
-    this.showModal = false;
     this.selectedPuce = null;
+    this.showModal = false;
   }
 }
