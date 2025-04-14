@@ -2,7 +2,6 @@ const Contact = require('../models/contact');
 const ContactGroupe = require('../models/contactGroupe');
 const ModelSMS = require('../models/model_sms');
 const xlsx = require('xlsx');
-const db = require('../config/dbConnect').promise();
 
 
 
