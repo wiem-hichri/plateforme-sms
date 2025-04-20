@@ -1,9 +1,12 @@
 <div class="min-h-screen flex flex-col items-center bg-gray-100 p-6 mt-16">
   <div class="w-full max-w-6xl bg-white shadow-lg rounded-lg p-8 mx-auto">
     <div class="sticky top-0 bg-gradient-to-r from-blue-500 to-white-400 text-white p-4 rounded-lg shadow-md z-50">
-      <h2 class="text-3xl font-semibold">📜 Gestion des Puces</h2>
+      <h2 class="text-3xl font-semibold">📜 Gestion des Puces</h2> <button
+      class="bg-white text-gray-800 hover:bg-gray-100 font-bold py-2 px-5 rounded-lg shadow-md transition-all flex items-center gap-2"
+      (click)="ajouterPuce()">
+      ➕ 
+    </button>
     </div>
-
     <div class="overflow-y-auto max-h-[60vh] mt-4 px-2">
       <table class="min-w-full bg-white shadow-md rounded-lg border border-gray-300">
         <thead>
@@ -27,15 +30,27 @@
               <strong>🛠️</strong> {{ puce.mission_name }}
             </td>
             <td class="p-3 border flex gap-2">
-              <button (click)="modifierPuce(puce)" class="bg-blue-500 text-white px-3 py-1 rounded">Modifier</button>
-              <button (click)="supprimerPuce(puce.id!)" class="bg-red-500 text-white px-3 py-1 rounded">Supprimer</button>
+              <button
+                (click)="modifierPuce(puce)"
+                mat-icon-button
+                title="Modifier">
+                <mat-icon class="text-blue-600">edit</mat-icon>
+              </button>
+              <button
+                (click)="supprimerPuce(puce.id!)"
+                class="delete-btn"
+                mat-icon-button
+                title="Supprimer">
+                <mat-icon class="text-orange-600">delete</mat-icon>
+              </button>
             </td>
+            
+            
           </tr>
         </tbody>
       </table>
     </div>
 
-    <button (click)="ajouterPuce()" class="bg-green-500 text-white px-4 py-2 rounded mt-4">Ajouter Puce</button>
 
     <div *ngIf="showModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-end z-50">
       <app-puce-modal

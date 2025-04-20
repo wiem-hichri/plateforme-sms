@@ -1,20 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { SmsModelService } from '../../services/model.service';
 import { CommonModule } from '@angular/common';
-import { ModalComponent } from '../modal/modal.component';
 import { FormsModule } from '@angular/forms';
+import { ModalComponent } from '../modal/modal.component';
+import { EditModelComponent } from '../edit-modal/edit-modal.component';
 
 @Component({
   selector: 'app-sms-models',
   standalone: true,
-  imports: [CommonModule, ModalComponent, FormsModule],
+  imports: [CommonModule, FormsModule, ModalComponent, EditModelComponent],
   templateUrl: './sms-models.component.html',
   styleUrls: ['./sms-models.component.scss']
 })
 export class SmsModelsComponent implements OnInit {
   models: any[] = [];
-  showModal = false;
-  selectedModel: any = { nom: '', contenu: '' };
+  showAddModal = false;
+  showEditModal = false;
+  selectedModel: any = null;
 
   constructor(private smsModelService: SmsModelService) {}
 
@@ -29,13 +31,12 @@ export class SmsModelsComponent implements OnInit {
   }
 
   openAddModal() {
-    this.selectedModel = { nom: '', contenu: '' };
-    this.showModal = true;
+    this.showAddModal = true;
   }
 
   openEditModal(model: any) {
     this.selectedModel = { ...model };
-    this.showModal = true;
+    this.showEditModal = true;
   }
 
   saveModel(model: any) {
@@ -54,6 +55,8 @@ export class SmsModelsComponent implements OnInit {
   }
 
   closeModal() {
-    this.showModal = false;
+    this.showAddModal = false;
+    this.showEditModal = false;
+    this.selectedModel = null;
   }
 }

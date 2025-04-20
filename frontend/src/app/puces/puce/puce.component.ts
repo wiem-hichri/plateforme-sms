@@ -3,7 +3,8 @@ import { PuceService } from '../../services/puce.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PuceModalComponent } from '../puce-modal/puce-modal.component';
-
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 interface Puce {
   id?: number;
   numero: string;
@@ -19,7 +20,8 @@ interface Puce {
 @Component({
   selector: 'app-puce',
   standalone: true,
-  imports: [CommonModule, FormsModule, PuceModalComponent],
+  imports: [CommonModule, FormsModule, PuceModalComponent,MatIconModule,
+    MatButtonModule,],
   templateUrl: './puce.component.html',
   styleUrls: ['./puce.component.scss']
 })

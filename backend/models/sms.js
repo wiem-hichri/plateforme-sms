@@ -5,29 +5,29 @@ const SMS = {
     return db.query('SELECT COUNT(*) as count FROM outbox');
   },
 
-  insertSMS: (destinationNumber, textDecoded, creatorId) => {
+  insertSMS: (destinationNumber, textDecoded) => {
     return db.query(
-      `INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES (?, ?, ?)`,
-      [destinationNumber, textDecoded, creatorId]
+      `INSERT INTO outbox (DestinationNumber, TextDecoded) VALUES (?, ?)`,
+      [destinationNumber, textDecoded]
     );
   },
 
   getSMS: () => {
-    return db.query(`SELECT * FROM outbox ORDER BY SendingDateTime DESC LIMIT 1`);
+    return db.query(`SELECT * FROM outbox ORDER BY SendingDateTime ASC LIMIT 1`);
   },
 
   deleteSMS: (id) => {
     return db.query(`
         DELETE FROM outbox
         WHERE ID = (
-            SELECT ID FROM outbox ORDER BY SendingDateTime DESC LIMIT 1
+            SELECT ID FROM outbox ORDER BY SendingDateTime ASC LIMIT 1
         )
     `);
 },
 
 
 smsSent: async () => {
-  const [rows] = await db.query(`SELECT * FROM outbox ORDER BY SendingDateTime DESC LIMIT 1`);
+  const [rows] = await db.query(`SELECT * FROM outbox ORDER BY SendingDateTime ASC LIMIT 1`);
   
   if (rows.length === 0) {
       throw new Error('No message found in outbox.');
@@ -38,12 +38,11 @@ smsSent: async () => {
   // Insert into sentitems with only DestinationNumber, TextDecoded, and CreatorID
   await db.query(
       `INSERT INTO sentitems 
-      (DestinationNumber, TextDecoded, CreatorID)
-      VALUES (?, ?, ?)`,
+      (DestinationNumber, TextDecoded)
+      VALUES (?, ?)`,
       [
           message.DestinationNumber,
           message.TextDecoded,
-          message.CreatorID
       ]
   );
 
@@ -51,7 +50,7 @@ smsSent: async () => {
   await db.query(`
       DELETE FROM outbox WHERE ID = (
           SELECT ID FROM (
-              SELECT ID FROM outbox ORDER BY SendingDateTime DESC LIMIT 1
+              SELECT ID FROM outbox ORDER BY SendingDateTime ASC LIMIT 1
           ) AS temp
       )
   `);

@@ -10,6 +10,7 @@ import {LoginHistoryComponent}from './parametre/login-history/login-history.comp
 import {SmsModelsComponent} from './models/sms-models/sms-models.component';
 import { ParametreBoardComponent } from './parametre/parametre-board/parametre-board.component';
 import { PuceComponent } from './puces/puce/puce.component';
+import { SendMessageComponent } from './sendSMS/send-message/send-message.component';
 
 export const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -19,6 +20,7 @@ export const appRoutes: Routes = [
   { path: 'groups', component: GroupsComponent },
   { path: 'user', component: UsersComponent },
   { path: 'profile', component: ProfileComponent },
+  { path: 'send-message', component: SendMessageComponent },
   { path: 'login-history', component: LoginHistoryComponent },
   {path: 'parametre', component: ParametreBoardComponent },
   {path : 'sms-models', component: SmsModelsComponent },
