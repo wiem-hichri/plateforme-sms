@@ -1,6 +1,7 @@
 const db = require('../config/dbConnect').promise();
 
 const SMS = {
+
   smsCount: () => {
     return db.query('SELECT COUNT(*) as count FROM outbox');
   },
@@ -25,7 +26,6 @@ const SMS = {
     `);
 },
 
-
 smsSent: async () => {
   const [rows] = await db.query(`SELECT * FROM outbox ORDER BY SendingDateTime ASC LIMIT 1`);
   
@@ -48,11 +48,10 @@ smsSent: async () => {
 
   // Delete from outbox after inserting into sentitems
   await db.query(`
-      DELETE FROM outbox WHERE ID = (
-          SELECT ID FROM (
-              SELECT ID FROM outbox ORDER BY SendingDateTime ASC LIMIT 1
-          ) AS temp
-      )
+      DELETE FROM outbox
+        WHERE ID = (
+            SELECT ID FROM outbox ORDER BY SendingDateTime ASC LIMIT 1
+        )
   `);
 
   return message;
