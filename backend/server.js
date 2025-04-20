@@ -50,11 +50,20 @@ app.use(passport.session());
 app.use(bodyParser.json());
 
 app.use(cors({
-  origin: 'http://localhost:4200', // Allow only your Angular frontend
-  credentials: true, // Allow credentials (cookies) to be sent
+  origin: function (origin, callback) {
+    if (!origin || origin === 'null') {
+      return callback(null, true); // Allow file:// and Cordova apps
+    }
+    return callback(null, origin); // Also allow other origins
+  },
+  credentials: true,
   methods: 'GET,POST,PUT,DELETE,OPTIONS',
   allowedHeaders: 'Content-Type,Authorization'
 }));
+
+// Preflight support
+app.options('*', cors());
+
 
 
 app.use('/api', authRoutes);

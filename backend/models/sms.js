@@ -6,10 +6,10 @@ const SMS = {
     return db.query('SELECT COUNT(*) as count FROM outbox');
   },
 
-  insertSMS: (destinationNumber, textDecoded, creatorId) => {
+  insertSMS: (destinationNumber, textDecoded) => {
     return db.query(
-      `INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES (?, ?, ?)`,
-      [destinationNumber, textDecoded, creatorId]
+      `INSERT INTO outbox (DestinationNumber, TextDecoded) VALUES (?, ?)`,
+      [destinationNumber, textDecoded]
     );
   },
 
@@ -38,12 +38,11 @@ smsSent: async () => {
   // Insert into sentitems with only DestinationNumber, TextDecoded, and CreatorID
   await db.query(
       `INSERT INTO sentitems 
-      (DestinationNumber, TextDecoded, CreatorID)
-      VALUES (?, ?, ?)`,
+      (DestinationNumber, TextDecoded)
+      VALUES (?, ?)`,
       [
           message.DestinationNumber,
           message.TextDecoded,
-          message.CreatorID
       ]
   );
 

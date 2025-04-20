@@ -3,7 +3,7 @@
 
     <!-- Sticky Header -->
     <div class="container">
-      <div class="sticky top-0 text-white p-4 rounded-lg shadow-md z-50">
+      <div class="sticky top-0 bg-gradient-to-r from-blue-500 to-white-400 text-white p-4 rounded-lg shadow-md z-50">
         <div class="flex justify-between items-center border-b pb-4">
           <h2 class="text-3xl font-semibold">Groupes</h2>
           <button
@@ -19,7 +19,7 @@
     <div class="overflow-y-auto max-h-[60vh] mt-4 px-2">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <div *ngFor="let groupe of groups"
-             class="relative bg-gradient-to-b from-orange-100 to-white shadow-md rounded-lg p-6 border border-orange-300 hover:scale-105 transition-all duration-300"
+             class="relative shadow-md rounded-lg p-6 border border-orange-300 hover:scale-105 transition-all duration-300"
              (click)="groupe.id !== undefined && viewGroupContacts(groupe.id)">
 
           <!-- Group Name -->

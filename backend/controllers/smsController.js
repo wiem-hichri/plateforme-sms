@@ -1,6 +1,7 @@
 const SMS = require('../models/sms'); // assuming the model is in models/sms.js
 
 const smsCount = async (req, res) => {
+    res.setHeader("Access-Control-Allow-Origin","*");
     try {
         const [rows] = await SMS.smsCount();
         res.json({ status: 'success', count: rows[0].count });
@@ -31,7 +32,7 @@ const getSMS = async (req, res) => {
         }
         res.status(200).json({ status: 'success', message: rows[0] });
     } catch (error) {
-        res.status(500).json({ message: "Erreur lors de la récupération du prochain message", error: error.message });
+        res.status(500).json({ message: "Erreur lors de la récupération du prochain message", status: error.message });
     }
 };
 
