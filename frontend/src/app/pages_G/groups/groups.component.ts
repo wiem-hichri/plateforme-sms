@@ -61,16 +61,14 @@ export class GroupsComponent implements OnInit {
       width: '400px',
       data: { groupe: group },
     });
-
+  
     dialogRef.afterClosed().subscribe((updatedGroup: Group | undefined) => {
       if (updatedGroup) {
-        const index = this.groups.findIndex((g) => g.id === updatedGroup.id);
-        if (index !== -1) {
-          this.groups[index] = updatedGroup;
-        }
+        this.fetchGroups(); // <-- Recharge proprement toute la liste depuis le serveur
       }
     });
   }
+  
 
   deleteGroup(id?: number) {
     if (id === undefined) {
