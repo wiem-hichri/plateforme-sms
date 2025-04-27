@@ -6,7 +6,7 @@ const { genererSMS } = require('../controllers/openaiController');
 
 
 
-router.post('/api/generate-sms', genererSMS);
+router.post('/generate-sms', genererSMS);
 
 
 

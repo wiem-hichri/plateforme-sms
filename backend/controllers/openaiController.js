@@ -34,7 +34,14 @@ async function genererSMS(req, res) {
     res.json({ message });
   } catch (error) {
     console.error("Erreur OpenAI:", error.response?.data || error.message);
-    res.status(500).json({ error: "Erreur de génération IA" });
+  
+    if (error.response) {
+      res.status(error.response.status).json({
+        error: error.response.data.error.message,
+      });
+    } else {
+      res.status(500).json({ error: "Erreur interne du serveur" });
+    }
   }
 }
 
