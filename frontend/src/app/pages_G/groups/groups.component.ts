@@ -20,6 +20,7 @@ import { RemoveContactDialogComponent } from '../../pages/rm-contact-list-dialog
 export class GroupsComponent implements OnInit {
   groups: Group[] = [];
   selectedGroupContacts: any[] = [];
+  
 
   constructor(
     private groupService: GroupService,

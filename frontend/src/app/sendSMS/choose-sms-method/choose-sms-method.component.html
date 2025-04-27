@@ -1,0 +1,41 @@
+<div class="min-h-screen flex flex-col items-center bg-gray-100 p-6 mt-16">
+    <div class="w-full max-w-4xl bg-white shadow-lg rounded-lg p-8 mx-auto">
+  
+      <!-- 🛑 Sticky Header (Title + Open Button) -->
+      <div class="sticky top-0 bg-white z-10 pb-4 flex justify-between items-center">
+        <h2 class="text-xl font-bold mb-2">📤 Envoi de SMS</h2>
+  
+        <div class="flex w-full justify-between items-center mt-3">
+          <span class="text-gray-500 text-sm">Choisissez une méthode d'envoi</span>
+          <button (click)="openModal()"
+            class="bg-blue-500 text-white px-4 py-2 rounded-md w-1/4 hover:bg-blue-600 transition">
+            + Nouveau SMS
+          </button>
+        </div>
+      </div>
+  
+      <!-- Modal Window -->
+      <div *ngIf="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-white rounded-lg p-6 w-[90%] max-w-md shadow-lg">
+          <h3 class="text-lg font-bold text-gray-800 mb-4 text-center">📨 Choisir la méthode d'envoi</h3>
+  
+          <div class="space-y-4">
+            <button (click)="goTo('direct')"
+              class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition">
+              📱 Envoi direct (par numéro)
+            </button>
+            <button (click)="goTo('advanced')"
+              class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition">
+              👥 Par Contact / Groupe / Modèle
+            </button>
+            <button (click)="closeModal()"
+              class="w-full bg-gray-300 text-gray-700 py-2 rounded hover:bg-gray-400 transition">
+              ❌ Annuler
+            </button>
+          </div>
+        </div>
+      </div>
+  
+    </div>
+  </div>
+  

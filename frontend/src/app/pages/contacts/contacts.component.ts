@@ -33,7 +33,6 @@ export class ContactsComponent implements OnInit {
     'prenom',
     'telephone_personnel',
     'telephone_professionnel',
-    'groups',
     'cin',
     'site',
     'action'

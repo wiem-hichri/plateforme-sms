@@ -103,7 +103,7 @@ export class UsersComponent implements OnInit {
     if (this.canViewPassword(user)) {
       this.dialog.open(PasswordPopupComponent, {
         width: '300px',
-        data: { matricule: user.matricule, password: user.password }
+        data: { login: user.login,matricule: user.matricule, password: user.password }
       });
     } else {
       alert('You do not have permission to view this password.');

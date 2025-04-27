@@ -1,18 +1,60 @@
 <div class="modal-card">
   <h3>Ajouter un Contact</h3>
   <form (ngSubmit)="addContact()" #contactForm="ngForm">
+    
+    <!-- Matricule -->
     <input type="text" [(ngModel)]="newContact.matricule" name="matricule" placeholder="Matricule" required minlength="3" maxlength="10">
-    <input type="text" [(ngModel)]="newContact.nom" name="nom" placeholder="Nom" required>
-    <input type="text" [(ngModel)]="newContact.prenom" name="prenom" placeholder="Prénom">
-    <input type="text" [(ngModel)]="newContact.telephone_personnel" name="telephone_personnel" placeholder="Téléphone Personnel" pattern="[0-9]{8}">
-    <input type="text" [(ngModel)]="newContact.telephone_professionnel" name="telephone_professionnel" placeholder="Téléphone Professionnel" pattern="[0-9]{8}">
-    <input type="text" [(ngModel)]="newContact.cin" name="cin" placeholder="CIN" pattern="[0-9]{8}">
-    <input type="text" [(ngModel)]="newContact.site" name="site" placeholder="Site">
-    <input type="text" [(ngModel)]="newContact.service" name="service" placeholder="Service" required>
+    
+    <!-- Nom -->
+    <input 
+      type="text" 
+      [(ngModel)]="newContact.nom" 
+      name="nom" 
+      placeholder="Nom" 
+      required 
+      pattern="^[A-Za-zÀ-ÿ\s]+$" 
+      #nom="ngModel"
+      >
+    <div *ngIf="nom.invalid && nom.touched" class="error-message">
+      <span *ngIf="nom.errors?.['required']">Le nom est requis.</span>
+      <span *ngIf="nom.errors?.['pattern']">Le nom ne doit contenir que des lettres et des espaces.</span>
+    </div>
 
-    <select [(ngModel)]="newContact.groups" name="groups" multiple required>
-      <option *ngFor="let groupe of groupes" [value]="groupe.id">{{ groupe.nom }}</option>
-    </select>
+    <!-- Prénom -->
+    <input 
+      type="text" 
+      [(ngModel)]="newContact.prenom" 
+      name="prenom" 
+      placeholder="Prénom" 
+      required 
+      pattern="^[A-Za-zÀ-ÿ\s]+$" 
+      #prenom="ngModel"
+      >
+    <div *ngIf="prenom.invalid && prenom.touched" class="error-message">
+      <span *ngIf="prenom.errors?.['required']">Le prénom est requis.</span>
+      <span *ngIf="prenom.errors?.['pattern']">Le prénom ne doit contenir que des lettres et des espaces.</span>
+    </div>
+
+    <!-- Téléphone Personnel -->
+    <input type="text" [(ngModel)]="newContact.telephone_personnel" name="telephone_personnel" placeholder="Téléphone Personnel" pattern="[0-9]{8}">
+    <div *ngIf="contactForm.controls['telephone_personnel']?.invalid && contactForm.controls['telephone_personnel']?.touched" class="error-message">
+      <span *ngIf="contactForm.controls['telephone_personnel']?.errors?.['pattern']">Le téléphone personnel doit contenir 8 chiffres.</span>
+    </div>
+
+    <!-- Téléphone Professionnel -->
+    <input type="text" [(ngModel)]="newContact.telephone_professionnel" name="telephone_professionnel" placeholder="Téléphone Professionnel" pattern="[0-9]{8}">
+    <div *ngIf="contactForm.controls['telephone_professionnel']?.invalid && contactForm.controls['telephone_professionnel']?.touched" class="error-message">
+      <span *ngIf="contactForm.controls['telephone_professionnel']?.errors?.['pattern']">Le téléphone professionnel doit contenir 8 chiffres.</span>
+    </div>
+
+    <!-- CIN -->
+    <input type="text" [(ngModel)]="newContact.cin" name="cin" placeholder="CIN" pattern="[0-9]{8}">
+    <div *ngIf="contactForm.controls['cin']?.invalid && contactForm.controls['cin']?.touched" class="error-message">
+      <span *ngIf="contactForm.controls['cin']?.errors?.['pattern']">Le CIN doit contenir 8 chiffres.</span>
+    </div>
+
+    <!-- Site -->
+    <input type="text" [(ngModel)]="newContact.site" name="site" placeholder="Site">
 
     <div class="modal-actions">
       <button type="button" class="cancel-btn" (click)="dialogRef.close()">Annuler</button>
