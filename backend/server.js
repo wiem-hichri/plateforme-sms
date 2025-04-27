@@ -11,11 +11,12 @@ const modelRoutes = require('./routes/modelRoutes');
 const missionRoutes = require('./routes/missionRoutes');
 const contactGroupeRoutes = require('./routes/contactGroupeRoutes');
 const puceRoutes = require('./routes/puceRoutes');
-const openaiRoutes= require('./routes/openaiRoutes');
+//const openaiRoutes= require('./routes/openaiRoutes');
 const replaceVariables = require("./utils");
 const  { getContactByMatricule } = require('./controllers/contactController');
 const smsRoutes = require('./routes/smsRoutes');
-const aiRoutes = require('./routes/aiRoutes');
+//const aiRoutes = require('./routes/aiRoutes');
+const claudRoutes= require('./routes/claudRoutes');
 
 
 
@@ -66,8 +67,9 @@ app.use('/contact-groupe', contactGroupeRoutes);
 app.use('/api', missionRoutes);
 app.use('/api', puceRoutes);
 app.use('/api', smsRoutes);
-app.use('/api', openaiRoutes);
-app.use('/api', aiRoutes);
+//app.use('/api', openaiRoutes);
+//app.use('/api', aiRoutes);
+app.use('/api', claudRoutes)
 
 
 
