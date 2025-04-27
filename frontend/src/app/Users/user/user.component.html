@@ -3,7 +3,7 @@
 
     <!-- 🛑 Sticky Header (Title + Filter + Add Button) -->
     <div class="sticky top-0 bg-white z-10 pb-4 flex justify-between items-center">
-      <h2 class="text-xl font-bold mb-2">Users List</h2>
+      <h2 class="text-xl font-bold mb-2">Utilisateurs List</h2>
 
       <div class="flex w-full justify-between items-center mt-3">
         <input
@@ -13,9 +13,11 @@
           [(ngModel)]="filterValue"
         />
         <button
-          class="bg-blue-500 text-white px-4 py-2 rounded-md w-1/4"
-          (click)="openAddUserDialog()">+ Ajouter User
-        </button>
+  class="bg-[#fc5130] text-white px-4 py-2 rounded-md w-1/4"
+  (click)="openAddUserDialog()">
+  <mat-icon>add</mat-icon>
+</button>
+
       </div>
     </div>
 

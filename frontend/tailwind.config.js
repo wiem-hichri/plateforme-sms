@@ -1,5 +1,6 @@
   module.exports = {
     content: [
+      "./src/app/pages/contacts-dialog/contacts-dialog.component.html",
       "./src/app/pages_G/groups/groups.component.html",
       "./src/app/pages_G/groups/groups.component.ts",
       "./src/app/Users/user/user.component.html",
@@ -22,7 +23,9 @@
       "./src/app/puces/puce/puce.component.ts",
       "./src/app/pages/rm-contact-list-dialog/rm-contact-list-dialog.component.html",
       "./src/app/pages/contact-list-dialog/contact-list-dialog.component.html",
-      "/src/app/sensSMS/send-message/send-message.component.html"
+      "/src/app/sensSMS/send-message/send-message.component.html",
+      "/src/app/sensSMS/choose-sms-method/choose-sms-method.component.html",
+      "/src/app/sensSMS/mgc-sms/mgc-sms.component.html"
 
 
     ],

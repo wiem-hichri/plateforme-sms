@@ -2,9 +2,9 @@ const db = require('../config/dbConnect').promise();
 
 const Contact = {
     create: async (contact, userId) => {
-        const query = `INSERT INTO contacts (matricule, nom, prenom, telephone_personnel, telephone_professionnel, site, service, cin)
-                       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
-        const values = [contact.matricule, contact.nom, contact.prenom, contact.telephone_personnel, contact.telephone_professionnel, contact.site, contact.service, contact.cin];
+        const query = `INSERT INTO contacts (matricule, nom, prenom, telephone_personnel, telephone_professionnel, site, cin)
+                       VALUES (?, ?, ?, ?, ?, ?,?)`;
+        const values = [contact.matricule, contact.nom, contact.prenom, contact.telephone_personnel, contact.telephone_professionnel, contact.site, contact.cin];
 
         const [result] = await db.query(query, values);
         const contactId = result.insertId;
@@ -34,8 +34,8 @@ const Contact = {
     },
 
     update: async (id, contact) => {
-        const query = `UPDATE contacts SET matricule=?, nom=?, prenom=?, telephone_personnel=?, telephone_professionnel=?, site=?, service=?, cin=? WHERE id=?`;
-        const values = [contact.matricule, contact.nom, contact.prenom, contact.telephone_personnel, contact.telephone_professionnel, contact.site, contact.service, contact.cin, id];
+        const query = `UPDATE contacts SET matricule=?, nom=?, prenom=?, telephone_personnel=?, telephone_professionnel=?, site=?,  cin=? WHERE id=?`;
+        const values = [contact.matricule, contact.nom, contact.prenom, contact.telephone_personnel, contact.telephone_professionnel, contact.site,  contact.cin, id];
         const [result] = await db.query(query, values);
         return result;
     },
