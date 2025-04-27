@@ -1,35 +1,10 @@
-<div class="flex justify-center items-center min-h-screen bg-gray-100">
-  <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
-    <h3 class="text-xl font-semibold mb-4">Ajouter un Modèle</h3>
-
-    <form (ngSubmit)="addModel()">
-      <label class="block text-sm font-medium text-gray-700 mb-1">Nom du Modèle</label>
-      <input
-        [(ngModel)]="model.nom"
-        name="nom"
-        required
-        placeholder="Nom"
-        class="w-full border border-gray-300 rounded-lg px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-orange-500"
-      />
-
-      <label class="block text-sm font-medium text-gray-700 mb-1">Contenu du SMS</label>
-      <textarea
-        [(ngModel)]="model.contenu"
-        name="contenu"
-        rows="4"
-        required
-        placeholder="Contenu du message"
-        class="w-full border border-gray-300 rounded-lg px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-orange-500"
-      ></textarea>
-
-      <div class="flex justify-end">
-        <button
-          type="submit"
-          class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
-        >
-          Ajouter
-        </button>
-      </div>
-    </form>
-  </div>
+<div class="bg-white p-4 rounded-lg shadow-md border border-gray-300">
+  <h3 class="text-lg font-semibold mb-2">Ajouter un modèle</h3>
+  <form (ngSubmit)="save()" class="flex flex-col gap-3">
+    <input type="text" [(ngModel)]="nom" name="nom" placeholder="Nom du modèle" class="border p-2 rounded-lg">
+    <textarea [(ngModel)]="contenu" name="contenu" placeholder="Contenu du modèle" class="border p-2 rounded-lg"></textarea>
+    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 mt-2">
+      Enregistrer
+    </button>
+  </form>
 </div>

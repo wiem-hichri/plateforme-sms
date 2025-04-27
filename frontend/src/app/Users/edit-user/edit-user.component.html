@@ -2,11 +2,82 @@
   <div class="modal-card">
     <h3>{{ data ? 'Modifier' : 'Ajouter' }} un Utilisateur</h3>
     <form>
-      <input type="text" [(ngModel)]="user.matricule" name="matricule" placeholder="Matricule">
-      <input type="text" [(ngModel)]="user.nom" name="nom" placeholder="Nom">
-      <input type="text" [(ngModel)]="user.prenom" name="prenom" placeholder="Prénom">
-      <input type="text" [(ngModel)]="user.login" name="login" placeholder="Login">
-      <input type="text" [(ngModel)]="user.role" name="role" placeholder="Rôle">
+      <!-- Matricule -->
+<input 
+type="text" 
+[(ngModel)]="user.matricule" 
+name="matricule" 
+placeholder="Matricule" 
+required 
+minlength="3" 
+maxlength="10"
+#matricule="ngModel"
+>
+<div *ngIf="matricule.invalid && matricule.touched" class="error-message">
+<span *ngIf="matricule.errors?.['required']">Le matricule est requis.</span>
+<span *ngIf="matricule.errors?.['minlength']">Le matricule doit contenir au moins 3 caractères.</span>
+<span *ngIf="matricule.errors?.['maxlength']">Le matricule ne peut pas dépasser 10 caractères.</span>
+</div>
+
+<!-- Nom -->
+<input 
+type="text" 
+[(ngModel)]="user.nom" 
+name="nom" 
+placeholder="Nom" 
+required 
+pattern="^[A-Za-zÀ-ÿ\s]+$"
+#nom="ngModel"
+>
+<div *ngIf="nom.invalid && nom.touched" class="error-message">
+<span *ngIf="nom.errors?.['required']">Le nom est requis.</span>
+<span *ngIf="nom.errors?.['pattern']">Le nom ne doit contenir que des lettres et des espaces.</span>
+</div>
+
+<!-- Prénom -->
+<input 
+type="text" 
+[(ngModel)]="user.prenom" 
+name="prenom" 
+placeholder="Prénom" 
+required 
+pattern="^[A-Za-zÀ-ÿ\s]+$"
+#prenom="ngModel"
+>
+<div *ngIf="prenom.invalid && prenom.touched" class="error-message">
+<span *ngIf="prenom.errors?.['required']">Le prénom est requis.</span>
+<span *ngIf="prenom.errors?.['pattern']">Le prénom ne doit contenir que des lettres et des espaces.</span>
+</div>
+
+<!-- Login -->
+<input 
+type="text" 
+[(ngModel)]="user.login" 
+name="login" 
+placeholder="Login" 
+required
+#login="ngModel"
+>
+<div *ngIf="login.invalid && login.touched" class="error-message">
+<span *ngIf="login.errors?.['required']">Le login est requis.</span>
+</div>
+
+<!-- Role -->
+<select 
+[(ngModel)]="user.role" 
+name="role" 
+required
+class="w-full py-2 px-3 border rounded-md"
+#role="ngModel"
+>
+<option value="">Sélectionner un rôle</option> <!-- default empty -->
+<option value="utilisateur">Utilisateur</option>
+<option value="administrateur">Administrateur</option>
+<option value="super-administrateur">Super-Administrateur</option>
+</select>
+<div *ngIf="role.invalid && role.touched" class="error-message">
+<span *ngIf="role.errors?.['required']">Le rôle est requis.</span>
+</div>
 
       <div class="modal-actions">
         <button type="button" class="cancel-btn" (click)="onCancel()">Annuler</button>

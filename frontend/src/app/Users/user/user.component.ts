@@ -8,6 +8,7 @@ import { UserService, User } from '../../services/user.service';
 import { EditUserComponent } from '../edit-user/edit-user.component';
 import { PasswordPopupComponent } from '../password-popup/password-popup.component';
 import { AuthService } from '../../services/auth.service';
+import { AddUserDialogComponent } from '../user-dialog/user-dialog.component';
 
 @Component({
   selector: 'app-users',
@@ -76,7 +77,7 @@ export class UsersComponent implements OnInit {
   }
 
   openAddUserDialog() {
-    const dialogRef = this.dialog.open(EditUserComponent, { width: '400px' });
+    const dialogRef = this.dialog.open(AddUserDialogComponent, { width: '400px' });
 
     dialogRef.afterClosed().subscribe((newUser: User | undefined) => {
       if (newUser) {
