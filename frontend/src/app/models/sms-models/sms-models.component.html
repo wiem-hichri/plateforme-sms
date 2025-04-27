@@ -2,10 +2,10 @@
   <div class="w-full max-w-5xl bg-white shadow-lg rounded-lg p-8 mx-auto">
 
     <!-- Sticky Header -->
-    <div class="sticky top-0 bg-gradient-to-r from-blue-500 to-white-400 text-white p-4 rounded-lg shadow-md z-50 flex justify-between">
+    <div class="sticky top-0 bg-gradient-to-r from-[#fc5130] to-white-400 text-white p-4 rounded-lg shadow-md z-50 flex justify-between">
       <h2 class="text-3xl font-semibold">📩 Modèles SMS</h2>
       <button class="bg-white text-gray-800 hover:bg-gray-100 font-bold py-2 px-5 rounded-lg shadow-md flex items-center gap-2"
-              (click)="openAddModal()">
+              (click)="openAddCard()">
         ➕ Ajouter Modèle
       </button>
     </div>
@@ -13,18 +13,29 @@
     <!-- SMS Model Cards -->
     <div class="overflow-y-auto max-h-[60vh] mt-4 px-2">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <!-- Afficher la carte d'ajout -->
+        <div *ngIf="showAddCard" class="col-span-1">
+          <app-add-model-card (modelAdded)="onModelAdded($event)"></app-add-model-card>
+        </div>
+
+        <!-- Afficher la carte d'édition -->
+        <div *ngIf="selectedModel" class="col-span-1">
+          <app-edit-model-card [model]="selectedModel" (modelUpdated)="onModelUpdated($event)"></app-edit-model-card>
+        </div>
+
+        <!-- Liste des modèles -->
         <div *ngFor="let model of models"
              class="relative bg-gradient-to-b from-blue-100 to-white shadow-md rounded-lg p-6 border border-blue-300 hover:scale-105 transition-all duration-300">
           <h3 class="text-xl font-semibold text-gray-800">{{ model.nom }}</h3>
           <p class="text-gray-600 text-sm">{{ model.contenu }}</p>
           <div class="mt-4 flex justify-end gap-2">
-            <button class="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600" (click)="openEditModal(model)">✏️</button>
+            <button class="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600" (click)="openEditCard(model)">✏️</button>
             <button class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600" (click)="deleteModel(model.id)">🗑️</button>
           </div>
         </div>
+
       </div>
-
-
     </div>
   </div>
 </div>

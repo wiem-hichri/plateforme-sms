@@ -2,20 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { SmsModelService } from '../../services/model.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ModalComponent } from '../modal/modal.component';
-import { EditModelComponent } from '../edit-modal/edit-modal.component';
+import { AddModelCardComponent } from '../modal/modal.component';
+import { EditModelCardComponent } from '../edit-modal/edit-modal.component';
 
 @Component({
   selector: 'app-sms-models',
   standalone: true,
-  imports: [CommonModule, FormsModule, ModalComponent, EditModelComponent],
+  imports: [CommonModule, FormsModule, AddModelCardComponent, EditModelCardComponent],
   templateUrl: './sms-models.component.html',
   styleUrls: ['./sms-models.component.scss']
 })
 export class SmsModelsComponent implements OnInit {
   models: any[] = [];
-  showAddModal = false;
-  showEditModal = false;
+  showAddCard = false;
   selectedModel: any = null;
 
   constructor(private smsModelService: SmsModelService) {}
@@ -30,33 +29,34 @@ export class SmsModelsComponent implements OnInit {
     });
   }
 
-  openAddModal() {
-    this.showAddModal = true;
+  openAddCard() {
+    this.showAddCard = true;
+    this.selectedModel = null;
   }
 
-  openEditModal(model: any) {
-    this.selectedModel = { ...model };
-    this.showEditModal = true;
+  openEditCard(model: any) {
+    this.selectedModel = { ...model }; // envoyer tout le modèle, pas juste l'id
+    this.showAddCard = false;
   }
 
-  saveModel(model: any) {
-    if (model.id) {
-      this.smsModelService.update(model.id, model).subscribe(() => this.loadModels());
-    } else {
-      this.smsModelService.create(model).subscribe(() => this.loadModels());
+  onModelAdded(newModel: any) {
+    this.models.push(newModel);
+    this.showAddCard = false;
+  }
+
+  onModelUpdated(updatedModel: any) {
+    const index = this.models.findIndex(m => m.id === updatedModel.id);
+    if (index !== -1) {
+      this.models[index] = updatedModel;
     }
-    this.closeModal();
+    this.selectedModel = null;
   }
 
   deleteModel(id: number) {
     if (confirm('Voulez-vous vraiment supprimer ce modèle ?')) {
-      this.smsModelService.delete(id).subscribe(() => this.loadModels());
+      this.smsModelService.delete(id).subscribe(() => {
+        this.models = this.models.filter(model => model.id !== id);
+      });
     }
-  }
-
-  closeModal() {
-    this.showAddModal = false;
-    this.showEditModal = false;
-    this.selectedModel = null;
   }
 }

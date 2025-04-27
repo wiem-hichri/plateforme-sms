@@ -1,31 +1,29 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { SmsModelService } from '../../services/model.service';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-modal',
+  selector: 'app-add-model-card',
   standalone: true,
-  imports: [CommonModule, FormsModule], // ✅ Ensure it imports FormsModule
+  imports: [CommonModule, FormsModule],
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.scss']
 })
-export class ModalComponent {
-  @Input() model: any = { nom: '', contenu: '' };
+export class AddModelCardComponent {
+  @Output() modelAdded = new EventEmitter<any>();
+  
+  nom = '';
+  contenu = '';
 
   constructor(private smsModelService: SmsModelService) {}
 
-  addModel() {
-    if (this.model.nom && this.model.contenu) {
-      this.smsModelService.create(this.model).subscribe({
-        next: (res) => {
-          console.log('✅ Modèle ajouté', res);
-          this.model = { nom: '', contenu: '' };
-        },
-        error: (err) => {
-          console.error('❌ Erreur:', err);
-        },
-      });
-    }
+  save() {
+    const newModel = { nom: this.nom, contenu: this.contenu };
+    this.smsModelService.create(newModel).subscribe(model => {
+      this.modelAdded.emit(model);
+      this.nom = '';
+      this.contenu = '';
+    });
   }
 }

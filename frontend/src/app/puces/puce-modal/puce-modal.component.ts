@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./puce-modal.component.scss']
 })
 export class PuceModalComponent {
-  @Input() puce: any = {};
+  @Input() puce: any = {};          // if id exists => edit, else => add
   @Input() contacts: any[] = [];
   @Input() missions: any[] = [];
   @Output() save = new EventEmitter<any>();
@@ -19,8 +19,11 @@ export class PuceModalComponent {
   operateurs: string[] = ['Orange', 'Ooredoo', 'TunisieTelecom'];
   etats: string[] = ['Active', 'Suspendue', 'Expiré'];
 
-  onSave() {
-    this.save.emit(this.puce);  // Emit the entire puce object
+  onSubmit() {
+    if (this.puce) {
+      this.save.emit(this.puce);
+      this.onClose(); // Close the modal automatically after saving
+    }
   }
 
   onClose() {

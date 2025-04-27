@@ -1,39 +1,35 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { SmsModelService } from '../../services/model.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { SmsModelService } from '../../services/model.service';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-edit-model',
+  selector: 'app-edit-model-card',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './edit-modal.component.html',
   styleUrls: ['./edit-modal.component.scss']
 })
-export class EditModelComponent implements OnInit {
-  modelId!: number;
-  model = { nom: '', contenu: '' };
+export class EditModelCardComponent implements OnChanges {
+  @Input() model: any;
+  @Output() modelUpdated = new EventEmitter<any>();
 
-  constructor(
-    private smsModelService: SmsModelService,
-    private route: ActivatedRoute
-  ) {}
+  nom = '';
+  contenu = '';
 
-  ngOnInit(): void {
-    this.modelId = Number(this.route.snapshot.paramMap.get('id'));
-    this.smsModelService.getById(this.modelId).subscribe({
-      next: (res) => this.model = res,
-      error: (err) => console.error('❌ Erreur chargement:', err)
-    });
+  constructor(private smsModelService: SmsModelService) {}
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['model'] && this.model) {
+      this.nom = this.model.nom;
+      this.contenu = this.model.contenu;
+    }
   }
 
-  updateModel() {
-    if (this.model.nom && this.model.contenu) {
-      this.smsModelService.update(this.modelId, this.model).subscribe({
-        next: (res) => console.log('✅ Modèle mis à jour', res),
-        error: (err) => console.error('❌ Erreur update:', err)
-      });
-    }
+  save() {
+    const updatedModel = { id: this.model.id, nom: this.nom, contenu: this.contenu };
+    this.smsModelService.update(this.model.id, updatedModel).subscribe(model => {
+      this.modelUpdated.emit(model);
+    });
   }
 }

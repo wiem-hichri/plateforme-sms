@@ -1,62 +1,76 @@
 <div class="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-end">
   <div class="w-[640px] h-full bg-white shadow-xl flex flex-col">
     <!-- Header -->
-    <div class="flex justify-between items-center bg-blue-500 text-white px-4 py-3">
-      <h2 class="text-xl font-semibold">{{ puce.id ? 'Modifier' : 'Ajouter' }} Puce</h2>
+    <div class="flex justify-between items-center bg-[#fc5130] text-white px-4 py-3">
+      <h2 class="text-xl font-semibold">{{ puce.id ? 'Modifier la Puce' : 'Ajouter une Puce' }}</h2>
       <button (click)="onClose()" class="text-white text-lg font-bold">✖</button>
     </div>
 
     <!-- Scrollable Form -->
     <div class="flex-1 overflow-y-auto px-6 py-4">
-      <form class="space-y-4">
+      <form (ngSubmit)="onSubmit()" #puceForm="ngForm" class="space-y-4">
+
+        <!-- Numéro -->
         <div>
           <label class="block text-gray-700">Numéro</label>
-          <input type="text" [(ngModel)]="puce.numero" name="numero" class="w-full border rounded px-3 py-2" required />
+          <input type="text" [(ngModel)]="puce.numero" name="numero" class="w-full border rounded px-3 py-2" required #numero="ngModel">
+          <div *ngIf="numero.invalid && numero.touched" class="text-red-500 text-sm">Numéro requis</div>
         </div>
 
+        <!-- Opérateur -->
         <div>
           <label class="block text-gray-700">Opérateur</label>
-          <select [(ngModel)]="puce.operateur" name="operateur" class="w-full border rounded px-3 py-2" required>
+          <select [(ngModel)]="puce.operateur" name="operateur" class="w-full border rounded px-3 py-2" required #operateur="ngModel">
             <option *ngFor="let op of operateurs" [value]="op">{{ op }}</option>
           </select>
+          <div *ngIf="operateur.invalid && operateur.touched" class="text-red-500 text-sm">Opérateur requis</div>
         </div>
 
+        <!-- État -->
         <div>
           <label class="block text-gray-700">État</label>
-          <select [(ngModel)]="puce.etat" name="etat" class="w-full border rounded px-3 py-2" required>
-            <option *ngFor="let etat of etats" [value]="etat">{{ etat }}</option>
+          <select [(ngModel)]="puce.etat" name="etat" class="w-full border rounded px-3 py-2" required #etat="ngModel">
+            <option *ngFor="let et of etats" [value]="et">{{ et }}</option>
           </select>
+          <div *ngIf="etat.invalid && etat.touched" class="text-red-500 text-sm">État requis</div>
         </div>
 
+        <!-- Quota -->
         <div>
           <label class="block text-gray-700">Quota</label>
-          <input type="text" [(ngModel)]="puce.quota" name="quota" class="w-full border rounded px-3 py-2" required />
+          <input type="text" [(ngModel)]="puce.quota" name="quota" class="w-full border rounded px-3 py-2" required #quota="ngModel">
+          <div *ngIf="quota.invalid && quota.touched" class="text-red-500 text-sm">Quota requis</div>
         </div>
 
+        <!-- Contact -->
         <div>
           <label class="block text-gray-700">Contact</label>
-          <select [(ngModel)]="puce.contact_id" name="contact_id" class="w-full border rounded px-3 py-2" required>
+          <select [(ngModel)]="puce.contact_id" name="contact_id" class="w-full border rounded px-3 py-2" required #contact_id="ngModel">
             <option *ngFor="let contact of contacts" [value]="contact.id">{{ contact.nom }}</option>
           </select>
+          <div *ngIf="contact_id.invalid && contact_id.touched" class="text-red-500 text-sm">Contact requis</div>
         </div>
 
+        <!-- Mission -->
         <div>
           <label class="block text-gray-700">Mission</label>
-          <select [(ngModel)]="puce.mission_id" name="mission_id" class="w-full border rounded px-3 py-2" required>
+          <select [(ngModel)]="puce.mission_id" name="mission_id" class="w-full border rounded px-3 py-2" required #mission_id="ngModel">
             <option *ngFor="let mission of missions" [value]="mission.id">{{ mission.type_mission }}</option>
           </select>
+          <div *ngIf="mission_id.invalid && mission_id.touched" class="text-red-500 text-sm">Mission requise</div>
         </div>
-      </form>
-    </div>
 
-    <!-- Footer Buttons -->
-    <div class="flex justify-end gap-2 px-6 py-4 border-t">
-      <button type="button" (click)="onClose()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
-        Annuler
-      </button>
-      <button type="button" (click)="onSave()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-        Sauvegarder
-      </button>
+        <!-- Footer Buttons -->
+        <div class="flex justify-end gap-2 mt-6 border-t pt-4">
+          <button type="button" (click)="onClose()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+            Annuler
+          </button>
+          <button type="submit" [disabled]="puceForm.invalid" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+            {{ puce.id ? 'Modifier' : 'Ajouter' }}
+          </button>
+        </div>
+
+      </form>
     </div>
   </div>
 </div>
