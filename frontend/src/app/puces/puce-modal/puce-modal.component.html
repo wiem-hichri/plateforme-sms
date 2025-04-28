@@ -45,7 +45,7 @@
         <!-- Contact -->
         <div>
           <label class="block text-gray-700">Contact</label>
-          <select [(ngModel)]="puce.contact_id" name="contact_id" class="w-full border rounded px-3 py-2" required #contact_id="ngModel">
+          <select [(ngModel)]="puce.contact_id" name="contact_id" class="w-full border rounded px-3 py-2" #contact_id="ngModel">
             <option *ngFor="let contact of contacts" [value]="contact.id">{{ contact.nom }}</option>
           </select>
           <div *ngIf="contact_id.invalid && contact_id.touched" class="text-red-500 text-sm">Contact requis</div>
@@ -54,7 +54,7 @@
         <!-- Mission -->
         <div>
           <label class="block text-gray-700">Mission</label>
-          <select [(ngModel)]="puce.mission_id" name="mission_id" class="w-full border rounded px-3 py-2" required #mission_id="ngModel">
+          <select [(ngModel)]="puce.mission_id" name="mission_id" class="w-full border rounded px-3 py-2"  #mission_id="ngModel">
             <option *ngFor="let mission of missions" [value]="mission.id">{{ mission.type_mission }}</option>
           </select>
           <div *ngIf="mission_id.invalid && mission_id.touched" class="text-red-500 text-sm">Mission requise</div>
