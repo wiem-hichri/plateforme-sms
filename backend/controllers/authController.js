@@ -47,9 +47,6 @@ const login = async (req, res) => {
         const ipAddress = getClientIP(req);
         const userAgent = req.headers['user-agent'];
 
-        console.log("User ID:", user.id);
-        console.log("IP Address:", ipAddress);
-        console.log("User Agent:", userAgent);
 
         await db.query(
             "INSERT INTO login_history (user_id, ip_address, user_agent) VALUES (?, ?, ?)",
@@ -58,7 +55,6 @@ const login = async (req, res) => {
 
         req.session.save((err) => {
             if (err) {
-                console.error("Session save error:", err);
                 return res.status(500).json({ message: "Erreur de session" });
             }
             res.json({
@@ -70,7 +66,6 @@ const login = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Login error:", error);
         res.status(500).json({ message: "Erreur serveur", error: error.message });
     }
 };
@@ -87,13 +82,9 @@ const logout = (req, res) => {
 
 
 const CurrentUser = (req, res) => {
-    console.log("Session actuelle :", req.session);
-
     if (!req.session || !req.session.user) {
-        console.error("⚠️ Aucune session trouvée !");
-        return res.status(401).json({ message: "Non authentifié" });
+         return res.status(401).json({ message: "Non authentifié" });
     }
-
     res.json(req.session.user);
 };
 

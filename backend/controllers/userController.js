@@ -102,10 +102,8 @@ const getAllLoginHistory = async (req, res) => {
              ORDER BY lh.login_time DESC`
         );
 
-        console.log("Login History Data:", history); // Debugging log
         res.json(history);
     } catch (error) {
-        console.error("Erreur lors de la récupération de l'historique :", error);
         res.status(500).json({ message: "Erreur interne du serveur" });
     }
 };

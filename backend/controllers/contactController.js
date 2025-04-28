@@ -26,7 +26,7 @@ const getContacts = async (req, res) => {
 
 const getContactByMatricule = async (req, res) => {
     try {
-        const { matricule } = req.params; // Récupérer le matricule depuis l'URL
+        const { matricule } = req.params; 
         if (!matricule) {
             return res.status(400).json({ status: "error", message: "Matricule requis" });
         }
@@ -43,7 +43,6 @@ const getContactByMatricule = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Erreur serveur:", error);
         return res.status(500).json({ 
             status: "error", 
             message: "Erreur lors de la récupération du contact", 

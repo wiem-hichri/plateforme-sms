@@ -1,6 +1,5 @@
 // Vérifier si l'utilisateur est connecté
 const isAuthentificated = (req, res, next) => {
-    console.log("🔍 Vérification de session :", req.session);  // Ajout du log
     
     if (req.session && req.session.user) {
         return next();
