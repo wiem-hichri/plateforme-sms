@@ -12,10 +12,7 @@ const missionRoutes = require('./routes/missionRoutes');
 const contactGroupeRoutes = require('./routes/contactGroupeRoutes');
 const puceRoutes = require('./routes/puceRoutes');
 //const openaiRoutes= require('./routes/openaiRoutes');
-const replaceVariables = require("./utils");
-const  { getContactByMatricule } = require('./controllers/contactController');
 const smsRoutes = require('./routes/smsRoutes');
-//const aiRoutes = require('./routes/aiRoutes');
 const claudRoutes= require('./routes/claudRoutes');
 
 
@@ -77,44 +74,7 @@ app.use('/api', missionRoutes);
 app.use('/api', puceRoutes);
 app.use('/api', smsRoutes);
 //app.use('/api', openaiRoutes);
-//app.use('/api', aiRoutes);
 app.use('/api', claudRoutes)
-
-
-
-
-
-
-
-/*app.post("/generate-message", (req, res) => {
-  const { template, data } = req.body;
-
-  if (!template || !data) {
-      return res.status(400).json({ error: "Template et données requis." });
-  }
-
-  const messageFinal = replaceVariables(template, data);
-  res.json({ message: messageFinal });
-});*/
-// Route pour générer un message SMS dynamique
-app.post("/generate-sms", async (req, res) => {
-  const { template, matricule } = req.body;
-
-  if (!template || !matricule) {
-      return res.status(400).json({ error: "Template et matricule requis." });
-  }
-
-  // Récupérer le contact
-  const contact = await getContactByMatricule(matricule);
-  if (!contact) {
-      return res.status(404).json({ error: "Contact non trouvé." });
-  }
-
-  // Remplacement des variables
-  const messageFinal = replaceVariables(template, contact);
-
-  res.json({ message: messageFinal });
-});
 
 
 
