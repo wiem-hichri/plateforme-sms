@@ -9,7 +9,12 @@
         ➕ Ajouter Modèle
       </button>
     </div>
-
+    <button 
+    type="button"
+    (click)="openGeneratorModal()"
+    class="ai-button" >
+    Générer un SMS avec l'IA
+  </button>
     <!-- SMS Model Cards -->
     <div class="overflow-y-auto max-h-[60vh] mt-4 px-2">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -39,3 +44,4 @@
     </div>
   </div>
 </div>
+<app-sms-generator></app-sms-generator>

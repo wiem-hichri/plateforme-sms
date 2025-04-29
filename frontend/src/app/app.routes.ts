@@ -13,6 +13,7 @@ import { PuceComponent } from './puces/puce/puce.component';
 import { SendMessageComponent } from './sendSMS/send-message/send-message.component';
 import { ChooseSmsMethodComponent } from './sendSMS/choose-sms-method/choose-sms-method.component';
 import { EnvoiSmsComponent } from './sendSMS/mgc-sms/mgc-sms.component';
+import { SmsGeneratorComponent } from './sendSMS/sms-generator/sms-generator.component';
 export const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -27,6 +28,7 @@ export const appRoutes: Routes = [
   {path: 'parametre', component: ParametreBoardComponent },
   {path : 'sms-models', component: SmsModelsComponent },
   {path : 'mgc-sms', component: EnvoiSmsComponent },
+  {path : 'generate', component: SmsGeneratorComponent },
   {path : 'puce', component: PuceComponent },
   { path: '**', component: NotFoundComponent }
 ];

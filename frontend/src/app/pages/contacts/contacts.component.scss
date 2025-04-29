@@ -90,9 +90,10 @@ table {
 .filter-wrapper {
   margin-bottom: 10px;
   display: flex;
-  justify-content: space-between; // ✅ Moves button left & search right
   align-items: center;
-  width: 100%;
+  width: fit-content; // 👈 Makes it only as wide as needed
+  gap: 8px; // 👈 Adds spacing between buttons and input
+  justify-content: flex-start; // 👈 Aligns everything to the left
 
   button {
     order: -1; // ✅ Ensures the button stays on the left
@@ -103,5 +104,63 @@ table {
     border: 1px solid #ccc;
     border-radius: 5px;
     width: 250px;
+  }
+  .action-btn {
+    background-color: #3f51b5;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .action-btn:hover {
+    background-color: #303f9f;
+  }
+  
+  .file-upload-label {
+    background-color: #3f51b5;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  input[type="file"] {
+    display: none;
+  }
+  
+  input[type="text"] {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-left: 8px;
+    flex-grow: 1;
+  }
+  
+  .table-wrapper {
+    overflow-x: auto;
+  }
+  
+  .edit-btn, .delete-btn {
+    margin-right: 4px;
+  }
+  
+  /* Material icons styling */
+  .material-icons {
+    font-size: 20px;
+  }
+  
+  /* Ensure table takes full width */
+  table.mat-elevation-z8 {
+    width: 100%;
   }
 }
