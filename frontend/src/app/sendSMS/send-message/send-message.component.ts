@@ -1,17 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SmsService } from '../../services/sms.service';
 import { AuthService } from '../../services/auth.service'; // ✅ Import AuthService
+import { SmsGeneratorComponent } from '../sms-generator/sms-generator.component';
 
 @Component({
   selector: 'app-send-message',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, SmsGeneratorComponent,SmsGeneratorComponent ],   // ✅ include this
   templateUrl: './send-message.component.html',
   styleUrls: ['./send-message.component.scss']
 })
 export class SendMessageComponent {
+  @ViewChild(SmsGeneratorComponent) smsGeneratorComponent?: SmsGeneratorComponent;
+
   smsForm: FormGroup;
   sending = false;
   responseMessage = '';
@@ -50,5 +53,8 @@ export class SendMessageComponent {
     } finally {
       this.sending = false;
     }
+  }
+  openGeneratorModal() {
+    this.smsGeneratorComponent?.openModal();
   }
 }

@@ -1,18 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { SmsModelService } from '../../services/model.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AddModelCardComponent } from '../modal/modal.component';
 import { EditModelCardComponent } from '../edit-modal/edit-modal.component';
+import { SmsGeneratorComponent } from '../../sendSMS/sms-generator/sms-generator.component';
 
 @Component({
   selector: 'app-sms-models',
   standalone: true,
-  imports: [CommonModule, FormsModule, AddModelCardComponent, EditModelCardComponent],
+  imports: [CommonModule, FormsModule, AddModelCardComponent, EditModelCardComponent,SmsGeneratorComponent],
   templateUrl: './sms-models.component.html',
   styleUrls: ['./sms-models.component.scss']
 })
 export class SmsModelsComponent implements OnInit {
+    @ViewChild(SmsGeneratorComponent) smsGeneratorComponent?: SmsGeneratorComponent;
+  
   models: any[] = [];
   showAddCard = false;
   selectedModel: any = null;
@@ -58,5 +61,8 @@ export class SmsModelsComponent implements OnInit {
         this.models = this.models.filter(model => model.id !== id);
       });
     }
+  }
+  openGeneratorModal() {
+    this.smsGeneratorComponent?.openModal();
   }
 }

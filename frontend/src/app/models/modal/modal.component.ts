@@ -1,16 +1,20 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, ViewChild } from '@angular/core';
 import { SmsModelService } from '../../services/model.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { SmsGeneratorComponent } from '../../sendSMS/sms-generator/sms-generator.component';
+
 
 @Component({
   selector: 'app-add-model-card',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,SmsGeneratorComponent ],
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.scss']
 })
 export class AddModelCardComponent {
+    @ViewChild(SmsGeneratorComponent) smsGeneratorComponent?: SmsGeneratorComponent;
+  
   @Output() modelAdded = new EventEmitter<any>();
   
   nom = '';
@@ -26,4 +30,7 @@ export class AddModelCardComponent {
       this.contenu = '';
     });
   }
+  openGeneratorModal() {
+      this.smsGeneratorComponent?.openModal();
+    }
 }

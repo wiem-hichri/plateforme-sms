@@ -1,0 +1,86 @@
+<div class="min-h-screen flex flex-col items-center bg-gray-100 p-6 mt-16">
+    <div class="w-full max-w-4xl bg-white shadow-lg rounded-lg p-8 mx-auto">
+        <!-- sms-generator.component.html -->
+<div class="sms-generator-container">
+    <!-- Button to open modal -->
+    <button class="open-button" (click)="toggleModal()">
+      <app-icon name="message-square" [size]="18"></app-icon>
+      Générer un modèle SMS
+    </button>
+  
+    <!-- Modal overlay with backdrop (only shown when isOpen is true) -->
+    @if (isOpen) {
+      <div class="modal-overlay" (click)="toggleModal()">
+        <!-- Modal container with click stop propagation to prevent closing when clicking inside -->
+        <div class="modal-container" (click)="$event.stopPropagation()">
+          <!-- Modal header -->
+          <div class="modal-header">
+            <h3 class="modal-title">Générateur de SMS</h3>
+            <button class="close-button" (click)="toggleModal()">
+              <app-icon name="x"></app-icon>
+            </button>
+          </div>
+  
+          <!-- Chat container -->
+          <div id="chat-container" class="chat-container">
+            <!-- Empty state when no messages -->
+            @if (conversation.length === 0) {
+              <div class="empty-state">
+                Entrez votre prompt pour générer un modèle de SMS
+              </div>
+            }
+  
+            <!-- Conversation messages -->
+            @for (message of conversation; track $index) {
+              <div class="message-container" 
+                  [ngClass]="{'user-message': message.role === 'user', 'assistant-message': message.role === 'assistant'}">
+                <div class="message-bubble">
+                  {{ message.content }}
+                </div>
+              </div>
+            }
+            
+            <!-- Loading indicator -->
+            @if (isLoading) {
+              <div class="message-container assistant-message">
+                <div class="message-bubble loading">
+                  <div class="loading-dots">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                  </div>
+                </div>
+              </div>
+            }
+            
+            <!-- Error message -->
+            @if (error) {
+              <div class="error-container">
+                {{ error }}
+              </div>
+            }
+          </div>
+  
+          <!-- Input area -->
+          <div class="input-container">
+            <div class="input-wrapper">
+              <input 
+                type="text"
+                [(ngModel)]="prompt"
+                placeholder="Décrivez le SMS que vous souhaitez générer..."
+                [disabled]="isLoading"
+                (keydown)="handleKeyDown($event)"
+              />
+              <button 
+                class="send-button" 
+                (click)="handleSubmit()" 
+                [disabled]="isLoading || !prompt.trim()"
+              >
+                <app-icon name="send"></app-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
