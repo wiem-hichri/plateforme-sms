@@ -13,7 +13,7 @@ router.put('/models/:id', isAuthentificated,checkRole('super-administrateur', 'a
 router.delete('/models/:id', isAuthentificated,checkRole('super-administrateur', 'administrateur', 'utilisateur'), deleteModelSMS);
 router.post("/models/generate-sms",checkRole('super-administrateur', 'administrateur', 'utilisateur'), generateSMS);
 router.post("/models/group/:groupId",checkRole('super-administrateur', 'administrateur', 'utilisateur'), sendMessageToGroup);
-router.post("/models/messageConfidentiel/:modeleId", upload.single('file'),checkRole('super-administrateur', 'administrateur', 'utilisateur'), sendConfidentialMessage);
+router.post("/models/messageConfidentiel/:modeleId/:groupId", upload.single('file'),checkRole('super-administrateur', 'administrateur', 'utilisateur'), sendConfidentialMessage);
 
 
 

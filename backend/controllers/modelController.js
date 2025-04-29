@@ -2,6 +2,7 @@ const Contact = require('../models/contact');
 const ContactGroupe = require('../models/contactGroupe');
 const ModelSMS = require('../models/model_sms');
 const xlsx = require('xlsx');
+const fs = require('fs/promises');
 
 
 
@@ -186,7 +187,11 @@ const sendMessageToGroup = async (req, res) => {
 
 
 
+
+
 const sendConfidentialMessage = async (req, res) => {
+    const filePath = req.file?.path;
+
     try {
         const { modeleId, groupId } = req.params;
 
@@ -198,16 +203,13 @@ const sendConfidentialMessage = async (req, res) => {
             return res.status(400).json({ status: "error", message: "Les champs 'modeleId' et 'groupId' sont requis" });
         }
 
-        // 1. Récupérer le modèle de SMS
-        const modele = await ModeleSMS.getById(modeleId);
+        const modele = await ModelSMS.getById(modeleId);
         if (!modele) {
             return res.status(404).json({ status: "error", message: `Modèle de SMS non trouvé pour l'ID ${modeleId}` });
         }
 
         const template = modele.contenu;
-
-        // 2. Lire les données du fichier Excel
-        const workbook = xlsx.readFile(req.file.path);
+        const workbook = xlsx.readFile(filePath);
         const sheetName = workbook.SheetNames[0];
         const excelData = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
 
@@ -215,34 +217,34 @@ const sendConfidentialMessage = async (req, res) => {
             return res.status(400).json({ status: "error", message: "Le fichier Excel est vide." });
         }
 
-        // 3. Récupérer les téléphones et matricules du groupe
         const groupContacts = await Contact.getPhonesAndMatriculesByGroupId(groupId);
-
         if (!groupContacts || groupContacts.length === 0) {
             return res.status(404).json({ status: "error", message: "Aucun contact trouvé pour ce groupe." });
         }
 
-        // 4. Créer un mapping matricule => téléphone
         const phoneMap = {};
         groupContacts.forEach(contact => {
-            phoneMap[contact.matricule] = contact.telephone;
+            phoneMap[contact.matricule] = contact.telephone_professionnel;
         });
 
-        // 5. Fusionner les données
         const validatedData = excelData
             .map(contactExcel => {
-                const matricule = contactExcel.Matricule;
+                const matricule = String(contactExcel.Matricule).trim();
                 const telephone = phoneMap[matricule];
 
                 if (!matricule || !telephone) {
-                    console.log("Données invalides ou téléphone non trouvé pour le matricule :", matricule);
+                    console.log("Matricule non trouvé ou téléphone manquant :", {
+                        matricule,
+                        telephone,
+                        ligneExcel: contactExcel
+                    });
                     return null;
                 }
 
                 return {
                     matricule,
                     telephone,
-                    ...contactExcel // Garde toutes les autres données du fichier Excel
+                    ...contactExcel
                 };
             })
             .filter(contact => contact !== null);
@@ -251,11 +253,11 @@ const sendConfidentialMessage = async (req, res) => {
             return res.status(400).json({ status: "error", message: "Aucun contact valide après fusion." });
         }
 
-        // 6. Vérifier que toutes les variables dynamiques du modèle existent dans le fichier Excel
         const dynamicVariables = template.match(/{{(.*?)}}/g)?.map(v => v.replace(/{{|}}/g, '').trim()) || [];
-        const missingVariables = dynamicVariables.filter(variable => !validatedData.some(contact => contact[variable] !== undefined));
+        const missingVariables = dynamicVariables.filter(variable =>
+            !validatedData.some(contact => contact[variable] !== undefined)
+        );
 
-        // Si des variables sont manquantes dans tous les contacts, on arrête
         if (missingVariables.length > 0) {
             return res.status(400).json({
                 status: "error",
@@ -263,11 +265,10 @@ const sendConfidentialMessage = async (req, res) => {
             });
         }
 
-        // 7. Remplacer les variables dans le message
         const replaceVariables = (template, contact) => {
             return template.replace(/{{(.*?)}}/g, (match, key) => {
                 const trimmedKey = key.trim();
-                return contact[trimmedKey] || match; // Si la variable n'existe pas, garder {{variable}}
+                return contact[trimmedKey] || match;
             });
         };
 
@@ -292,8 +293,21 @@ const sendConfidentialMessage = async (req, res) => {
             message: "Erreur lors de l'envoi des messages",
             error: error.message
         });
+    } finally {
+        // ✅ Supprimer le fichier même en cas d'erreur ou succès
+        if (filePath) {
+            try {
+                await fs.unlink(filePath);
+                console.log(`Fichier supprimé : ${filePath}`);
+            } catch (err) {
+                console.error(`Erreur lors de la suppression du fichier ${filePath} :`, err);
+            }
+        }
     }
 };
+
+
+
 
 
 

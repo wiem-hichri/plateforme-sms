@@ -54,8 +54,8 @@ const Contact = {
         const [rows] = await db.query(
             `SELECT c.telephone_professionnel, c.matricule
              FROM contacts c
-             INNER JOIN contact_group cg ON c.id = cg.contact_id
-             WHERE cg.group_id = ?`,
+             INNER JOIN contact_groupe cg ON c.id = cg.contact_id
+             WHERE cg.groupe_id = ?`,
             [groupId]
         );
         return rows;
