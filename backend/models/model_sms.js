@@ -34,7 +34,10 @@ const ModelSMS = {
         const [results] = await db.query("SELECT * FROM model_sms WHERE id = ? AND user_id = ?", [id, user_id]);
         return results.length > 0 ? results[0] : null;
     },
-
+    getById: async (id) => {
+        const [results] = await db.query("SELECT * FROM model_sms WHERE id = ?", [id]);
+        return results.length > 0 ? results[0] : null;
+    },
     // Mettre à jour un modèle de SMS pour un utilisateur spécifique
     update: async (id, user_id, { nom, contenu }) => {
         const query = `UPDATE model_sms SET nom=?, contenu=? WHERE id=? AND user_id=?`;
