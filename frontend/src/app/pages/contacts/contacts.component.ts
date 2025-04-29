@@ -35,6 +35,7 @@ export class ContactsComponent implements OnInit {
     'telephone_professionnel',
     'cin',
     'site',
+    'fonction',
     'action'
   ];
 

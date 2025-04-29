@@ -10,6 +10,7 @@ const {
     deleteMission,
 } = require('../controllers/missionController');
 
+
 router.post('/addmission', isAuthentificated, checkRole('super-administrateur', 'administrateur'), createMission);
 router.get('/missions', isAuthentificated, checkRole('super-administrateur', 'administrateur'), getMissions);
 router.get('/missions/:id', isAuthentificated, checkRole('super-administrateur', 'administrateur'), getMissionById);

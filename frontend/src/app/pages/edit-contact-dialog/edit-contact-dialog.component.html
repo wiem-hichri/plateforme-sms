@@ -33,14 +33,7 @@
         <small *ngIf="editContactForm.controls['site']?.errors?.['maxlength']">Site cannot be more than 50 characters long.</small>
       </div>
 
-      <!-- Dropdown for Service -->
-      <select [(ngModel)]="contact.service" name="service" required>
-        <option value="" disabled selected>Choisir un service</option>
-        <option *ngFor="let groupe of groupes" [value]="groupe.nom">{{ groupe.nom }}</option>
-      </select>
-      <div *ngIf="editContactForm.controls['service']?.invalid && editContactForm.controls['service']?.touched">
-        <small *ngIf="editContactForm.controls['service']?.errors?.['required']">Service is required.</small>
-      </div>
+    
 
       <div class="modal-actions">
         <button type="button" class="cancel-btn" (click)="closeDialog()">Annuler</button>

@@ -6,6 +6,7 @@ const upload = multer({ dest: 'uploads/' });
 const { isAuthentificated, checkRole } = require('../middlewares/authMiddleware');
 
 
+
 router.post('/models', isAuthentificated,checkRole('super-administrateur', 'administrateur', 'utilisateur'), createModelSMS);
 router.get('/models', isAuthentificated,checkRole('super-administrateur', 'administrateur', 'utilisateur'), getAllModels);
 //router.get('/models', isAuthentificated, getAllModelsByUser);
