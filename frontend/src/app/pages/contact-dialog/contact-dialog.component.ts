@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { ContactService } from '../../services/contact.service';
+import { SiteService } from '../../services/site.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -12,6 +13,8 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./contact-dialog.component.scss']
 })
 export class AddContactDialogComponent implements OnInit {
+  
+
   newContact = {
     matricule: '',
     nom: '',
@@ -20,14 +23,33 @@ export class AddContactDialogComponent implements OnInit {
     telephone_professionnel: '',
     cin: '',
     site: '',
+    fonction: '',
   };
+
+  sites: any[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<AddContactDialogComponent>,
-    private contactService: ContactService
+    private contactService: ContactService,
+    private siteService: SiteService
   ) {}
 
-  ngOnInit(): void {}
+
+  ngOnInit(): void {
+    
+    this.siteService.getSites().subscribe({
+      next: (response) => {
+        console.log('Réponse API pour les sites:', response);
+        this.sites = response.data; 
+      },
+      error: (err) => {
+        console.error('Erreur lors du chargement des sites:', err);
+      }
+    });
+  }
+  
+  
+  
 
   addContact() {
     if (this.newContact.matricule && this.newContact.nom) {

@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 const passport = require('../config/passport');
 const { isAuthentificated, checkRole } = require('../middlewares/authMiddleware');
-
 const  {createContact, getContacts, getContactByMatricule, updateContact, deleteContact, getContactsByGroup, importContacts } = require('../controllers/contactController');
+
+
 
 router.post('/addcontacts',isAuthentificated, checkRole( 'super-administrateur','administrateur'), createContact);
 router.get('/contacts',isAuthentificated, checkRole( 'utilisateur','super-administrateur','administrateur'), getContacts);

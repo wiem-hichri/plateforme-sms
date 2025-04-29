@@ -53,8 +53,27 @@
       <span *ngIf="contactForm.controls['cin']?.errors?.['pattern']">Le CIN doit contenir 8 chiffres.</span>
     </div>
 
+    <input 
+      type="text" 
+      [(ngModel)]="newContact.fonction" 
+      name="fonction" 
+      placeholder="Fonction" 
+      required 
+      pattern="^[A-Za-zÀ-ÿ\s]+$" 
+      #fonction="ngModel"
+      >
+    <div *ngIf="fonction.invalid && fonction.touched" class="error-message">
+      <span *ngIf="fonction.errors?.['required']">La fonction est requis.</span>
+    </div>
+
     <!-- Site -->
-    <input type="text" [(ngModel)]="newContact.site" name="site" placeholder="Site">
+    <select [(ngModel)]="newContact.site" name="site">
+      <option value="">-- Sélectionner un site --</option>
+      <option *ngFor="let site of sites" [value]="site.site_name">
+        {{ site.site_name }}
+      </option>
+    </select>
+    
 
     <div class="modal-actions">
       <button type="button" class="cancel-btn" (click)="dialogRef.close()">Annuler</button>

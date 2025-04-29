@@ -14,6 +14,8 @@ const puceRoutes = require('./routes/puceRoutes');
 //const openaiRoutes= require('./routes/openaiRoutes');
 const smsRoutes = require('./routes/smsRoutes');
 const claudRoutes= require('./routes/claudRoutes');
+const siteRoutes = require('./routes/siteRoutes');
+
 
 
 
@@ -46,7 +48,6 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(bodyParser.json());
-
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin || origin === 'null') {
@@ -75,6 +76,8 @@ app.use('/api', puceRoutes);
 app.use('/api', smsRoutes);
 //app.use('/api', openaiRoutes);
 app.use('/api', claudRoutes)
+app.use('/api', siteRoutes);
+
 
 
 
