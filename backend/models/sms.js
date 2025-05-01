@@ -6,12 +6,14 @@ const SMS = {
     return db.query('SELECT COUNT(*) as count FROM outbox');
   },
 
-  insertSMS: (destinationNumber, textDecoded) => {
+  insertSMS: (destinationNumber, textDecoded, senderID) => {
     return db.query(
-      `INSERT INTO outbox (DestinationNumber, TextDecoded) VALUES (?, ?)`,
-      [destinationNumber, textDecoded]
+      `INSERT INTO outbox (DestinationNumber, TextDecoded, SenderID) VALUES (?, ?, ?)`,
+      [destinationNumber, textDecoded, senderID]
     );
   },
+
+
 
   getSMS: () => {
     return db.query(`SELECT * FROM outbox ORDER BY SendingDateTime ASC LIMIT 1`);
