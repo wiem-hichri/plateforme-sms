@@ -44,14 +44,14 @@ export class ContactService {
     return this.http.post<any>('http://localhost:3000/api/import-contacts', contacts, { withCredentials: true });
   }
 
-  associateContactToGroup(contactId: number, groupIds: number[]): Observable<any> {
-    return this.http.post(`${this.contactGroupeUrl}/contacts/${contactId}/groups`, { groupIds });
+  associateContactsToGroup(contactIds: number[], groupId: number): Observable<any> {
+    return this.http.post(`${this.contactGroupeUrl}/contacts/group`, { contactIds, groupId }, { withCredentials: true });
   }
 
-  disassociateContactFromGroup(contactId: number, groupId: number): Observable<void> {
-    return this.http.request<void>('DELETE', `${this.contactGroupeUrl}/delete`, { body: { contactId, groupId }, withCredentials: true });
+  disassociateContactsFromGroup(contactIds: number[], groupId: number): Observable<any> {
+    return this.http.delete(`${this.contactGroupeUrl}/delete`, { body: { contactIds, groupId }, withCredentials: true });
   }
-
+  
   getContactsByGroup(groupId: number): Observable<{ data: any[] }> {
     return this.http.get<{ data: any[] }>(`${this.contactGroupeUrl}/group/${groupId}/contacts`, { withCredentials: true });
   }

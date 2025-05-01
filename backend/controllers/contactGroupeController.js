@@ -1,16 +1,21 @@
 const ContactGroupe = require('../models/contactGroupe');
 
-const associateContactToGroups = async (req, res) => {
-    const { contactId } = req.params;
-    const { groupIds } = req.body;
 
-    try {
-        const result = await ContactGroupe.associateContactToGroups(contactId, groupIds);
-        res.status(200).json({ message: 'Contact associated with groups successfully.', affectedRows: result.affectedRows });
-    } catch (error) {
-        res.status(500).json({ message: 'Error associating contact with groups', error: error.message });
+
+const associateContactsToGroup = async (req, res) => {
+    const { contactIds, groupId } = req.body;
+  
+    if (!Array.isArray(contactIds)) {
+      return res.status(400).json({ message: "contactIds must be an array" });
     }
-};
+  
+    try {
+      const result = await ContactGroupe.associateContactsToGroup(contactIds, groupId);
+      res.status(200).json({ message: 'Contacts associés au groupe avec succès.', affectedRows: result.affectedRows });
+    } catch (error) {
+      res.status(500).json({ message: 'Erreur lors de l’association', error: error.message });
+    }
+  };
 
 const getGroupsByContact = async (req, res) => {
     try {
@@ -32,14 +37,20 @@ const getContactsByGroup = async (req, res) => {
     }
 };
 
-const deleteAssociation = async (req, res) => {
+const disassociateContactsFromGroup = async (req, res) => {
+    const { contactIds, groupId } = req.body;
+
+    if (!Array.isArray(contactIds)) {
+        return res.status(400).json({ message: "contactIds must be an array" });
+    }
+
     try {
-        const { contactId, groupId } = req.body;
-        await ContactGroupe.deleteAssociation(contactId, groupId);
-        res.json({ message: "Association supprimée avec succès." });
+        const result = await ContactGroupe.disassociateContactsFromGroup(contactIds, groupId);
+        res.status(200).json({ message: "Contacts désassociés du groupe avec succès.", affectedRows: result.affectedRows });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ message: "Erreur lors de la désassociation", error: error.message });
     }
 };
 
-module.exports = { associateContactToGroups, getGroupsByContact, getContactsByGroup, deleteAssociation };
+
+module.exports = { associateContactsToGroup, getGroupsByContact, getContactsByGroup, disassociateContactsFromGroup };

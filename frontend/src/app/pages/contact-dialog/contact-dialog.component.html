@@ -63,16 +63,26 @@
       #fonction="ngModel"
       >
     <div *ngIf="fonction.invalid && fonction.touched" class="error-message">
-      <span *ngIf="fonction.errors?.['required']">La fonction est requis.</span>
+      <span *ngIf="fonction.errors?.['required']">La fonction est requise.</span>
     </div>
 
     <!-- Site -->
-    <select [(ngModel)]="newContact.site" name="site">
+    <select
+      [(ngModel)]="newContact.site"
+      name="site"
+      id="site"
+      required
+      #siteField="ngModel"
+      class="form-control"
+    >
       <option value="">-- Sélectionner un site --</option>
       <option *ngFor="let site of sites" [value]="site.site_name">
         {{ site.site_name }}
       </option>
     </select>
+
+    
+
     
 
     <div class="modal-actions">

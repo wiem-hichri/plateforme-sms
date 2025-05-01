@@ -132,30 +132,27 @@ export class GroupsComponent implements OnInit {
   }
 
   associateContactsToGroup(contactIds: number[], groupId: number) {
-    contactIds.forEach((contactId) => {
-      this.contactService.associateContactToGroup(contactId, [groupId]).subscribe(
-        () => {
-          this.fetchGroupContacts(groupId);
-        },
-        (error) => {
-          console.error('Error associating contact with group:', error);
-        }
-      );
-    });
+    this.contactService.associateContactsToGroup(contactIds, groupId).subscribe(
+      () => {
+        this.fetchGroupContacts(groupId);
+      },
+      (error) => {
+        console.error('Erreur lors de l’association des contacts au groupe :', error);
+      }
+    );
   }
-
+  
   disassociateContactsFromGroup(contactIds: number[], groupId: number) {
-    contactIds.forEach((contactId) => {
-      this.contactService.disassociateContactFromGroup(contactId, groupId).subscribe(
-        () => {
-          this.fetchGroupContacts(groupId);
-        },
-        (error) => {
-          console.error('Error disassociating contact from group:', error);
-        }
-      );
-    });
+    this.contactService.disassociateContactsFromGroup(contactIds, groupId).subscribe(
+      () => {
+        this.fetchGroupContacts(groupId);
+      },
+      (error) => {
+        console.error('Erreur lors de la désassociation des contacts du groupe :', error);
+      }
+    );
   }
+  
 
   fetchGroupContacts(groupId: number) {
     this.contactService.getContactsByGroup(groupId).subscribe(

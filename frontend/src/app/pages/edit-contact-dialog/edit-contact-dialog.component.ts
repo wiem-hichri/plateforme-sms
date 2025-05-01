@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ContactService } from '../../services/contact.service';
 import { Contact } from '../../models/contact.model';
-import { GroupService, Group } from '../../services/group.service';
+import { SiteService } from '../../services/site.service';
 
 @Component({
   selector: 'app-edit-contact-dialog',
@@ -15,31 +15,37 @@ import { GroupService, Group } from '../../services/group.service';
 })
 export class EditContactDialogComponent implements OnInit {
   contact: Contact;
-  groupes: Group[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<EditContactDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { contact: Contact },
     private contactService: ContactService,
-    private groupService: GroupService
+    private siteService: SiteService
   ) {
     this.contact = { ...data.contact };
   }
+  sites: any[] = [];
 
-  ngOnInit() {
-    this.fetchGroups();
-  }
+  ngOnInit(): void {
+    this.siteService.getSites().subscribe({
+      next: (response) => {
+        console.log('Réponse API pour les sites:', response);
+        this.sites = response.data;
 
-  fetchGroups() {
-    this.groupService.getGroups().subscribe(
-      (response) => {
-        this.groupes = response.data || [];
+        // S'assurer que le site sélectionné est encore valide
+        if (!this.sites.some(site => site.site_name === this.contact.site)) {
+          this.contact.site = '';
+        }
       },
-      (error) => {
-        console.error('Error fetching groups:', error);
+      error: (err) => {
+        console.error('Erreur lors du chargement des sites:', err);
       }
-    );
+    });
   }
+
+
+
+ 
 
   closeDialog() {
     this.dialogRef.close();
@@ -50,7 +56,7 @@ export class EditContactDialogComponent implements OnInit {
       (updatedContact) => {
         console.log('Contact updated successfully:', updatedContact);
         this.dialogRef.close(updatedContact);
-        window.location.reload(); // Reload the page
+        window.location.reload(); 
       },
       (error) => {
         console.error('Error updating contact:', error);
