@@ -1,66 +1,69 @@
-<div class="min-h-screen bg-gray-100 p-6 mt-16">
-    <div class="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-8">
-      <h2 class="text-2xl font-bold text-blue-600 mb-6">📨 Envoi de SMS</h2>
-  
-      <form class="space-y-6" (ngSubmit)="sendMessage()">
-        <!-- Contact Selection -->
-        <div>
-          <label class="font-semibold">📱 Contact (optionnel)</label>
-          <select [(ngModel)]="selectedContactId" name="contact" class="w-full mt-1 p-2 border rounded">
-            <option [ngValue]="null">-- Aucun --</option>
-            <option *ngFor="let contact of contacts" [ngValue]="contact.id">
-              {{ contact.nom }} {{ contact.prenom }} - {{ contact.numero }}
-            </option>
-          </select>
-        </div>
-  
-        <!-- Group Selection with Checkboxes -->
-        <div>
-          <label class="font-semibold">👥 Groupes</label>
-          <div class="space-y-2 mt-2">
-            <label *ngFor="let group of groups" class="flex items-center space-x-2">
-              <input 
-                type="checkbox" 
-                [(ngModel)]="selectedGroupIds" 
-                [value]="group.id" 
-                class="h-5 w-5 border-gray-300 rounded"
-              />
-              <span class="text-gray-700">{{ group.nom }}</span>
-            </label>
-          </div>
-        </div>
-  
-        <!-- Model Selection -->
-        <div>
-          <label class="font-semibold">📄 Modèle de Message</label>
-          <select [(ngModel)]="selectedModelId" name="model" class="w-full mt-1 p-2 border rounded">
-            <option *ngFor="let model of models" [ngValue]="model.id">{{ model.nom }}</option>
-          </select>
-        </div>
-  
-        <!-- Preview -->
-        <div class="bg-gray-100 p-4 rounded border">
-          <h3 class="font-bold mb-2 text-gray-700">📋 Récapitulatif</h3>
-          <p><strong>Contact :</strong>
-            <span *ngIf="selectedContact">{{ selectedContact.nom }} {{ selectedContact.prenom }} - {{ selectedContact.numero }}</span>
-            <span *ngIf="!selectedContact">Aucun</span>
-          </p>
-          <p><strong>Groupes :</strong>
-            <span *ngIf="selectedGroups.length > 0">
-              <span *ngFor="let group of selectedGroups; let last = last">
-                {{ group.nom }}<span *ngIf="!last">, </span>
-              </span>
-            </span>
-            <span *ngIf="selectedGroups.length === 0">Aucun</span>
-          </p>
-          <p><strong>Message :</strong> <span class="italic text-gray-600">{{ selectedModel?.contenu }}</span></p>
-        </div>
-  
-        <!-- Submit -->
-        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-          ✉️ Envoyer le SMS
-        </button>
-      </form>
+<div class="min-h-screen flex flex-col items-center bg-gray-100 p-6 mt-16">
+  <div class="w-full max-w-4xl bg-white shadow-lg rounded-lg p-8 mx-auto">
+<div class="p-6 max-w-4xl mx-auto">
+  <h2 class="text-2xl font-bold mb-4">Générer et Envoyer un Message Confidentiel</h2>
+
+  <!-- Selection Section -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+    <div>
+      <label class="block text-sm font-medium mb-1">Sélectionner un groupe</label>
+      <select
+        class="w-full border rounded px-3 py-2"
+        (change)="onGroupChange($event)"
+      >
+        <option value="" disabled selected>-- Choisir un groupe --</option>
+        <option *ngFor="let group of groups" [value]="group.id">{{ group.nom }}</option>
+      </select>
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium mb-1">Sélectionner un modèle</label>
+      <select
+        class="w-full border rounded px-3 py-2"
+        (change)="onModelChange($event)"
+      >
+        <option value="" disabled selected>-- Choisir un modèle --</option>
+        <option *ngFor="let model of models" [value]="model.id">{{ model.nom }}</option>
+      </select>
     </div>
   </div>
-  
+
+  <!-- File Upload -->
+  <div class="mb-6">
+    <label class="block text-sm font-medium mb-1">Importer un fichier Excel</label>
+    <input
+      type="file"
+      (change)="onFileChange($event)"
+      class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+      accept=".xlsx,.xls"
+    />
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="flex gap-4 mb-6">
+    <button
+      class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded"
+      (click)="generateMessages()"
+    >
+      Générer les messages
+    </button>
+
+    <button
+      class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded"
+      [disabled]="generatedMessages.length === 0"
+      (click)="sendMessages()"
+    >
+      Envoyer les messages
+    </button>
+  </div>
+
+  <!-- Preview Section -->
+  <div *ngIf="generatedMessages.length > 0" class="mt-8">
+    <h3 class="text-xl font-semibold mb-2">Messages générés :</h3>
+    <div class="bg-gray-100 rounded p-4 max-h-64 overflow-y-auto space-y-2">
+      <div *ngFor="let msg of generatedMessages" class="p-2 bg-white rounded shadow text-sm">
+        {{ msg }}
+      </div>
+    </div>
+  </div>
+</div>

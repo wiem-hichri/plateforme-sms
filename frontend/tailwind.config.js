@@ -23,9 +23,9 @@
       "./src/app/puces/puce/puce.component.ts",
       "./src/app/pages/rm-contact-list-dialog/rm-contact-list-dialog.component.html",
       "./src/app/pages/contact-list-dialog/contact-list-dialog.component.html",
-      "/src/app/sensSMS/send-message/send-message.component.html",
-      "/src/app/sensSMS/choose-sms-method/choose-sms-method.component.html",
-      "/src/app/sensSMS/mgc-sms/mgc-sms.component.html"
+      "/src/app/sendSMS/send-message/send-message.component.html",
+      "/src/app/sendSMS/choose-sms-method/choose-sms-method.component.html",
+      "/src/app/sendSMS/mgc-sms/mgc-sms.component.html"
 
 
     ],
