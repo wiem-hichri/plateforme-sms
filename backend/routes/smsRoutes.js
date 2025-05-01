@@ -10,7 +10,7 @@ const { smsCount,
 router.get('/count', smsCount);
 router.post('/insert',  insertSMS);
 router.get('/recent', getSMS);
-router.delete('/delete',isAuthentificated, deleteSMS);
+router.delete('/delete', deleteSMS);
 router.post('/sent', smsSent)
 
 module.exports = router;
