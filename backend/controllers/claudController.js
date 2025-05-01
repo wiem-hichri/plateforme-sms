@@ -18,19 +18,24 @@ async function genererSMS(req, res) {
       content: prompt,
     });
 
-    // Préparation du contexte pour l'API
     const messages = [
       {
         role: "system",
-        content: "Tu es un assistant qui génère des modèles de SMS professionnels et courts.",
+        content: `Tu es un assistant dédié à l'entreprise Lumière, spécialisée dans le domaine de la logistique et du transport. 
+    Ta seule mission est de générer des SMS professionnels courts et des modèles de SMS contenant des variables dynamiques au format {{variable}}.
+    Tu ne dois en aucun cas répondre à des questions ou demandes qui ne concernent pas la génération de SMS. 
+    Si quelqu’un te pose une question hors sujet, tu dois répondre : 
+    "Je suis un assistant dédié exclusivement à la génération de SMS professionnels et de modèles dynamiques pour l'entreprise Lumière. Je ne peux pas répondre à d'autres types de demandes."`,
       },
       ...conversationHistory,
     ];
+    
+    
 
     const response = await axios.post(
       "https://openrouter.ai/api/v1/chat/completions",
       {
-        model: "anthropic/claude-3-sonnet-20240229", // Remplacer selon ton modèle
+        model: "anthropic/claude-3-sonnet-20240229", 
         messages: messages,
         max_tokens: 500,
         temperature: 0.7,
@@ -39,26 +44,23 @@ async function genererSMS(req, res) {
         headers: {
           Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
           "Content-Type": "application/json",
-          "HTTP-Referer": "https://tonsite.com", // Personnalise
-          "X-Title": "NomDeTonProjet", // Personnalise
+          "HTTP-Referer": "https://tonsite.com", 
+          "X-Title": "Lumière messagerie", 
         },
       }
     );
 
     const message = response.data.choices[0].message.content.trim();
 
-    // Ajouter la réponse IA à l'historique
     conversationHistory.push({
       role: "assistant",
       content: message,
     });
 
-    // Limiter à 3 derniers échanges maximum
-    if (conversationHistory.length > 6) {
-      conversationHistory = conversationHistory.slice(-6);
+    if (conversationHistory.length > 10) {
+      conversationHistory = conversationHistory.slice(-10);
     }
 
-    // Renvoyer uniquement le message et l'historique
     res.json({ message, conversationHistory });
   } catch (error) {
     console.error("Erreur Claude API:", error.response?.data || error.message);

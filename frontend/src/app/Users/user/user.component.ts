@@ -55,7 +55,8 @@ export class UsersComponent implements OnInit {
     return this.users.filter(user =>
       user.nom.toLowerCase().includes(this.filterValue.toLowerCase()) ||
       user.prenom.toLowerCase().includes(this.filterValue.toLowerCase()) ||
-      user.matricule.toLowerCase().includes(this.filterValue.toLowerCase())
+      user.matricule.toLowerCase().includes(this.filterValue.toLowerCase())||
+      user.role.toLowerCase().includes(this.filterValue.toLowerCase())
     );
   }
 
@@ -76,15 +77,15 @@ export class UsersComponent implements OnInit {
     }
   }
 
-  openAddUserDialog() {
-    const dialogRef = this.dialog.open(AddUserDialogComponent, { width: '400px' });
+ openAddUserDialog() {
+  const dialogRef = this.dialog.open(AddUserDialogComponent, { width: '400px' });
 
-    dialogRef.afterClosed().subscribe((newUser: User | undefined) => {
-      if (newUser) {
-        this.userService.addUser(newUser).subscribe(() => this.fetchUsers());
-      }
-    });
-  }
+  dialogRef.afterClosed().subscribe((newUser: User | undefined) => {
+    if (newUser) {
+      this.fetchUsers(); // ✔ Recharge la liste directement, car l'utilisateur est déjà ajouté
+    }
+  });
+}
 
   openEditUserDialog(user: User) {
     if (this.canEditOrDeleteUser(user)) {
