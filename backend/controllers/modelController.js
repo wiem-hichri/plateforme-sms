@@ -199,8 +199,8 @@ const sendConfidentialMessage = async (req, res) => {
             return res.status(400).json({ status: "error", message: "Fichier Excel requis" });
         }
 
-        if (!modeleId || !groupId) {
-            return res.status(400).json({ status: "error", message: "Les champs 'modeleId' et 'groupId' sont requis" });
+        if (!modeleId) {
+            return res.status(400).json({ status: "error", message: "Le champ 'modeleId' est requis" });
         }
 
         const modele = await ModelSMS.getById(modeleId);
@@ -217,15 +217,26 @@ const sendConfidentialMessage = async (req, res) => {
             return res.status(400).json({ status: "error", message: "Le fichier Excel est vide." });
         }
 
-        const groupContacts = await Contact.getPhonesAndMatriculesByGroupId(groupId);
-        if (!groupContacts || groupContacts.length === 0) {
-            return res.status(404).json({ status: "error", message: "Aucun contact trouvé pour ce groupe." });
+        // Récupérer les contacts selon présence du groupId
+        let contactsDb;
+        if (groupId) {
+            contactsDb = await Contact.getPhonesAndMatriculesByGroupId(groupId);
+            if (!contactsDb || contactsDb.length === 0) {
+                return res.status(404).json({ status: "error", message: "Aucun contact trouvé pour ce groupe." });
+            }
+        } else {
+            contactsDb = await Contact.getPhonesByMatricules(
+                excelData.map(row => String(row.Matricule).trim())
+            );
         }
 
+        // Création du dictionnaire matricule => téléphone
         const phoneMap = {};
-        groupContacts.forEach(contact => {
+        contactsDb.forEach(contact => {
             phoneMap[contact.matricule] = contact.telephone_professionnel;
         });
+
+        const erreursMatricules = [];
 
         const validatedData = excelData
             .map(contactExcel => {
@@ -233,11 +244,7 @@ const sendConfidentialMessage = async (req, res) => {
                 const telephone = phoneMap[matricule];
 
                 if (!matricule || !telephone) {
-                    console.log("Matricule non trouvé ou téléphone manquant :", {
-                        matricule,
-                        telephone,
-                        ligneExcel: contactExcel
-                    });
+                    erreursMatricules.push(matricule);
                     return null;
                 }
 
@@ -250,7 +257,11 @@ const sendConfidentialMessage = async (req, res) => {
             .filter(contact => contact !== null);
 
         if (validatedData.length === 0) {
-            return res.status(400).json({ status: "error", message: "Aucun contact valide après fusion." });
+            return res.status(400).json({
+                status: "error",
+                message: "Aucun contact valide après fusion.",
+                erreursMatricules
+            });
         }
 
         const dynamicVariables = template.match(/{{(.*?)}}/g)?.map(v => v.replace(/{{|}}/g, '').trim()) || [];
@@ -281,8 +292,9 @@ const sendConfidentialMessage = async (req, res) => {
         return res.status(200).json({
             status: "success",
             modeleId,
-            groupId,
+            groupId: groupId || null,
             totalContacts: validatedData.length,
+            erreursMatricules,
             messages
         });
 
@@ -294,7 +306,6 @@ const sendConfidentialMessage = async (req, res) => {
             error: error.message
         });
     } finally {
-        // ✅ Supprimer le fichier même en cas d'erreur ou succès
         if (filePath) {
             try {
                 await fs.unlink(filePath);
@@ -305,6 +316,8 @@ const sendConfidentialMessage = async (req, res) => {
         }
     }
 };
+
+
 
 
 

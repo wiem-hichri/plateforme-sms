@@ -7,6 +7,6 @@ export interface Contact {
     telephone_professionnel: string;
     cin: string;
     site: string;
-    service: string;
+    fonction:string;
   }
   

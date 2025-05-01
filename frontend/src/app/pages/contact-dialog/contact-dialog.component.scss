@@ -39,7 +39,7 @@
   }
   
   .cancel-btn {
-    background: #f44336;
+    background: #979191;
     color: white;
     border: none;
     padding: 10px 15px;
@@ -48,7 +48,7 @@
   }
   
   .submit-btn {
-    background: #4CAF50;
+    background: #fc5130;
     color: white;
     border: none;
     padding: 10px 15px;
@@ -57,10 +57,10 @@
   }
   
   .cancel-btn:hover {
-    background: darken(#f44336, 10%);
+    background: darken(#979191, 10%);
   }
   
   .submit-btn:hover {
-    background: darken(#4CAF50, 10%);
+    background: darken(#fc5130, 10%);
   }
   

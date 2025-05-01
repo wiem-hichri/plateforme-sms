@@ -1,13 +1,17 @@
 const db = require('../config/dbConnect').promise();
 
 const ContactGroupe = {
-    associateContactToGroups: async (contactId, groupIds) => {
-        const values = groupIds.map(groupId => [contactId, groupId]);
-        const query = `INSERT INTO contact_groupe (contact_id, groupe_id) VALUES ?`;
-        const [result] = await db.query(query, [values]);
-        return result;
-    },
-
+        associateContactsToGroup: async (contactIds, groupId) => {
+            if (!Array.isArray(contactIds)) {
+                throw new Error("contactIds must be an array");
+            }
+        
+            const values = contactIds.map(contactId => [contactId, groupId]);
+            const query = `INSERT IGNORE INTO contact_groupe (contact_id, groupe_id) VALUES ?`;
+            const [result] = await db.query(query, [values]);
+            return result;
+        },
+        
     getGroupsByContact: async (contactId) => {
         const query = `
             SELECT g.* FROM groupes g
@@ -26,11 +30,17 @@ const ContactGroupe = {
         return results;
     },
 
-    deleteAssociation: async (contactId, groupId) => {
-        const query = `DELETE FROM contact_groupe WHERE contact_id = ? AND groupe_id = ?`;
-        const [result] = await db.query(query, [contactId, groupId]);
+    disassociateContactsFromGroup: async (contactIds, groupId) => {
+        if (!Array.isArray(contactIds)) {
+            throw new Error("contactIds must be an array");
+        }
+    
+        const placeholders = contactIds.map(() => '?').join(',');
+        const query = `DELETE FROM contact_groupe WHERE groupe_id = ? AND contact_id IN (${placeholders})`;
+        const [result] = await db.query(query, [groupId, ...contactIds]);
         return result;
     }
+    
 };
 
 module.exports = ContactGroupe;

@@ -33,7 +33,7 @@ const Contact = {
     },
 
     update: async (id, contact) => {
-        const query = `UPDATE contacts SET matricule=?, nom=?, prenom=?, telephone_personnel=?, telephone_professionnel=?, site=?, cin=?, fonction=?, WHERE id=?`;
+        const query = `UPDATE contacts SET matricule=?, nom=?, prenom=?, telephone_personnel=?, telephone_professionnel=?, site=?, cin=?, fonction=? WHERE id=?`;
         const values = [contact.matricule, contact.nom, contact.prenom, contact.telephone_personnel, contact.telephone_professionnel, contact.site, contact.cin, contact.fonction, id];
         const [result] = await db.query(query, values);
         return result;
@@ -60,6 +60,22 @@ const Contact = {
         );
         return rows;
     },
+
+    getPhonesByMatricules: async (matricules) => {
+        if (!Array.isArray(matricules) || matricules.length === 0) {
+            return [];
+        }
+    
+        const placeholders = matricules.map(() => '?').join(', ');
+        const [rows] = await db.query(
+            `SELECT c.telephone_professionnel, c.matricule
+             FROM contacts c
+             WHERE c.matricule IN (${placeholders})`,
+            matricules
+        );
+        return rows;
+    },
+    
 
     addMultipleContacts: async (contacts, callback) => {
         try {
