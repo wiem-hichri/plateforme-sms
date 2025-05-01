@@ -24,4 +24,5 @@ export class SmsGeneratorService {
   generateSms(prompt: string): Observable<SmsResponse> {
     return this.http.post<SmsResponse>(this.apiUrl, { prompt, withCredentials: true } );
   }
+  
 }

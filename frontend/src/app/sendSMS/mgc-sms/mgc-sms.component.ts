@@ -1,101 +1,122 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { SmsService } from '../../services/sms.service';
-import { ContactService } from '../../services/contact.service';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { GroupService } from '../../services/group.service';
 import { SmsModelService } from '../../services/model.service';
+import { SmsService } from '../../services/sms.service'; // ✅
+import { AuthService } from '../../services/auth.service'; // ✅
 
 @Component({
-  selector: 'app-envoi-sms',
+  selector: 'app-mgc',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, HttpClientModule],
   templateUrl: './mgc-sms.component.html',
-  styleUrls: ['./mgc-sms.component.scss']
+  styleUrls: ['./mgc-sms.component.scss'] // Make sure this file exists or remove this line
 })
-export class EnvoiSmsComponent implements OnInit {
-  contacts: any[] = [];
+export class MgcComponent implements OnInit {
   groups: any[] = [];
   models: any[] = [];
-
-  selectedContactId: number | null = null;
-  selectedGroupIds: number[] = [];
+  selectedGroupId: number | null = null;
   selectedModelId: number | null = null;
-
-  groupSearch: string = '';
+  excelFile: File | null = null;
+  generatedMessages: any[] = [];
+  sending = false;
+  responseMessage = '';
 
   constructor(
-    private smsService: SmsService,
-    private contactService: ContactService,
     private groupService: GroupService,
-    private modelService: SmsModelService
+    private smsmodelService: SmsModelService,
+    private smsService: SmsService,           // ✅
+    private authService: AuthService,         // ✅
+    private http: HttpClient
   ) {}
 
-  ngOnInit() {
-    this.contactService.getContacts().subscribe(data => this.contacts = data);
-    this.groupService.getGroups().subscribe(data => this.groups = data.data);
-    this.modelService.getAll().subscribe(data => this.models = data);
+  ngOnInit(): void {
+    this.loadGroups();
+    this.loadModels();
   }
 
-  get selectedContact() {
-    return this.contacts.find(c => c.id === this.selectedContactId);
+  loadGroups() {
+    this.groupService.getGroups().subscribe(response => {
+      this.groups = Array.isArray(response) ? response : response.data ?? [];
+    });
   }
 
-  get selectedGroups() {
-    return this.groups.filter(g => this.selectedGroupIds.includes(g.id));
+  loadModels() {
+    this.smsmodelService.getAll().subscribe(models => {
+      this.models = models;
+    });
   }
 
-  get selectedModel() {
-    return this.models.find(m => m.id === this.selectedModelId);
+  onGroupChange(event: Event) {
+    const value = (event.target as HTMLSelectElement).value;
+    this.selectedGroupId = Number(value);
   }
 
-  get filteredGroups() {
-    const query = this.groupSearch.trim().toLowerCase();
-    return this.groups.filter(g => g.nom.toLowerCase().includes(query));
+  onModelChange(event: Event) {
+    const value = (event.target as HTMLSelectElement).value;
+    this.selectedModelId = Number(value);
   }
 
-  toggleGroupSelection(groupId: number) {
-    const index = this.selectedGroupIds.indexOf(groupId);
-    if (index > -1) {
-      this.selectedGroupIds.splice(index, 1);
-    } else {
-      this.selectedGroupIds.push(groupId);
+  onFileChange(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.excelFile = file;
     }
   }
 
-  sendMessage() {
-    const destinationNumbers: string[] = [];
-
-    if (this.selectedContact) {
-      destinationNumbers.push(this.selectedContact.numero);
+  generateMessages() {
+    if (!this.selectedGroupId || !this.selectedModelId || !this.excelFile) {
+      alert('Please fill all fields');
+      return;
     }
 
-    this.selectedGroups.forEach(group => {
-      if (group.contacts) {
-        group.contacts.forEach((contact: any) => {
-          if (contact.numero && !destinationNumbers.includes(contact.numero)) {
-            destinationNumbers.push(contact.numero);
-          }
-        });
+    const formData = new FormData();
+    formData.append('file', this.excelFile);
+    formData.append('groupId', this.selectedGroupId.toString());
+    formData.append('modeleId', this.selectedModelId.toString());
+
+    this.http.post<any>(`http://localhost:3000/api/models/messageConfidentiel/${this.selectedModelId}/${this.selectedGroupId}`, formData).subscribe(
+      (response) => {
+        if (response.status === 'success') {
+          this.generatedMessages = response.messages;
+        } else {
+          alert('Error generating messages: ' + response.message);
+        }
+      },
+      (error) => {
+        alert('Error generating messages: ' + error.message);
       }
-    });
+    );
+  }
 
-    const messageContent = this.selectedModel?.contenu || '';
-    const creatorId = 1; // Replace with actual logged-in user ID
+  async sendMessages() {
+    if (this.generatedMessages.length === 0) {
+      alert('No messages to send');
+      return;
+    }
 
-    Promise.all(
-      destinationNumbers.map(num =>
-        this.smsService.sendSMS(num, messageContent, creatorId)
-      )
-    ).then(() => {
-      alert('📤 SMS envoyé avec succès à tous les destinataires !');
-      this.selectedContactId = null;
-      this.selectedGroupIds = [];
-      this.selectedModelId = null;
-      this.groupSearch = '';
-    }).catch(error => {
-      console.error('Erreur lors de l\'envoi des SMS :', error);
-      alert('❌ Une erreur est survenue lors de l\'envoi.');
-    });
+    const creatorId = this.authService.getCurrentUserId(); // ✅
+    if (!creatorId) {
+      this.responseMessage = "Utilisateur non authentifié.";
+      return;
+    }
+
+    this.sending = true;
+    this.responseMessage = '';
+
+    try {
+      for (const msg of this.generatedMessages) {
+        await this.smsService.sendSMS(msg.phone, msg.text, creatorId); // ✅ use the same pattern
+      }
+
+      this.responseMessage = 'Tous les messages ont été envoyés avec succès !';
+      this.generatedMessages = []; // optional: clear the list after sending
+    } catch (error) {
+      this.responseMessage = "Erreur lors de l'envoi de certains messages.";
+    } finally {
+      this.sending = false;
+    }
   }
 }

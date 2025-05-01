@@ -11,6 +11,7 @@ export class ContactService {
   private apiUrl = 'http://localhost:3000/api/contacts';
   private addApiUrl = 'http://localhost:3000/api/addcontacts';
   private contactGroupeUrl = 'http://localhost:3000/contact-groupe';
+  private phonesMatriculesUrl = 'http://localhost:3000/api/contacts/phones-matricules'; // New endpoint
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
@@ -54,5 +55,10 @@ export class ContactService {
   
   getContactsByGroup(groupId: number): Observable<{ data: any[] }> {
     return this.http.get<{ data: any[] }>(`${this.contactGroupeUrl}/group/${groupId}/contacts`, { withCredentials: true });
+  }
+
+  // New method to fetch phone numbers and matricules by group ID
+  getPhonesAndMatriculesByGroupId(groupId: number): Observable<any> {
+    return this.http.get<any>(`${this.phonesMatriculesUrl}/${groupId}`, { withCredentials: true });
   }
 }
