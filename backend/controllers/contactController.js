@@ -1,4 +1,5 @@
 const Contact = require('../models/contact');
+const db = require('../config/dbConnect').promise();
 
 
 const createContact = async (req, res) => {
@@ -129,7 +130,26 @@ const importContacts = (req, res) => {
       res.status(500).json({ message: 'Error fetching existing contacts' });
     });
   };
-  
+  const getPhonesAndMatriculesByGroupId = async (req, res) => {
+    const { groupId } = req.params; 
+
+    try {
+        // Run the query to get contacts' phone numbers and matricules
+        const [rows] = await db.query(
+            `SELECT c.telephone_professionnel, c.matricule
+             FROM contacts c
+             INNER JOIN contact_groupe cg ON c.id = cg.contact_id
+             WHERE cg.groupe_id = ?`,
+            [groupId]
+        );
+
+        // Return the results
+        res.status(200).json({ data: rows });
+    } catch (error) {
+        console.error('Error fetching phones and matricules:', error);
+        res.status(500).json({ message: "Erreur serveur, veuillez réessayer." });
+    }
+};
 
 
-module.exports = { createContact, getContacts, getContactByMatricule, updateContact, deleteContact, getContactsByGroup, importContacts };
+module.exports = { createContact, getContacts, getContactByMatricule, updateContact, deleteContact, getContactsByGroup, importContacts,getPhonesAndMatriculesByGroupId };
