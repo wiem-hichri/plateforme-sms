@@ -7,10 +7,10 @@ const { smsCount,
     deleteSMS,
     smsSent} = require('../controllers/smsController');
 
-router.get('/count', isAuthentificated, smsCount);
-router.post('/insert', isAuthentificated, insertSMS);
-router.get('/recent',isAuthentificated, getSMS);
+router.get('/count', smsCount);
+router.post('/insert',  insertSMS);
+router.get('/recent', getSMS);
 router.delete('/delete',isAuthentificated, deleteSMS);
-router.post('/sent',isAuthentificated, smsSent)
+router.post('/sent', smsSent)
 
 module.exports = router;

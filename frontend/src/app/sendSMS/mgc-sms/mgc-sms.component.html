@@ -1,68 +1,106 @@
+<!-- Fixed mgc-sms.component.html -->
 <div class="min-h-screen flex flex-col items-center bg-gray-100 p-6 mt-16">
   <div class="w-full max-w-4xl bg-white shadow-lg rounded-lg p-8 mx-auto">
-<div class="p-6 max-w-4xl mx-auto">
-  <h2 class="text-2xl font-bold mb-4">Générer et Envoyer un Message Confidentiel</h2>
+    <div class="container my-4">
+      <h2 class="mb-4">Génération de SMS confidentiels</h2>
 
-  <!-- Selection Section -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-    <div>
-      <label class="block text-sm font-medium mb-1">Sélectionner un groupe</label>
-      <select
-        class="w-full border rounded px-3 py-2"
-        (change)="onGroupChange($event)"
-      >
-        <option value="" disabled selected>-- Choisir un groupe --</option>
-        <option *ngFor="let group of groups" [value]="group.id">{{ group.nom }}</option>
-      </select>
-    </div>
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5>Sélection du groupe et du modèle</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label for="groupSelect">Groupe</label>
+              <select id="groupSelect" class="form-control" (change)="onGroupChange($event)">
+                <option value="" disabled selected>Sélectionner un groupe</option>
+                <option value="all">Tous les contacts (via Excel)</option>
+                <option *ngFor="let group of groups" [value]="group.id">{{ group.nom }}</option>
+              </select>
+            </div>
+            
+            <div class="col-md-4 mb-3">
+              <label for="modelSelect">Modèle de SMS</label>
+              <select id="modelSelect" class="form-control" (change)="onModelChange($event)">
+                <option value="" disabled selected>Sélectionner un modèle</option>
+                <option *ngFor="let model of models" [value]="model.id">{{ model.nom }}</option>
+              </select>
+            </div>
+            
+            <div class="col-md-4 mb-3">
+              <label for="excelFile">Fichier Excel (avec données variables)</label>
+              <input type="file" id="excelFile" class="form-control" accept=".xlsx,.xls" (change)="onFileChange($event)">
+              <small class="form-text text-muted">
+                Le fichier doit contenir une colonne "Matricule" et des colonnes pour chaque variable du modèle.
+              </small>
+            </div>
+          </div>
 
-    <div>
-      <label class="block text-sm font-medium mb-1">Sélectionner un modèle</label>
-      <select
-        class="w-full border rounded px-3 py-2"
-        (change)="onModelChange($event)"
-      >
-        <option value="" disabled selected>-- Choisir un modèle --</option>
-        <option *ngFor="let model of models" [value]="model.id">{{ model.nom }}</option>
-      </select>
-    </div>
-  </div>
+          <!-- Show selected model content -->
+          <div class="row mb-3" *ngIf="selectedModelContent">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header bg-light">
+                  <h6 class="mb-0">Contenu du modèle</h6>
+                </div>
+                <div class="card-body">
+                  <p class="model-content">{{ selectedModelContent }}</p>
+                  <div class="text-muted">
+                    <small>Les variables entre {{ '{' }}{{ '{' }}...{{ '}' }}{{ '}' }} seront remplacées par les données du fichier Excel</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
-  <!-- File Upload -->
-  <div class="mb-6">
-    <label class="block text-sm font-medium mb-1">Importer un fichier Excel</label>
-    <input
-      type="file"
-      (change)="onFileChange($event)"
-      class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-      accept=".xlsx,.xls"
-    />
-  </div>
+          <div class="alert alert-info" *ngIf="!isGroupSelected">
+            <i class="bi bi-info-circle"></i> Mode "Tous les contacts" : Le système utilisera uniquement les matricules du fichier Excel pour envoyer les messages.
+          </div>
+          
+          <div class="mt-3">
+            <button class="btn btn-primary" [disabled]="!selectedModelId || !excelFile || isLoading" (click)="generateMessages()">
+              <span *ngIf="isLoading" class="spinner-border spinner-border-sm mr-2"></span>
+              {{ isLoading ? 'Génération en cours...' : 'Générer les messages' }}
+            </button>
+          </div>
+        </div>
+      </div>
 
-  <!-- Action Buttons -->
-  <div class="flex gap-4 mb-6">
-    <button
-      class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded"
-      (click)="generateMessages()"
-    >
-      Générer les messages
-    </button>
-
-    <button
-      class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded"
-      [disabled]="generatedMessages.length === 0"
-      (click)="sendMessages()"
-    >
-      Envoyer les messages
-    </button>
-  </div>
-
-  <!-- Preview Section -->
-  <div *ngIf="generatedMessages.length > 0" class="mt-8">
-    <h3 class="text-xl font-semibold mb-2">Messages générés :</h3>
-    <div class="bg-gray-100 rounded p-4 max-h-64 overflow-y-auto space-y-2">
-      <div *ngFor="let msg of generatedMessages" class="p-2 bg-white rounded shadow text-sm">
-        {{ msg }}
+      <div class="card mb-4" *ngIf="generatedMessages.length > 0">
+        <div class="card-header">
+          <h5>Aperçu des messages ({{ generatedMessages.length }})</h5>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Matricule</th>
+                  <th>Téléphone</th>
+                  <th>Message</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let msg of generatedMessages">
+                  <td>{{ msg.matricule }}</td>
+                  <td>{{ msg.telephone }}</td>
+                  <td>{{ msg.message }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="mt-3">
+            <button class="btn btn-success" [disabled]="sending" (click)="sendMessages()">
+              <span *ngIf="sending" class="spinner-border spinner-border-sm mr-2"></span>
+              {{ sending ? 'Envoi en cours...' : 'Envoyer les messages' }}
+            </button>
+            
+            <div class="alert" [ngClass]="{'alert-success': !responseMessage.includes('Erreur'), 'alert-danger': responseMessage.includes('Erreur')}" *ngIf="responseMessage">
+              {{ responseMessage }}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
