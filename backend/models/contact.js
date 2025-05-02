@@ -61,19 +61,43 @@ const Contact = {
         return rows;
     },
 
-    getPhonesByMatricules: async (matricules) => {
-        if (!Array.isArray(matricules) || matricules.length === 0) {
-            return [];
+    getPhonesByMatricules : async (matricules) => {
+        try {
+            // Validate input
+            if (!Array.isArray(matricules) || matricules.length === 0) {
+                console.log('No matricules provided or invalid format');
+                return [];
+            }
+            
+            // Log the request
+            console.log(`Looking up phone numbers for ${matricules.length} matricules`);
+            
+            // Create placeholders for SQL query
+            const placeholders = matricules.map(() => '?').join(', ');
+            
+            // Execute the query
+            const [rows] = await db.query(
+                `SELECT c.telephone_professionnel, c.matricule
+                 FROM contacts c
+                 WHERE c.matricule IN (${placeholders})`,
+                matricules
+            );
+            
+            // Log the results
+            console.log(`Found ${rows.length} matches out of ${matricules.length} matricules`);
+            
+            // If some matricules were not found, log them
+            if (rows.length < matricules.length) {
+                const foundMatricules = rows.map(row => row.matricule);
+                const missingMatricules = matricules.filter(m => !foundMatricules.includes(m));
+                console.log(`Missing phone numbers for matricules: ${missingMatricules.join(', ')}`);
+            }
+            
+            return rows;
+        } catch (error) {
+            console.error("Error in getPhonesByMatricules:", error);
+            throw error;
         }
-    
-        const placeholders = matricules.map(() => '?').join(', ');
-        const [rows] = await db.query(
-            `SELECT c.telephone_professionnel, c.matricule
-             FROM contacts c
-             WHERE c.matricule IN (${placeholders})`,
-            matricules
-        );
-        return rows;
     },
     
 

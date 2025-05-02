@@ -3,6 +3,7 @@ const ContactGroupe = require('../models/contactGroupe');
 const ModelSMS = require('../models/model_sms');
 const xlsx = require('xlsx');
 const fs = require('fs/promises');
+const db = require('../config/dbConnect').promise();
 
 
 
@@ -189,6 +190,7 @@ const sendMessageToGroup = async (req, res) => {
 
 
 
+
 const sendConfidentialMessage = async (req, res) => {
     const filePath = req.file?.path;
 
@@ -220,7 +222,17 @@ const sendConfidentialMessage = async (req, res) => {
         // Récupérer les contacts selon présence du groupId
         let contactsDb;
         if (groupId) {
-            contactsDb = await Contact.getPhonesAndMatriculesByGroupId(groupId);
+            // Fixed: Use the controller function that wraps Contact.getPhonesAndMatriculesByGroupId
+            // Or implement the direct query here if needed
+            const response = await db.query(
+                `SELECT c.telephone_professionnel, c.matricule
+                 FROM contacts c
+                 INNER JOIN contact_groupe cg ON c.id = cg.contact_id
+                 WHERE cg.groupe_id = ?`,
+                [groupId]
+            );
+            contactsDb = response[0]; // First element contains the rows
+            
             if (!contactsDb || contactsDb.length === 0) {
                 return res.status(404).json({ status: "error", message: "Aucun contact trouvé pour ce groupe." });
             }
@@ -316,7 +328,6 @@ const sendConfidentialMessage = async (req, res) => {
         }
     }
 };
-
 
 
 
