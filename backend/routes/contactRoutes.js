@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const passport = require('../config/passport');
 const { isAuthentificated, checkRole } = require('../middlewares/authMiddleware');
-const  {createContact, getContacts, getContactByMatricule, updateContact, deleteContact, getContactsByGroup, importContacts,getPhonesAndMatriculesByGroupId } = require('../controllers/contactController');
+const  {createContact, getContacts, getContactByMatricule, updateContact, deleteContact, getPhonesByMatricules,getContactsByGroup, importContacts,getPhonesAndMatriculesByGroupId } = require('../controllers/contactController');
 
 
 
@@ -14,6 +14,7 @@ router.put('/contacts/:id',isAuthentificated,isAuthentificated, checkRole( 'util
 router.delete('/contacts/:id',isAuthentificated, checkRole('utilisateur', 'super-administrateur','administrateur'), deleteContact);
 router.post('/import-contacts',isAuthentificated, checkRole( 'utilisateur','super-administrateur','administrateur') ,importContacts);
 router.get('/phones-matricules/:groupId',getPhonesAndMatriculesByGroupId);
+router.post('/phones-by-matricules', getPhonesByMatricules);
 
 
 module.exports = router;

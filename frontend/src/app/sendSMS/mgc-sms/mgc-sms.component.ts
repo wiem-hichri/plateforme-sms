@@ -7,6 +7,7 @@ import { SmsModelService } from '../../services/model.service';
 import { SmsService } from '../../services/sms.service';
 import { AuthService } from '../../services/auth.service';
 import * as XLSX from 'xlsx';
+import { PhonesService } from '../../services/phones.service';  // Import the service
 
 interface SmsModel {
   id: number;
@@ -46,6 +47,7 @@ export class MgcComponent implements OnInit {
   isLoading = false;
 
   constructor(
+    private phonesService:PhonesService,
     private groupService: GroupService,
     private smsmodelService: SmsModelService,
     private smsService: SmsService,
@@ -209,31 +211,56 @@ export class MgcComponent implements OnInit {
       alert('Veuillez sélectionner un modèle et charger un fichier Excel');
       return;
     }
-
+  
     this.isLoading = true;
-    
+  
     // Try local generation first if Excel data is loaded
     if (this.excelData.length > 0) {
       try {
         const localMessages = this.generateMessagesLocally();
         if (localMessages.length > 0) {
-          // If no telephone numbers in local data, we need to fetch them from backend
-          const needPhoneNumbers = localMessages.some(msg => !msg.telephone);
-          
-          if (!needPhoneNumbers || !this.isGroupSelected) {
-            // We have all data needed or we're in "all contacts" mode
+          // Check if any message is missing a phone number
+          const missingPhoneNumbers = localMessages.filter(msg => !msg.telephone);
+  
+          if (missingPhoneNumbers.length === 0 || !this.isGroupSelected) {
+            // No missing phone numbers, or we're in "all contacts" mode
             setTimeout(() => {
               this.generatedMessages = localMessages;
               this.isLoading = false;
             }, 500);
             return;
+          } else {
+            // Fetch missing phone numbers using matricule
+            const matricules = missingPhoneNumbers.map(msg => msg.matricule);
+  
+            this.phonesService.getPhoneNumbersByMatricules(matricules).subscribe({
+              next: (response) => {
+                // Map the fetched phone numbers to the corresponding messages
+                response.data.forEach((contact: any) => {
+                  const message = localMessages.find(msg => msg.matricule === contact.matricule);
+                  if (message) {
+                    message.telephone = contact.telephone_professionnel; // Assign the phone number
+                  }
+                });
+  
+                // After updating the phone numbers, set the messages
+                this.generatedMessages = localMessages;
+                this.isLoading = false;
+              },
+              error: (error) => {
+                console.error('Error fetching phone numbers:', error);
+                this.isLoading = false;
+                this.handleApiError(error, 'Erreur lors de la récupération des numéros de téléphone');
+              }
+            });
           }
         }
       } catch (error) {
         console.error('Error generating messages locally:', error);
-        // Fall back to server-side generation
+        // Fall back to server-side generation if there's an error
       }
     }
+  
 
     // Server-side generation (fallback)
     const formData = new FormData();

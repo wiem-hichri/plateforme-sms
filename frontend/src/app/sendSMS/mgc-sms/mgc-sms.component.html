@@ -1,4 +1,3 @@
-<!-- Fixed mgc-sms.component.html -->
 <div class="min-h-screen flex flex-col items-center bg-gray-100 p-6 mt-16">
   <div class="w-full max-w-4xl bg-white shadow-lg rounded-lg p-8 mx-auto">
     <div class="container my-4">
@@ -53,12 +52,9 @@
             </div>
           </div>
 
-          <div class="alert alert-info" *ngIf="!isGroupSelected">
-            <i class="bi bi-info-circle"></i> Mode "Tous les contacts" : Le système utilisera uniquement les matricules du fichier Excel pour envoyer les messages.
-          </div>
           
           <div class="mt-3">
-            <button class="btn btn-primary" [disabled]="!selectedModelId || !excelFile || isLoading" (click)="generateMessages()">
+            <button class="btn btn-primary" [disabled]="!selectedModelId || !excelFile || isLoading " (click)="generateMessages()">
               <span *ngIf="isLoading" class="spinner-border spinner-border-sm mr-2"></span>
               {{ isLoading ? 'Génération en cours...' : 'Générer les messages' }}
             </button>

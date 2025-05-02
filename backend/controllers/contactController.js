@@ -152,4 +152,44 @@ const importContacts = (req, res) => {
 };
 
 
-module.exports = { createContact, getContacts, getContactByMatricule, updateContact, deleteContact, getContactsByGroup, importContacts,getPhonesAndMatriculesByGroupId };
+const getPhonesByMatricules = async (req, res) => {
+    try {
+        // Extract matricules from request body
+        const { matricules } = req.body;
+        
+        // Validate input
+        if (!matricules || !Array.isArray(matricules) || matricules.length === 0) {
+            return res.status(400).json({
+                status: 'error',
+                message: 'Please provide an array of matricules'
+            });
+        }
+
+        console.log(`Processing request for ${matricules.length} matricules`);
+        
+        // Call the model function to get phone numbers
+        const phoneData = await Contact.getPhonesByMatricules(matricules);
+        
+        // Check if any phone numbers were found
+        if (phoneData.length === 0) {
+            console.log(`No phone numbers found for the provided matricules`);
+        } else {
+            console.log(`Found ${phoneData.length} phone numbers for ${matricules.length} matricules`);
+        }
+        
+        // Return result
+        return res.status(200).json({
+            status: 'success',
+            data: phoneData
+        });
+    } catch (error) {
+        console.error('Error fetching phone numbers by matricules:', error);
+        return res.status(500).json({
+            status: 'error',
+            message: 'Failed to fetch phone numbers',
+            error: error.message
+        });
+    }
+};
+
+module.exports = { createContact, getContacts, getContactByMatricule, updateContact, deleteContact, getContactsByGroup, importContacts,getPhonesAndMatriculesByGroupId ,getPhonesByMatricules};
