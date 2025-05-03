@@ -40,11 +40,12 @@ smsSent: async () => {
   // Insert into sentitems with only DestinationNumber, TextDecoded, and CreatorID
   await db.query(
       `INSERT INTO sentitems 
-      (DestinationNumber, TextDecoded)
-      VALUES (?, ?)`,
+      (DestinationNumber, TextDecoded, SenderID)
+      VALUES (?, ?, ?)`,
       [
           message.DestinationNumber,
           message.TextDecoded,
+          message.SenderID
       ]
   );
 

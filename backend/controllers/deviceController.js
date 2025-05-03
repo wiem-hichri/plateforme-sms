@@ -2,8 +2,8 @@ const Device = require('../models/device');
 
 const createDevice = async (req, res) => {
     try {
-        const { nom, proprietaire } = req.body;
-        const device = { nom, proprietaire };
+        const { nom, proprietaire, type } = req.body;
+        const device = { nom, proprietaire, type};
         const result = await Device.create(device);
         res.status(201).json({ message: "Device créé avec succès", deviceId: result.insertId });
     } catch (error) {
@@ -23,8 +23,8 @@ const getDevices = async (req, res) => {
 const updateDevice = async (req, res) => {
     try {
         const deviceId = req.params.id;
-        const { nom, proprietaire } = req.body;
-        const device = { nom, proprietaire };
+        const { nom, proprietaire, type } = req.body;
+        const device = { nom, proprietaire, type };
         const result = await Device.update(deviceId, device);
 
         if (result.affectedRows === 0) {

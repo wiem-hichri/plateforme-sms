@@ -16,7 +16,7 @@ const smsRoutes = require('./routes/smsRoutes');
 const claudRoutes= require('./routes/claudRoutes');
 const siteRoutes = require('./routes/siteRoutes');
 const deviceRoutes = require('./routes/deviceRoutes');
-
+const historiqueRoutes = require('./routes/historiqueEnvoiRoutes');
 
 
 
@@ -80,6 +80,8 @@ app.use('/api', smsRoutes);
 app.use('/api', claudRoutes)
 app.use('/api', siteRoutes);
 app.use('/api', deviceRoutes);
+app.use('/api', historiqueRoutes);
+
 
 
 
