@@ -2,8 +2,7 @@ const Groupe = require('../models/groupe');
 
 const createGroupe = async (req, res) => {
     try {
-        const { userId, nom } = req.body; // ✅ Ensure correct extraction of 'nom'
-
+        const { userId, nom } = req.body; 
         if (!userId) {
             return res.status(400).json({ error: "L'ID utilisateur est requis." });
         }
