@@ -16,7 +16,6 @@ const getHistorique = async (req, res) => {
 
         res.status(200).json({ messages });
     } catch (error) {
-        console.error("Erreur lors de la récupération de l'historique des messages :", error);
         return res.status(500).json({ message: 'Erreur serveur' });
     }
 };
