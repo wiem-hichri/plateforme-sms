@@ -3,13 +3,15 @@ const router = express.Router();
 const { isAuthentificated } = require('../middlewares/authMiddleware');
 const { smsCount,
     insertSMS,
-    getSMS,
+    getSMSFloat,
+    getSMSORFloat,
     deleteSMS,
     smsSent} = require('../controllers/smsController');
 
 router.get('/count', smsCount);
 router.post('/insert',  insertSMS);
-router.get('/recent', getSMS);
+router.get('/recentFloat', getSMSFloat);
+router.get('/recentORFloat', getSMSORFloat);
 router.delete('/delete', deleteSMS);
 router.post('/sent', smsSent)
 
