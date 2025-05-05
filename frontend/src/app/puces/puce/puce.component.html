@@ -1,14 +1,12 @@
-<div class="min-h-screen flex flex-col items-center bg-gray-100 p-6 mt-16">
-  <div class="w-full max-w-6xl bg-white shadow-lg rounded-lg p-8 mx-auto">
-    <div class="sticky top-0 bg-gradient-to-r from-[#fc5130] to-white-400 text-white p-4 rounded-lg shadow-md z-50">
-      <h2 class="text-3xl font-semibold">📜 Gestion des Puces</h2> <button
-      class="bg-white text-gray-800 hover:bg-gray-100 font-bold py-2 px-5 rounded-lg shadow-md transition-all flex items-center gap-2"
-      (click)="ajouterPuce()">
-      ➕ 
-    </button>
+<div class="flex flex-col items-center min-h-screen p-6 mt-16 bg-gray-100">
+  <div class="w-full max-w-6xl p-8 mx-auto bg-white rounded-lg shadow-lg">
+    <div class="filter-wrapper">
+      <button mat-raised-button color="primary" (click)="ajouterPuce()">+</button>
+      <input type="text" class="px-4 py-2 border rounded-md w-1/1" [(ngModel)]="searchText" placeholder="🔍 Rechercher"  />
     </div>
+
     <div class="overflow-y-auto max-h-[60vh] mt-4 px-2">
-      <table class="min-w-full bg-white shadow-md rounded-lg border border-gray-300">
+      <table class="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
         <thead>
           <tr class="bg-gradient-to-r from-[#fc5130] to-[#fc5130] text-white text-left">
             <th class="p-3 border">Numéro</th>
@@ -20,7 +18,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let puce of puces" class="hover:bg-blue-100 transition-all">
+          <tr *ngFor="let puce of getFilteredPuces()" class="transition-all hover:bg-blue-100">
             <td class="p-3 border">{{ puce.numero }}</td>
             <td class="p-3 border">{{ puce.operateur }}</td>
             <td class="p-3 border">{{ puce.etat }}</td>
@@ -29,7 +27,7 @@
               <strong>📞</strong> {{ puce.contact_name }}<br>
               <strong>🛠️</strong> {{ puce.mission_name }}
             </td>
-            <td class="p-3 border flex gap-2">
+            <td class="flex gap-2 p-3 border">
               <button
                 (click)="modifierPuce(puce)"
                 mat-icon-button
@@ -41,7 +39,7 @@
                 class="delete-btn"
                 mat-icon-button
                 title="Supprimer">
-                <mat-icon class="text-orange-600">delete</mat-icon>
+                <mat-icon class="text-red-600">delete</mat-icon>
               </button>
             </td>
             
@@ -52,7 +50,7 @@
     </div>
 
 
-    <div *ngIf="showModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-end z-50">
+    <div *ngIf="showModal" class="fixed inset-0 z-50 flex justify-end bg-gray-800 bg-opacity-50">
       <app-puce-modal
         class="w-full sm:w-[400px] bg-white h-full shadow-xl p-4"
         [puce]="selectedPuce"
