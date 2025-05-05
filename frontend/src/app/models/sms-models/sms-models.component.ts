@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { SmsModelService } from '../../services/model.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { AddModelCardComponent } from '../modal/modal.component';
 import { EditModelCardComponent } from '../edit-modal/edit-modal.component';
 import { SmsGeneratorComponent } from '../../sendSMS/sms-generator/sms-generator.component';
@@ -9,7 +11,7 @@ import { SmsGeneratorComponent } from '../../sendSMS/sms-generator/sms-generator
 @Component({
   selector: 'app-sms-models',
   standalone: true,
-  imports: [CommonModule, FormsModule, AddModelCardComponent, EditModelCardComponent,SmsGeneratorComponent],
+  imports: [CommonModule, FormsModule, AddModelCardComponent,MatButtonModule, MatIconModule, EditModelCardComponent,SmsGeneratorComponent],
   templateUrl: './sms-models.component.html',
   styleUrls: ['./sms-models.component.scss']
 })

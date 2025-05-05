@@ -70,7 +70,7 @@ const User = {
     },
     
      getAll: async () => {
-        const [results] = await db.query("SELECT * FROM users");
+        const [results] = await db.query("SELECT * FROM users ORDER BY created_at DESC");
         return results;
     },
 

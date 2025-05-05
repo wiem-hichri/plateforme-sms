@@ -1,15 +1,15 @@
-<div class="min-h-screen flex flex-col items-center bg-gray-100 p-6 mt-16">
-  <div class="w-full max-w-4xl bg-white shadow-lg rounded-lg p-8 mx-auto">
+<div class="flex flex-col items-center min-h-screen p-6 mt-16 bg-gray-100">
+  <div class="w-full max-w-4xl p-8 mx-auto bg-white rounded-lg shadow-lg">
 
     <!-- Sticky Header -->
     <div class="container">
       <div class="sticky top-0 bg-gradient-to-r from-[#fc5130] to-white-400 text-white p-4 rounded-lg shadow-md z-50">
-        <div class="flex justify-between items-center border-b pb-4">
+        <div class="flex items-center justify-between pb-4 border-b">
           <h2 class="text-3xl font-semibold">Groupes</h2>
           <button
-            class="bg-white text-gray-800 hover:bg-gray-100 font-bold py-2 px-5 rounded-lg shadow-md transition-all flex items-center gap-2"
+            class="flex items-center gap-2 px-5 py-2 font-bold text-gray-800 transition-all bg-white rounded-lg shadow-md hover:bg-gray-100"
             (click)="openAddGroupModal()">
-            ➕ Nouveau Groupe
+            ➕
           </button>
         </div>
       </div>
@@ -17,17 +17,17 @@
 
     <!-- Scrollable Group Cards Grid -->
     <div class="overflow-y-auto max-h-[60vh] mt-4 px-2">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         <div *ngFor="let groupe of groups"
-             class="relative shadow-md rounded-lg p-6 border border-orange-300 hover:scale-105 transition-all duration-300"
+             class="relative p-6 transition-all duration-300 border border-orange-300 rounded-lg shadow-md hover:scale-105"
              (click)="groupe.id !== undefined && viewGroupContacts(groupe.id)">
 
           <!-- Group Name -->
-          <h3 class="text-xl font-semibold text-gray-800 relative z-10">{{ groupe.nom }}</h3>
-          <p class="text-gray-600 text-sm">📌 ID: {{ groupe.id }}</p>
+          <h3 class="relative z-10 text-xl font-semibold text-gray-800">{{ groupe.nom }}</h3>
+          <p class="text-sm text-gray-600">📌 ID: {{ groupe.id }}</p>
 
           <!-- Actions -->
-          <div class="mt-4 flex justify-end">
+          <div class="flex justify-end mt-4">
             <button
               mat-icon-button
               class="edit-btn"
@@ -60,7 +60,7 @@
 
           <!-- Display associated contacts -->
           <div *ngIf="groupe.id === selectedGroupContacts[0]?.groupe_id">
-            <h4 class="text-lg font-semibold mt-4">Contacts associés:</h4>
+            <h4 class="mt-4 text-lg font-semibold">Contacts associés:</h4>
             <ul>
               <li *ngFor="let contact of selectedGroupContacts" class="text-gray-700">
                 {{ contact.nom }}

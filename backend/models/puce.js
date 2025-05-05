@@ -34,7 +34,7 @@ const Puce = {
     },
 
     getAll: async () => {
-        const [results] = await db.query("SELECT * FROM sim_cards");
+        const [results] = await db.query("SELECT * FROM sim_cards ORDER BY date_acquisition DESC");
         return results;
     },
 

@@ -18,7 +18,7 @@ const Contact = {
     },
 
     getAll: async () => {
-        const [results] = await db.query("SELECT * FROM contacts");
+        const [results] = await db.query("SELECT * FROM contacts ORDER BY created_at DESC");
         return results;
     },
 

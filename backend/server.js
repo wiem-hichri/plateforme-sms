@@ -17,6 +17,8 @@ const claudRoutes= require('./routes/claudRoutes');
 const siteRoutes = require('./routes/siteRoutes');
 const deviceRoutes = require('./routes/deviceRoutes');
 const historiqueRoutes = require('./routes/historiqueEnvoiRoutes');
+const dashboardRoutes = require('./routes/dashboardRoutes');
+
 
 
 
@@ -81,6 +83,8 @@ app.use('/api', claudRoutes)
 app.use('/api', siteRoutes);
 app.use('/api', deviceRoutes);
 app.use('/api', historiqueRoutes);
+app.use('/dashboard', dashboardRoutes);
+
 
 
 

@@ -17,7 +17,7 @@ const ModelSMS = {
     
        // Récupérer tous les modèles de SMS (pour le superadmin) ou les modèles d'un utilisateur spécifique
         getAll: async (user_id, role) => {
-            let query = "SELECT * FROM model_sms";
+            let query = "SELECT * FROM model_sms ORDER BY created_at DESC";
             let values = [];
 
             if (role !== 'super-administrateur') {

@@ -92,4 +92,20 @@ export class PuceComponent implements OnInit {
     this.selectedPuce = null;
     this.showModal = false;
   }
+
+
+  searchText: string = '';
+  getFilteredPuces(): Puce[] {
+    if (!this.searchText.trim()) return this.puces;
+    const lowerSearch = this.searchText.toLowerCase();
+    return this.puces.filter(puce =>
+      puce.numero.toLowerCase().includes(lowerSearch) ||
+      puce.operateur.toLowerCase().includes(lowerSearch) ||
+      puce.etat.toLowerCase().includes(lowerSearch) ||
+      puce.contact_name?.toLowerCase().includes(lowerSearch) ||
+      puce.mission_name?.toLowerCase().includes(lowerSearch)
+    );
+  }
+  
+
 }

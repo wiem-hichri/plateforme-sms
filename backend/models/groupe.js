@@ -21,7 +21,7 @@ const Groupe = {
 
     // Get all groups for a specific user or all groups for super-administrateur
     getAll: async (userId, role) => {
-        let query = "SELECT g.id, g.nom, ug.user_id FROM groupes g LEFT JOIN user_groupe ug ON g.id = ug.groupe_id";
+        let query = "SELECT g.id, g.nom, ug.user_id FROM groupes g LEFT JOIN user_groupe ug ON g.id = ug.groupe_id ORDER BY g.created_at DESC";
         let values = [];
 
         if (role !== 'super-administrateur') {
