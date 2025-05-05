@@ -1,0 +1,28 @@
+<div class="modal-overlay">
+    <div class="modal-card">
+      <h3 class="modal-title">Modifier la Mission</h3>
+      <form>
+        <div class="form-field">
+          <label for="type_mission">Type de Mission</label>
+          <input 
+            type="text" 
+            id="type_mission"
+            [(ngModel)]="mission.type_mission" 
+            name="type_mission" 
+            placeholder="Type de mission" 
+            required />
+        </div>
+        
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" (click)="closeDialog()">Annuler</button>
+          <button 
+            type="button" 
+            class="submit-btn" 
+            [disabled]="!mission.type_mission.trim()"
+            (click)="updateMission()">
+            Mettre à jour
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>

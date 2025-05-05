@@ -1,0 +1,38 @@
+<div class="modal-overlay">
+    <div class="modal-card">
+      <h3 class="modal-title">Ajouter un Site</h3>
+      <form>
+        <div class="form-field">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nom du site</mat-label>
+            <input 
+              matInput 
+              type="text" 
+              [(ngModel)]="newSite.site_name" 
+              name="site_name" 
+              placeholder="Entrez le nom du site" 
+              required>
+          </mat-form-field>
+        </div>
+        
+        <div class="modal-actions">
+          <button 
+            type="button" 
+            mat-button 
+            class="cancel-btn" 
+            (click)="closeDialog()">
+            Annuler
+          </button>
+          <button 
+            type="button" 
+            mat-raised-button 
+            color="primary"
+            class="submit-btn" 
+            [disabled]="!newSite.site_name.trim()"
+            (click)="addSite()">
+            Créer
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>

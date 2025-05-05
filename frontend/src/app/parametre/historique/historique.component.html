@@ -1,0 +1,40 @@
+<div class="min-h-screen flex flex-col items-center bg-gray-100 p-6 mt-16"> 
+    <div class="w-full max-w-5xl bg-white shadow-lg rounded-lg p-8 mx-auto">
+  
+      <!-- 🔥 Sticky Header -->
+      <div class="container">
+        <div class="sticky top-0 bg-gradient-to-r from-orange-500 to-white-400 text-white p-4 rounded-lg shadow-md z-50">
+          <h2 class="text-3xl font-semibold">📜 Historique d'Envoi</h2>
+        </div>
+      </div>
+  
+      <!-- 🎨 Scrollable Table -->
+      <div class="overflow-y-auto max-h-[60vh] mt-4 px-2">
+        <div class="overflow-x-auto">
+          <table class="min-w-full bg-white shadow-md rounded-lg border border-gray-300">
+            <thead>
+              <tr class="bg-gradient-to-r from-orange-400 to-orange-600 text-white text-left">
+                <th class="p-3 border">Utilisateur</th>
+                <th class="p-3 border">Date D'envoi</th>
+                <th class="p-3 border">Destinataire</th>
+                <th class="p-3 border">contenu</th>
+                <th class="p-3 border">Statue</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let log of historique" class="hover:bg-orange-100 transition-all">
+                <td class="p-3 border">{{ log.user_name }}</td>
+                <td class="p-3 border">{{ log.SendingDateTime | date:'yyyy-MM-dd HH:mm'}}</td>
+                <td class="p-3 border truncate max-w-xs">{{ log.DestinationNumber }}</td>
+                <td class="p-3 border">{{ log.TextDecoded}}</td>
+                <td class="p-3 border">{{ log.Status}}</td>
+
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+  
+    </div>
+  </div>

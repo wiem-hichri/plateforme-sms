@@ -75,6 +75,8 @@
       <option value="">Sélectionner un rôle</option>
         <option value="utilisateur">Utilisateur</option>
         <option value="administrateur">Administrateur</option>
+        <option value="super-administrateur">Super-Administrateur</option>
+
       </select>
       <div *ngIf="role.invalid && role.touched" class="error-message">
         <span *ngIf="role.errors?.['required']">Le rôle est requis.</span>
