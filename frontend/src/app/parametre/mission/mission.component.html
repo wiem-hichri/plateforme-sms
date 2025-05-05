@@ -1,0 +1,66 @@
+<div class="min-h-screen flex flex-col items-center bg-gray-100 p-6 mt-16">
+    <div class="w-full max-w-4xl bg-white shadow-lg rounded-lg p-8 mx-auto">
+<div class="container mx-auto px-4 py-8">
+  <div class="sticky top-0 bg-gradient-to-r from-[#fc5130] text-white p-4 rounded-lg shadow-md z-50">
+    <h2 class="text-2xl font-bold text-white">Gestion des Missions</h2>
+  </div>
+  
+  <!-- Add Mission Button -->
+  <div class="px-6 py-4 bg-gray-50 border-b">
+    <button
+      class="bg-white text-gray-800 hover:bg-gray-100 font-bold py-2 px-5 rounded-lg shadow-md transition-all flex items-center gap-2"
+      (click)="openCreateModal()">
+      ➕ 
+    </button>
+  </div>
+  
+  <!-- Loading Indicator -->
+  <div *ngIf="loading" class="flex justify-center items-center p-12">
+    <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+  </div>
+ 
+  <div *ngIf="error" class="p-4 mb-4 bg-red-100 border-l-4 border-red-500 text-red-700">
+    <p class="font-bold">Erreur</p>
+    <p>{{ error }}</p>
+  </div>
+  
+  <!-- Mission List Table -->
+  <div *ngIf="!loading" class="overflow-x-auto">
+    <table *ngIf="missions.length > 0" class="min-w-full">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type de Mission</th>
+          <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        <tr *ngFor="let mission of missions" class="hover:bg-gray-50">
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ mission.type_mission }}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+            <button 
+              (click)="openEditModal(mission)" 
+              mat-icon-button
+              title="Modifier">
+              <mat-icon class="text-blue-600">edit</mat-icon>
+            </button>
+            <button 
+              (click)="confirmDelete(mission)" 
+              mat-icon-button
+              title="Modifier">
+              <mat-icon class="text-red-600">delete</mat-icon>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <!-- Empty State -->
+    <div *ngIf="missions.length === 0 && !loading" class="py-12 flex flex-col items-center justify-center text-gray-500">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mb-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+      </svg>
+      <p class="text-xl">Aucune mission trouvée.</p>
+      <p class="mt-2">Cliquez sur "Ajouter une Mission" pour commencer.</p>
+    </div>
+  </div>
+</div>

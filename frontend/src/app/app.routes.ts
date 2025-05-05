@@ -14,21 +14,29 @@ import { SendMessageComponent } from './sendSMS/send-message/send-message.compon
 import { ChooseSmsMethodComponent } from './sendSMS/choose-sms-method/choose-sms-method.component';
 import { MgcComponent } from './sendSMS/mgc-sms/mgc-sms.component';
 import { SmsGeneratorComponent } from './sendSMS/sms-generator/sms-generator.component';
+import { MissionManagementComponent } from './parametre/mission/mission.component';
+import { SiteListComponent } from './parametre/Sites/site/site.component';
+import { HistoriqueComponent } from './parametre/historique/historique.component';
+import { DeviceListComponent } from './Devices/device-list/device-list.component';
 export const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'contacts', component: ContactsComponent },
   { path: 'groups', component: GroupsComponent },
+  { path: 'device', component: DeviceListComponent },
+  { path: 'site', component: SiteListComponent },
   { path: 'user', component: UsersComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'send-message', component: SendMessageComponent },
   { path: 'send', component: ChooseSmsMethodComponent },
   { path: 'login-history', component: LoginHistoryComponent },
+  { path: 'historique', component: HistoriqueComponent },
   {path: 'parametre', component: ParametreBoardComponent },
   {path : 'sms-models', component: SmsModelsComponent },
   {path : 'mgc-sms', component: MgcComponent },
   {path : 'generate', component: SmsGeneratorComponent },
+  {path : 'mission', component: MissionManagementComponent},
   {path : 'puce', component: PuceComponent },
   { path: '**', component: NotFoundComponent }
 ];

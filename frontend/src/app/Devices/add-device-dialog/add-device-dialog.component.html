@@ -1,0 +1,63 @@
+<div class="modal-overlay">
+    <div class="modal-card">
+      <h3 class="modal-title">Ajouter un Appareil</h3>
+      <form>
+        <div class="form-field">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nom de l'appareil</mat-label>
+            <input 
+              matInput 
+              type="text" 
+              [(ngModel)]="newDevice.nom" 
+              name="nom" 
+              placeholder="Entrez le nom de l'appareil" 
+              required>
+          </mat-form-field>
+        </div>
+  
+        <div class="form-field">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Propriétaire</mat-label>
+            <input 
+              matInput 
+              type="text" 
+              [(ngModel)]="newDevice.proprietaire" 
+              name="proprietaire" 
+              placeholder="Entrez le nom du propriétaire" 
+              required>
+          </mat-form-field>
+        </div>
+  
+        <div class="form-field">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Type d'appareil</mat-label>
+            <mat-select  name="type" required>
+              <mat-option value="float" > float
+              </mat-option>
+              <mat-option value="non_float" >Non_float
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        
+        <div class="modal-actions">
+          <button 
+            type="button" 
+            mat-button 
+            class="cancel-btn" 
+            (click)="closeDialog()">
+            Annuler
+          </button>
+          <button 
+            type="button" 
+            mat-raised-button 
+            color="primary"
+            class="submit-btn" 
+            [disabled]="!isFormValid()"
+            (click)="addDevice()">
+            Créer
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>

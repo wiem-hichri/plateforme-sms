@@ -1,0 +1,33 @@
+.container {
+    padding: 20px;
+  
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      
+      h2 {
+        margin: 0;
+      }
+    }
+  
+    .content {
+      table {
+        width: 100%;
+        
+        .mat-column-actions {
+          width: 120px;
+          text-align: center;
+        }
+      }
+      
+      .no-data {
+        padding: 20px;
+        text-align: center;
+        background-color: #f5f5f5;
+        border-radius: 4px;
+        margin-top: 20px;
+      }
+    }
+  }

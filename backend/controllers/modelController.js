@@ -186,11 +186,6 @@ const sendMessageToGroup = async (req, res) => {
     }
 };
 
-
-
-
-
-
 const sendConfidentialMessage = async (req, res) => {
     const filePath = req.file?.path;
 

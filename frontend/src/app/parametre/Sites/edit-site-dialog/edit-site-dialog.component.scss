@@ -1,0 +1,30 @@
+.modal-overlay {
+    .modal-card {
+      padding: 20px;
+      
+      .modal-title {
+        margin-top: 0;
+        margin-bottom: 20px;
+        font-size: 20px;
+        font-weight: 500;
+      }
+      
+      .form-field {
+        margin-bottom: 15px;
+        
+        .full-width {
+          width: 100%;
+        }
+      }
+      
+      .modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 20px;
+        
+        button {
+          margin-left: 10px;
+        }
+      }
+    }
+  }
