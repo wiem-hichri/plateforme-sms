@@ -63,12 +63,12 @@ const deleteSMS = async (req, res) => {
     }
 };
 
-// Fixed to ensure proper status handling
+// Updated to add debugging and ensure consistent status handling
 const smsSent = async (req, res) => {
     try {
         const { status, deviceName, messageId } = req.body;
         
-        console.log('Received status update:', { status, deviceName, messageId });
+        console.log('Received status update:', req.body);
 
         if (!status || !messageId) {
             return res.status(400).json({ 
@@ -76,22 +76,23 @@ const smsSent = async (req, res) => {
             });
         }
 
+        // Debug received data
+        console.log(`Processing status update: status=${status}, device=${deviceName}, id=${messageId}`);
+        
         const message = await SMS.smsSent(status, deviceName, messageId);
 
-        if (status === 'success') {
-            res.status(200).json({ 
-                message: 'Message transféré vers les éléments envoyés et supprimé de la boîte d\'envoi', 
-                data: message 
-            });
-        } else {
-            res.status(200).json({
-                message: 'Le message reste dans la boîte d\'envoi pour une nouvelle tentative',
-                data: message
-            });
-        }
+        // Make response consistent regardless of status
+        res.status(200).json({ 
+            status: 'success',
+            message: status === 'success' 
+                ? 'Message transféré vers les éléments envoyés et supprimé de la boîte d\'envoi'
+                : 'Le message reste dans la boîte d\'envoi pour une nouvelle tentative',
+            data: message 
+        });
     } catch (error) {
         console.error('Error in smsSent controller:', error);
         res.status(500).json({ 
+            status: 'error',
             message: "Erreur lors du traitement du statut d'envoi", 
             error: error.message 
         });
