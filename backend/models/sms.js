@@ -31,37 +31,53 @@ const SMS = {
     return db.query('DELETE FROM outbox WHERE ID = ?', [id]);
   },
 
-  // Fixed to properly handle successful/failed sending status
+  // Updated to ensure consistent lowercase status comparison
   smsSent: async (status, deviceName, messageId) => {
     try {
+      console.log(`Processing SMS status update: ID=${messageId}, status=${status}, device=${deviceName}`);
+      
       // First retrieve the message that was sent
       const [rows] = await db.query('SELECT * FROM outbox WHERE ID = ?', [messageId]);
 
       if (rows.length === 0) {
+        console.error(`Message ID ${messageId} not found in outbox.`);
         throw new Error('Message not found in outbox.');
       }
 
       const message = rows[0];
+      console.log(`Found message in outbox: ${JSON.stringify(message)}`);
 
-      // Only move to sentitems if status is success
-      if (status === 'success') {
-        // Insert into sentitems
-        await db.query(
-          'INSERT INTO sentitems (DestinationNumber, TextDecoded, SenderID, SentBy) VALUES (?, ?, ?, ?)',
-          [
-            message.DestinationNumber,
-            message.TextDecoded,
-            message.SenderID,
-            deviceName || 'Unknown Device'
-          ]
-        );
-
-        // Delete from outbox after inserting into sentitems
-        await db.query('DELETE FROM outbox WHERE ID = ?', [messageId]);
+      // Normalize status to lowercase for consistent comparison
+      const statusLower = String(status).toLowerCase();
+      
+      // Check for success status - using lowercase comparison only
+      const isSuccess = (statusLower === 'success');
+      
+      if (isSuccess) {
+        console.log(`Message ID ${messageId} sent successfully, moving to sentitems...`);
         
-        console.log(`Message ID ${messageId} moved to sentitems and deleted from outbox`);
+        try {
+          // Insert into sentitems
+          await db.query(
+            'INSERT INTO sentitems (DestinationNumber, TextDecoded, SenderID, SentBy) VALUES (?, ?, ?, ?)',
+            [
+              message.DestinationNumber,
+              message.TextDecoded,
+              message.SenderID,
+              deviceName || 'Unknown Device'
+            ]
+          );
+          console.log(`Message ID ${messageId} inserted into sentitems`);
+          
+          // Delete from outbox after inserting into sentitems
+          await db.query('DELETE FROM outbox WHERE ID = ?', [messageId]);
+          console.log(`Message ID ${messageId} deleted from outbox`);
+        } catch (dbError) {
+          console.error(`Database error processing message ID ${messageId}:`, dbError);
+          throw dbError;
+        }
       } else {
-        console.log(`Message ID ${messageId} failed to send, keeping in outbox for retry`);
+        console.log(`Message ID ${messageId} failed to send (status=${status}), keeping in outbox for retry`);
       }
 
       return message;
