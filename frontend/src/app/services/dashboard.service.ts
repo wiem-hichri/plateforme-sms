@@ -10,4 +10,9 @@ export class DashboardService {
   getStats() {
     return this.http.get<any>(`${this.apiUrl}/stats`);
   }
+
+  getTauxMensuels() {
+    return this.http.get<{ tauxMensuels: any[] }>(`${this.apiUrl}/taux-mensuels`);
+  }
+  
 }
