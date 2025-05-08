@@ -33,7 +33,7 @@ export class SendMessageComponent {
   async sendSMS() {
     if (this.smsForm.invalid) return;
 
-    const SenderID = this.authService.getCurrentUserId(); // ✅ Get user ID
+    const SenderID = this.authService.getCurrentUserId(); 
     if (!SenderID) {
       this.responseMessage = "Utilisateur non authentifié.";
       return;
@@ -45,7 +45,7 @@ export class SendMessageComponent {
     const { destinationNumber, textDecoded } = this.smsForm.value;
 
     try {
-      await this.smsService.sendSMS(destinationNumber, textDecoded, SenderID);
+      await this.smsService.sendSMS(destinationNumber, textDecoded, SenderID, null);
       this.responseMessage = 'Message envoyé avec succès !';
       this.smsForm.reset();
     } catch (error) {

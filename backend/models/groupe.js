@@ -21,17 +21,24 @@ const Groupe = {
 
     // Get all groups for a specific user or all groups for super-administrateur
     getAll: async (userId, role) => {
-        let query = "SELECT g.id, g.nom, ug.user_id FROM groupes g LEFT JOIN user_groupe ug ON g.id = ug.groupe_id ORDER BY g.created_at DESC";
+        let query = `
+            SELECT g.id, g.nom, ug.user_id
+            FROM groupes g
+            LEFT JOIN user_groupe ug ON g.id = ug.groupe_id
+        `;
         let values = [];
-
+    
         if (role !== 'super-administrateur') {
             query += " WHERE ug.user_id = ?";
             values.push(userId);
         }
-
+    
+        query += " ORDER BY g.created_at DESC";
+    
         const [results] = await db.query(query, values);
         return results;
     },
+    
 
     // Get a group by ID and user
     getByIdAndUser: async (id, userId) => {

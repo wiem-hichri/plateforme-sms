@@ -10,10 +10,10 @@ export class SmsService {
 
   constructor(private http: HttpClient) {}
 
-  sendSMS(destinationNumber: string, textDecoded: string, creatorId: number) {
+  sendSMS(destinationNumber: string, textDecoded: string, senderID: number, modeleId: number | null) {
     return this.http.post(
       `${this.apiUrl}/insert`,
-      { destinationNumber, textDecoded, creatorId },
+      { destinationNumber, textDecoded, senderID, modeleId },
       { withCredentials: true }
     ).toPromise();
   }
@@ -65,11 +65,11 @@ export class SmsService {
   }
 
   // Send actual SMS (implementation would depend on your backend)
-  SendSMS(recipientNumber: string, messageContent: string, creatorId: number): Observable<any> {
+  SendSMS(recipientNumber: string, messageContent: string, senderID: number): Observable<any> {
     const payload = {
       destinationNumber: recipientNumber,
       content: messageContent,
-      creatorId: creatorId
+      senderID: senderID
     };
     return this.http.post(`${this.apiUrl}/sms/send`, payload);
   }

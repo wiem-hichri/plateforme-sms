@@ -1,11 +1,13 @@
 const db = require('../config/dbConnect').promise();
+const bcrypt = require('bcrypt');
+
 
 const SMS = {
   smsCount: () => {
     return db.query('SELECT COUNT(*) as count FROM outbox');
   },
 
-  insertSMS: async (destinationNumber, textDecoded, senderID) => {
+  insertSMS: async (destinationNumber, textDecoded, senderID, modeleId = null) => {
     const [rows] = await db.query(
       'SELECT 1 FROM sim_cards WHERE numero = ? LIMIT 1',
       [destinationNumber]
@@ -14,8 +16,8 @@ const SMS = {
     const type_envoi = rows.length > 0 ? 'float' : 'ORfloat';
 
     return db.query(
-      'INSERT INTO outbox (DestinationNumber, TextDecoded, SenderID, type_envoi) VALUES (?, ?, ?, ?)',
-      [destinationNumber, textDecoded, senderID, type_envoi]
+      'INSERT INTO outbox (DestinationNumber, TextDecoded, SenderID, type_envoi, model_id) VALUES (?, ?, ?, ?, ?)',
+      [destinationNumber, textDecoded, senderID, type_envoi, modeleId]
     );
   },
 
@@ -57,22 +59,40 @@ const SMS = {
         console.log(`Message ID ${messageId} sent successfully, moving to sentitems...`);
         
         try {
-          // Insert into sentitems
+          let contenu = message.TextDecoded;
+        
+          if (message.model_id !== null && message.model_id !== undefined) {
+            const [rows] = await db.query(
+              'SELECT is_confidential FROM model_sms WHERE id = ?',
+              [message.model_id]
+            );
+        
+            if (rows.length > 0) {
+              const isConfidential = rows[0].is_confidential;
+        
+              if (isConfidential) {
+                const saltRounds = 10;
+                contenu = await bcrypt.hash(contenu, saltRounds);
+              }
+            } else {
+              console.warn(`⚠️ Modèle avec ID ${message.model_id} non trouvé. Enregistrement sans hachage.`);
+            }
+          }
+        
           await db.query(
             'INSERT INTO sentitems (DestinationNumber, TextDecoded, SenderID, SentBy) VALUES (?, ?, ?, ?)',
             [
               message.DestinationNumber,
-              message.TextDecoded,
+              contenu,
               message.SenderID,
               deviceName || 'Unknown Device'
             ]
           );
-          console.log(`Message ID ${messageId} inserted into sentitems`);
-          
-          // Delete from outbox after inserting into sentitems
+          console.log(`✅ Message ID ${messageId} inséré dans sentitems`);
           await db.query('DELETE FROM outbox WHERE ID = ?', [messageId]);
-          console.log(`Message ID ${messageId} deleted from outbox`);
-        } catch (dbError) {
+          console.log(`🗑️ Message ID ${messageId} supprimé de outbox`);
+        }
+         catch (dbError) {
           console.error(`Database error processing message ID ${messageId}:`, dbError);
           throw dbError;
         }

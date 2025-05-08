@@ -16,6 +16,7 @@ export class EditModelCardComponent implements OnChanges {
 
   nom = '';
   contenu = '';
+  is_confidential = false;
 
   constructor(private smsModelService: SmsModelService) {}
 
@@ -23,11 +24,11 @@ export class EditModelCardComponent implements OnChanges {
     if (changes['model'] && this.model) {
       this.nom = this.model.nom;
       this.contenu = this.model.contenu;
-    }
+      this.is_confidential = this.model.is_confidential === 1 || this.model.is_confidential === true;    }
   }
 
   save() {
-    const updatedModel = { id: this.model.id, nom: this.nom, contenu: this.contenu };
+    const updatedModel = { id: this.model.id, nom: this.nom, contenu: this.contenu, is_confidential: this.is_confidential };
     this.smsModelService.update(this.model.id, updatedModel).subscribe(model => {
       this.modelUpdated.emit(model);
     });

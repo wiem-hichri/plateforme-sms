@@ -8,10 +8,10 @@ const db = require('../config/dbConnect').promise();
 
 
 const createModelSMS = async (req, res) => {
-    const { nom, contenu } = req.body;
+    const { nom, contenu, is_confidential } = req.body;
     const user_id = req.session.user.id; 
     try {
-        const result = await ModelSMS.create({ user_id, nom, contenu });
+        const result = await ModelSMS.create({ user_id, nom, contenu, is_confidential });
         res.status(201).json({ message: "Modèle de SMS créé", result });
     } catch (error) {
         res.status(500).json({ message: "Erreur lors de la création", error });
@@ -42,10 +42,10 @@ const getAllModels = async (req, res) => {
 
 const updateModelSMS = async (req, res) => {
     const { id } = req.params;
-    const { nom, contenu } = req.body;
+    const { nom, contenu, is_confidential } = req.body;
     const user_id = req.session.user.id;
     try {
-        const result = await ModelSMS.update(id, user_id, { nom, contenu });
+        const result = await ModelSMS.update(id, user_id, { nom, contenu, is_confidential });
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: 'Modèle non trouvé' });
         }
@@ -293,7 +293,8 @@ const sendConfidentialMessage = async (req, res) => {
         const messages = validatedData.map(contact => ({
             matricule: contact.matricule,
             telephone: contact.telephone,
-            message: replaceVariables(template, contact)
+            message: replaceVariables(template, contact),
+            modele_id: modeleId
         }));
 
         return res.status(200).json({

@@ -299,8 +299,8 @@ export class MgcComponent implements OnInit {
       return;
     }
 
-    const creatorId = this.authService.getCurrentUserId();
-    if (!creatorId) {
+    const senderID = this.authService.getCurrentUserId();
+    if (!senderID) {
       this.responseMessage = "Utilisateur non authentifié.";
       return;
     }
@@ -314,7 +314,7 @@ export class MgcComponent implements OnInit {
       
       for (const msg of this.generatedMessages) {
         try {
-          await this.smsService.sendSMS(msg.telephone, msg.message, creatorId);
+          await this.smsService.sendSMS(msg.telephone, msg.message, senderID, this.selectedModelId);
           successCount++;
         } catch (error) {
           failCount++;

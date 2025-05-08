@@ -19,15 +19,18 @@ export class AddModelCardComponent {
   
   nom = '';
   contenu = '';
+  is_confidential = false;
 
   constructor(private smsModelService: SmsModelService) {}
 
   save() {
-    const newModel = { nom: this.nom, contenu: this.contenu };
+    const newModel = { nom: this.nom, contenu: this.contenu, is_confidential: this.is_confidential };
     this.smsModelService.create(newModel).subscribe(model => {
       this.modelAdded.emit(model);
       this.nom = '';
       this.contenu = '';
+      this.is_confidential = false;
+      
     });
   }
   openGeneratorModal() {
