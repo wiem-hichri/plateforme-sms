@@ -37,7 +37,8 @@
       </a>
     </li>
 
-      <li *ngIf="currentUserRole !== 'utilisateur'"><a href="#">
+      <li >       
+         <a routerLink="/historique" routerLinkActive="active" href="/historique">
           <i class="flaticon-bar-chart-1"></i>
           <span class="nav-text">Rapports</span>
         </a>
@@ -49,12 +50,7 @@
           <span class="nav-text">Parametres</span>
         </a>
       </li>
-      <li>
-        <a routerLink="/historique" routerLinkActive="active" href="/historique">
-        <i class="flaticon-table"></i>
-        <span class="nav-text">Historique D'envoi</span>
-      </a>
-    </li>
+
 
       <!-- Other links -->
       <!-- 

@@ -1,0 +1,42 @@
+<div class="modal-overlay">
+    <div class="modal-card">
+      <h2 class="modal-title">Modifier la puce</h2>
+      
+      <form>
+        <div class="form-field">
+          <input type="text" [(ngModel)]="puce.numero" name="numero" placeholder="Numéro" required />
+        </div>
+        
+        <div class="form-field">
+          <input type="text" [(ngModel)]="puce.operateur" name="operateur" placeholder="Opérateur" required />
+        </div>
+        
+        <div class="form-field">
+          <input type="text" [(ngModel)]="puce.etat" name="etat" placeholder="État" required />
+        </div>
+        
+        <div class="form-field">
+          <input type="text" [(ngModel)]="puce.quota" name="quota" placeholder="Quota" required />
+        </div>
+        
+        <div class="form-field">
+          <select [(ngModel)]="puce.contact_id" name="contact_id" required>
+            <option [value]="0" disabled>Sélectionner un contact</option>
+            <option *ngFor="let contact of contacts" [value]="contact.id">{{ contact.nom }}</option>
+          </select>
+        </div>
+        
+        <div class="form-field">
+          <select [(ngModel)]="puce.mission_id" name="mission_id" required>
+            <option [value]="0" disabled>Sélectionner une mission</option>
+            <option *ngFor="let mission of missions" [value]="mission.id">{{ mission.type_mission }}</option>
+          </select>
+        </div>
+  
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" (click)="closeDialog()">Annuler</button>
+          <button type="button" class="submit-btn" (click)="updatePuce()">Enregistrer</button>
+        </div>
+      </form>
+    </div>
+  </div>

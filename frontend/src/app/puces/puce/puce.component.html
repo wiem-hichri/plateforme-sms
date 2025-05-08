@@ -2,7 +2,7 @@
   <div class="w-full max-w-6xl p-8 mx-auto bg-white rounded-lg shadow-lg">
     <div class="filter-wrapper">
       <button mat-raised-button color="primary" (click)="ajouterPuce()">+</button>
-      <input type="text" class="px-4 py-2 border rounded-md w-1/1" [(ngModel)]="searchText" placeholder="🔍 Rechercher"  />
+      <input type="text" class="px-4 py-2 border rounded-md w-1/1" [(ngModel)]="searchText" placeholder="🔍 Rechercher" />
     </div>
 
     <div class="overflow-y-auto max-h-[60vh] mt-4 px-2">
@@ -42,23 +42,9 @@
                 <mat-icon class="text-red-600">delete</mat-icon>
               </button>
             </td>
-            
-            
           </tr>
         </tbody>
       </table>
-    </div>
-
-
-    <div *ngIf="showModal" class="fixed inset-0 z-50 flex justify-end bg-gray-800 bg-opacity-50">
-      <app-puce-modal
-        class="w-full sm:w-[400px] bg-white h-full shadow-xl p-4"
-        [puce]="selectedPuce"
-        [contacts]="contacts"
-        [missions]="missions"
-        (save)="onSavePuce($event)"
-        (close)="closeModal()"
-      ></app-puce-modal>
     </div>
   </div>
 </div>

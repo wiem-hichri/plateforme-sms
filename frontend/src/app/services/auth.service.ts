@@ -9,6 +9,7 @@ import { map } from 'rxjs/operators';
 export class AuthService {
   private currentUserSubject: BehaviorSubject<any>;
   public currentUser: Observable<any>;
+  private apiUrl = 'http://localhost:3000/api';
 
   constructor(private http: HttpClient) {
     this.currentUserSubject = new BehaviorSubject<any>(null);
@@ -25,19 +26,19 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
-  /** ✅ Get the role of the currently logged-in user */
+  /** Get the role of the currently logged-in user */
   getCurrentUserRole(): string {
     return this.currentUserValue?.role || '';
   }
-  /** ✅ Get the ID of the currently logged-in user */
-getCurrentUserId(): number | null {
-  return this.currentUserValue?.id || null;
-}
+  
+  /** Get the ID of the currently logged-in user */
+  getCurrentUserId(): number | null {
+    return this.currentUserValue?.id || null;
+  }
 
-
-  /** ✅ Fetch the current user from the backend */
+  /** Fetch the current user from the backend */
   fetchCurrentUser() {
-    return this.http.get<any>('http://localhost:3000/api/auth/current-user', {
+    return this.http.get<any>(`${this.apiUrl}/auth/current-user`, {
       withCredentials: true // Required for sessions!
     }).pipe(
       map(user => {
@@ -47,9 +48,9 @@ getCurrentUserId(): number | null {
     );
   }
 
-  /** ✅ Login method */
+  /** Login method */
   login(login: string, password: string) {
-    return this.http.post<any>('http://localhost:3000/api/auth/login', { login, password }, {
+    return this.http.post<any>(`${this.apiUrl}/auth/login`, { login, password }, {
       withCredentials: true
     }).pipe(map(user => {
       this.currentUserSubject.next(user);
@@ -57,13 +58,23 @@ getCurrentUserId(): number | null {
     }));
   }
 
-  /** ✅ Logout method */
+  /** Logout method */
   logout() {
-    return this.http.post<any>('http://localhost:3000/api/auth/logout', {}, {
+    return this.http.post<any>(`${this.apiUrl}/auth/logout`, {}, {
       withCredentials: true
     }).pipe(map(() => {
       this.currentUserSubject.next(null);
       return true;
     }));
+  }
+
+  /** Reset password method - does not require authentication */
+  resetPassword(login: string, oldPassword: string, newPassword: string, confirmPassword: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/auth/reset-password`, { 
+      login, 
+      oldPassword, 
+      newPassword, 
+      confirmPassword 
+    });
   }
 }

@@ -133,3 +133,18 @@ $border-radius: 8px;
   background-color: #ff5722;
   color: white;
 }
+/* Add this to your existing login.component.scss */
+.forgot-password {
+  text-align: center;
+  margin-top: 1rem;
+  
+  a {
+    color: #007bff;
+    text-decoration: none;
+    cursor: pointer;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

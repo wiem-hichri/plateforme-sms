@@ -13,6 +13,11 @@
       </div>
 
       <button type="submit" class="login-btn">Se connecter</button>
+      
+      <!-- Added link to reset password page -->
+      <div class="forgot-password">
+        <a (click)="goToResetPassword()">Mot de passe oublié?</a>
+      </div>
     </form>
   </div>
 
@@ -27,11 +32,8 @@
   <div class="popup-box">
     <p>{{ popupMessage }}</p>
 
-    <!-- ✅ Reset button now works correctly -->
     <button *ngIf="expired" class="reset-btn" (click)="goToResetPassword()">Réinitialiser</button>
 
     <button (click)="closePopup()">OK</button>
   </div>
 </div>
-
-

@@ -30,12 +30,13 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  isLoginPage = false;
+  isFullPageRoute = false;
 
   constructor(private router: Router) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        this.isLoginPage = this.router.url === '/login';
+        // Check if current route is either login or reset-password
+        this.isFullPageRoute = ['/login', '/reset-password'].includes(this.router.url);
       }
     });
   }

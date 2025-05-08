@@ -4,25 +4,40 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { AddModelCardComponent } from '../modal/modal.component';
-import { EditModelCardComponent } from '../edit-modal/edit-modal.component';
+import { MatDialog } from '@angular/material/dialog';
 import { SmsGeneratorComponent } from '../../sendSMS/sms-generator/sms-generator.component';
+import { AddSmsModelDialogComponent } from '../add-sms-model-dialog/add-sms-model-dialog.component';
+import { EditSmsModelDialogComponent } from '../edit-sms-model-dialog/edit-sms-model-dialog.component';
+
+interface SmsModel {
+  id?: number;
+  nom: string;
+  contenu: string;
+  is_confidential: boolean;
+}
 
 @Component({
   selector: 'app-sms-models',
   standalone: true,
-  imports: [CommonModule, FormsModule, AddModelCardComponent,MatButtonModule, MatIconModule, EditModelCardComponent,SmsGeneratorComponent],
+  imports: [
+    CommonModule, 
+    FormsModule,
+    MatButtonModule,
+    MatIconModule,
+    SmsGeneratorComponent
+  ],
   templateUrl: './sms-models.component.html',
   styleUrls: ['./sms-models.component.scss']
 })
 export class SmsModelsComponent implements OnInit {
-    @ViewChild(SmsGeneratorComponent) smsGeneratorComponent?: SmsGeneratorComponent;
+  @ViewChild(SmsGeneratorComponent) smsGeneratorComponent?: SmsGeneratorComponent;
   
-  models: any[] = [];
-  showAddCard = false;
-  selectedModel: any = null;
+  models: SmsModel[] = [];
 
-  constructor(private smsModelService: SmsModelService) {}
+  constructor(
+    private smsModelService: SmsModelService,
+    public dialog: MatDialog
+  ) {}
 
   ngOnInit() {
     this.loadModels();
@@ -35,35 +50,43 @@ export class SmsModelsComponent implements OnInit {
   }
 
   openAddCard() {
-    this.showAddCard = true;
-    this.selectedModel = null;
+    const dialogRef = this.dialog.open(AddSmsModelDialogComponent, {
+      width: '400px'
+    });
+    
+    dialogRef.afterClosed().subscribe((newModel: SmsModel | undefined) => {
+      if (newModel) {
+        this.loadModels();
+      }
+    });
   }
 
-  openEditCard(model: any) {
-    this.selectedModel = { ...model }; // envoyer tout le modèle, pas juste l'id
-    this.showAddCard = false;
+  openEditCard(model: SmsModel) {
+    const dialogRef = this.dialog.open(EditSmsModelDialogComponent, {
+      width: '400px',
+      data: { model }
+    });
+    
+    dialogRef.afterClosed().subscribe((updatedModel: SmsModel | undefined) => {
+      if (updatedModel) {
+        this.loadModels();
+      }
+    });
   }
 
-  onModelAdded(newModel: any) {
-    this.models.push(newModel);
-    this.showAddCard = false;
-  }
-
-  onModelUpdated(updatedModel: any) {
-    const index = this.models.findIndex(m => m.id === updatedModel.id);
-    if (index !== -1) {
-      this.models[index] = updatedModel;
+  deleteModel(id: number | undefined) {
+    if (id === undefined) {
+      console.error('Cannot delete model with undefined id');
+      return;
     }
-    this.selectedModel = null;
-  }
-
-  deleteModel(id: number) {
+    
     if (confirm('Voulez-vous vraiment supprimer ce modèle ?')) {
       this.smsModelService.delete(id).subscribe(() => {
         this.models = this.models.filter(model => model.id !== id);
       });
     }
   }
+  
   openGeneratorModal() {
     this.smsGeneratorComponent?.openModal();
   }
