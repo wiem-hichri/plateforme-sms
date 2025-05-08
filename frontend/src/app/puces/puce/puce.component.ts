@@ -2,9 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { PuceService } from '../../services/puce.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { PuceModalComponent } from '../puce-modal/puce-modal.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
+import { AddPuceDialogComponent } from '../add-puce-dialog/add-puce-dialog.component';
+import { EditPuceDialogComponent } from '../edit-puce-dialog/edit-puce-dialog.component';
+
 interface Puce {
   id?: number;
   numero: string;
@@ -20,8 +23,12 @@ interface Puce {
 @Component({
   selector: 'app-puce',
   standalone: true,
-  imports: [CommonModule, FormsModule, PuceModalComponent,MatIconModule,
-    MatButtonModule,],
+  imports: [
+    CommonModule, 
+    FormsModule, 
+    MatIconModule,
+    MatButtonModule
+  ],
   templateUrl: './puce.component.html',
   styleUrls: ['./puce.component.scss']
 })
@@ -29,10 +36,12 @@ export class PuceComponent implements OnInit {
   puces: Puce[] = [];
   contacts: any[] = [];
   missions: any[] = [];
-  selectedPuce: Puce | null = null;
-  showModal = false;
+  searchText: string = '';
 
-  constructor(private puceService: PuceService) {}
+  constructor(
+    private puceService: PuceService,
+    public dialog: MatDialog
+  ) {}
 
   ngOnInit() {
     this.loadAll();
@@ -55,20 +64,28 @@ export class PuceComponent implements OnInit {
   }
 
   ajouterPuce() {
-    this.selectedPuce = {
-      numero: '',
-      operateur: '',
-      etat: '',
-      quota: '',
-      contact_id: 0,
-      mission_id: 0
-    };
-    this.showModal = true;
+    const dialogRef = this.dialog.open(AddPuceDialogComponent, {
+      width: '400px'
+    });
+
+    dialogRef.afterClosed().subscribe((newPuce: Puce | undefined) => {
+      if (newPuce) {
+        this.loadAll();
+      }
+    });
   }
 
   modifierPuce(puce: Puce) {
-    this.selectedPuce = { ...puce };
-    this.showModal = true;
+    const dialogRef = this.dialog.open(EditPuceDialogComponent, {
+      width: '400px',
+      data: { puce }
+    });
+
+    dialogRef.afterClosed().subscribe((updatedPuce: Puce | undefined) => {
+      if (updatedPuce) {
+        this.loadAll();
+      }
+    });
   }
 
   supprimerPuce(id: number) {
@@ -77,24 +94,6 @@ export class PuceComponent implements OnInit {
     }
   }
 
-  onSavePuce(puce: Puce) {
-    const request = puce.id
-      ? this.puceService.updatePuce(puce.id, puce)
-      : this.puceService.createPuce(puce);
-
-    request.subscribe(() => {
-      this.loadAll();
-      this.closeModal();
-    });
-  }
-
-  closeModal() {
-    this.selectedPuce = null;
-    this.showModal = false;
-  }
-
-
-  searchText: string = '';
   getFilteredPuces(): Puce[] {
     if (!this.searchText.trim()) return this.puces;
     const lowerSearch = this.searchText.toLowerCase();
@@ -106,6 +105,4 @@ export class PuceComponent implements OnInit {
       puce.mission_name?.toLowerCase().includes(lowerSearch)
     );
   }
-  
-
 }

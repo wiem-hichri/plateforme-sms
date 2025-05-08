@@ -18,6 +18,7 @@ import { MissionManagementComponent } from './parametre/mission/mission.componen
 import { SiteListComponent } from './parametre/Sites/site/site.component';
 import { HistoriqueComponent } from './parametre/historique/historique.component';
 import { DeviceListComponent } from './Devices/device-list/device-list.component';
+import { ResetPasswordComponent } from './Login/reset-password/reset-password.component';
 export const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -32,6 +33,7 @@ export const appRoutes: Routes = [
   { path: 'send', component: ChooseSmsMethodComponent },
   { path: 'login-history', component: LoginHistoryComponent },
   { path: 'historique', component: HistoriqueComponent },
+  { path: 'reset-password', component: ResetPasswordComponent },
   {path: 'parametre', component: ParametreBoardComponent },
   {path : 'sms-models', component: SmsModelsComponent },
   {path : 'mgc-sms', component: MgcComponent },

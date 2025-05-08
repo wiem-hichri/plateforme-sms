@@ -20,7 +20,8 @@ import { RemoveContactDialogComponent } from '../../pages/rm-contact-list-dialog
 export class GroupsComponent implements OnInit {
   groups: Group[] = [];
   selectedGroupContacts: any[] = [];
-  
+  selectedGroupId: number | null = null;
+  loading = false;
 
   constructor(
     private groupService: GroupService,
@@ -33,14 +34,29 @@ export class GroupsComponent implements OnInit {
   }
 
   fetchGroups() {
+    this.loading = true;
     this.groupService.getGroups().subscribe(
       (response) => {
         this.groups = response.data || [];
+        this.loading = false;
       },
       (error) => {
         console.error('Error fetching groups:', error);
+        this.loading = false;
       }
     );
+  }
+
+  selectGroup(group: Group) {
+    if (group.id !== undefined) {
+      this.selectedGroupId = group.id;
+      this.viewGroupContacts(group.id);
+    }
+  }
+
+  getSelectedGroupName(): string {
+    const selectedGroup = this.groups.find(group => group.id === this.selectedGroupId);
+    return selectedGroup ? selectedGroup.nom : '';
   }
 
   openAddGroupModal() {
@@ -50,7 +66,6 @@ export class GroupsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((newGroup: Group | undefined) => {
       if (newGroup) {
-        this.groups.push(newGroup);
         this.fetchGroups();
       }
     });
@@ -64,12 +79,11 @@ export class GroupsComponent implements OnInit {
   
     dialogRef.afterClosed().subscribe((updatedGroup: Group | undefined) => {
       if (updatedGroup) {
-        this.fetchGroups(); // <-- Recharge proprement toute la liste depuis le serveur
+        this.fetchGroups();
       }
     });
   }
   
-
   deleteGroup(id?: number) {
     if (id === undefined) {
       return;
@@ -79,6 +93,10 @@ export class GroupsComponent implements OnInit {
       this.groupService.deleteGroup(id).subscribe(
         () => {
           this.groups = this.groups.filter((group) => group.id !== id);
+          if (this.selectedGroupId === id) {
+            this.selectedGroupId = null;
+            this.selectedGroupContacts = [];
+          }
         },
         (error) => {
           console.error('Error deleting group:', error);
@@ -137,7 +155,7 @@ export class GroupsComponent implements OnInit {
         this.fetchGroupContacts(groupId);
       },
       (error) => {
-        console.error('Erreur lors de l’association des contacts au groupe :', error);
+        console.error('Erreur lors de l\'association des contacts au groupe :', error);
       }
     );
   }
@@ -153,14 +171,16 @@ export class GroupsComponent implements OnInit {
     );
   }
   
-
   fetchGroupContacts(groupId: number) {
+    this.loading = true;
     this.contactService.getContactsByGroup(groupId).subscribe(
       (response) => {
         this.selectedGroupContacts = response.data;
+        this.loading = false;
       },
       (error) => {
         console.error('Error fetching group contacts:', error);
+        this.loading = false;
       }
     );
   }

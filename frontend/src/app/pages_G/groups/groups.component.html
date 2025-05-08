@@ -15,62 +15,100 @@
       </div>
     </div>
 
-    <!-- Scrollable Group Cards Grid -->
-    <div class="overflow-y-auto max-h-[60vh] mt-4 px-2">
-      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        <div *ngFor="let groupe of groups"
-             class="relative p-6 transition-all duration-300 border border-orange-300 rounded-lg shadow-md hover:scale-105"
-             (click)="groupe.id !== undefined && viewGroupContacts(groupe.id)">
+    <!-- Main content area with two columns -->
+    <div class="flex flex-col md:flex-row gap-6 mt-6">
+      <!-- Scrollable Group Cards Grid -->
+      <div class="md:w-2/3 overflow-y-auto max-h-[60vh] px-2">
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <div *ngFor="let groupe of groups"
+               class="relative p-6 transition-all duration-300 border border-orange-300 rounded-lg shadow-md hover:shadow-lg cursor-pointer"
+               [ngClass]="{'bg-orange-50': selectedGroupId === groupe.id}"
+               (click)="selectGroup(groupe)">
 
-          <!-- Group Name -->
-          <h3 class="relative z-10 text-xl font-semibold text-gray-800">{{ groupe.nom }}</h3>
-          <p class="text-sm text-gray-600">📌 ID: {{ groupe.id }}</p>
+            <!-- Group Name -->
+            <h3 class="relative z-10 text-xl font-semibold text-gray-800">{{ groupe.nom }}</h3>
+            <p class="text-sm text-gray-600">📌 ID: {{ groupe.id }}</p>
 
-          <!-- Actions -->
-          <div class="flex justify-end mt-4">
+            <!-- Actions -->
+            <div class="flex justify-end mt-4 space-x-1">
+              <button
+                mat-icon-button
+                class="p-1 text-blue-600 hover:bg-blue-100 rounded-full"
+                *ngIf="groupe.id !== undefined"
+                (click)="openEditGroupModal(groupe); $event.stopPropagation();">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                class="p-1 text-red-600 hover:bg-red-100 rounded-full"
+                *ngIf="groupe.id !== undefined"
+                (click)="deleteGroup(groupe.id); $event.stopPropagation();">
+                <mat-icon>delete</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                class="p-1 text-green-600 hover:bg-green-100 rounded-full"
+                *ngIf="groupe.id !== undefined"
+                (click)="openAddContactDialog(groupe.id); $event.stopPropagation();">
+                <mat-icon>person_add</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                class="p-1 text-yellow-600 hover:bg-yellow-100 rounded-full"
+                *ngIf="groupe.id !== undefined"
+                (click)="openRemoveContactDialog(groupe.id); $event.stopPropagation();">
+                <mat-icon>person_remove</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Details Panel -->
+      <div class="md:w-1/3 mt-6 md:mt-0">
+        <div *ngIf="selectedGroupId" class="p-6 border border-orange-300 rounded-lg shadow-md bg-white sticky top-24">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-semibold text-gray-800">
+              {{ getSelectedGroupName() }} - Contacts
+            </h3>
+            <div class="flex space-x-2">
+              <button
+                *ngIf="selectedGroupId"
+                class="p-1 text-green-600 hover:bg-green-100 rounded-full"
+                (click)="openAddContactDialog(selectedGroupId)">
+                <mat-icon>person_add</mat-icon>
+              </button>
+              <button
+                *ngIf="selectedGroupId && selectedGroupContacts.length > 0"
+                class="p-1 text-yellow-600 hover:bg-yellow-100 rounded-full"
+                (click)="openRemoveContactDialog(selectedGroupId)">
+                <mat-icon>person_remove</mat-icon>
+              </button>
+            </div>
+          </div>
+          
+          <div *ngIf="selectedGroupContacts.length === 0" class="py-8 text-center text-gray-500">
+            <mat-icon class="text-4xl mb-2">people_outline</mat-icon>
+            <p>Aucun contact dans ce groupe</p>
             <button
-              mat-icon-button
-              class="edit-btn"
-              *ngIf="groupe.id !== undefined"
-              (click)="openEditGroupModal(groupe)">
-              <mat-icon class="text-blue-600">edit</mat-icon>
-            </button>
-            <button
-              mat-icon-button
-              class="delete-btn"
-              *ngIf="groupe.id !== undefined"
-              (click)="deleteGroup(groupe.id)">
-              <mat-icon class="text-red-600">delete</mat-icon>
-            </button>
-            <button
-              mat-icon-button
-              class="add-contact-btn"
-              *ngIf="groupe.id !== undefined"
-              (click)="openAddContactDialog(groupe.id)">
-              <mat-icon class="text-green-600">add</mat-icon>
-            </button>
-            <button
-              mat-icon-button
-              class="remove-contact-btn"
-              *ngIf="groupe.id !== undefined"
-              (click)="openRemoveContactDialog(groupe.id)">
-              <mat-icon class="text-yellow-600">remove</mat-icon>
+              class="mt-4 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600"
+              (click)="openAddContactDialog(selectedGroupId)">
+              Ajouter des contacts
             </button>
           </div>
-
-          <!-- Display associated contacts -->
-          <div *ngIf="groupe.id === selectedGroupContacts[0]?.groupe_id">
-            <h4 class="mt-4 text-lg font-semibold">Contacts associés:</h4>
-            <ul>
-              <li *ngFor="let contact of selectedGroupContacts" class="text-gray-700">
-                {{ contact.nom }}
-              </li>
-            </ul>
-          </div>
-
+          
+          <ul *ngIf="selectedGroupContacts.length > 0" class="divide-y divide-gray-200 max-h-[40vh] overflow-y-auto">
+            <li *ngFor="let contact of selectedGroupContacts" class="py-3 flex items-center justify-between">
+              <div>
+                <div class="font-medium">{{ contact.nom }}</div>
+                <div class="text-sm text-gray-600" *ngIf="contact.telephone">📱 {{ contact.telephone }}</div>
+                <div class="text-sm text-gray-600" *ngIf="contact.matricule">🆔 {{ contact.matricule }}</div>
+                <div class="text-sm text-gray-600" *ngIf="contact.email">✉️ {{ contact.email }}</div>
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
-
   </div>
 </div>
