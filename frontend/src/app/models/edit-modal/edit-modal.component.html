@@ -3,6 +3,17 @@
   <form (ngSubmit)="save()" class="flex flex-col gap-3">
     <input type="text" [(ngModel)]="nom" name="nom" placeholder="Nom du modèle" class="border p-2 rounded-lg">
     <textarea [(ngModel)]="contenu" name="contenu" placeholder="Contenu du modèle" class="border p-2 rounded-lg"></textarea>
+    <div class="flex flex-col gap-1">
+      <label class="font-medium">Ce modèle est-il confidentiel ?</label>
+      <label>
+        <input type="radio" [(ngModel)]="is_confidential" name="is_confidential" [value]="true">
+        Oui (Confidentiel)
+      </label>
+      <label>
+        <input type="radio" [(ngModel)]="is_confidential" name="is_confidential" [value]="false">
+        Non (Visible)
+      </label>
+    </div>
     <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 mt-2">
       Enregistrer
     </button>

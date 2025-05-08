@@ -12,13 +12,13 @@ const smsCount = async (req, res) => {
 
 const insertSMS = async (req, res) => {
     try {
-        const { destinationNumber, textDecoded } = req.body;
+        const { destinationNumber, textDecoded,modeleId } = req.body;
 
-        if (!destinationNumber || !textDecoded) {
+        if (!destinationNumber || !textDecoded ) {
             return res.status(400).json({ message: 'Données manquantes' });
         }
         const senderID = req.session.user.id;
-        await SMS.insertSMS(destinationNumber, textDecoded, senderID);
+        await SMS.insertSMS(destinationNumber, textDecoded, senderID, modeleId || null);
 
         res.status(201).json({ message: 'Message ajouté avec succès' });
     } catch (error) {
