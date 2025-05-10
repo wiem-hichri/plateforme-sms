@@ -13,8 +13,9 @@ interface Puce {
   operateur: string;
   etat: string;
   quota: string;
-  contact_id: number;
-  mission_id: number;
+  contact_id: number | null;
+  mission_id: number | null;
+  date_acquisition?: Date;
 }
 
 @Component({
@@ -32,8 +33,11 @@ interface Puce {
 })
 export class EditPuceDialogComponent implements OnInit {
   puce: Puce;
+  operateurs: string[] = ['Ooredoo', 'Orange', 'Telecom'];
+  etats: string[] = ['Active', 'Suspendu', 'Desactivé'];
   contacts: any[] = [];
   missions: any[] = [];
+  assignmentType: 'none' | 'contact' | 'mission' = 'none';
 
   constructor(
     public dialogRef: MatDialogRef<EditPuceDialogComponent>,
@@ -41,6 +45,15 @@ export class EditPuceDialogComponent implements OnInit {
     private puceService: PuceService
   ) {
     this.puce = { ...data.puce };
+    
+    // Determine the initial assignment type
+    if (this.puce.contact_id) {
+      this.assignmentType = 'contact';
+    } else if (this.puce.mission_id) {
+      this.assignmentType = 'mission';
+    } else {
+      this.assignmentType = 'none';
+    }
   }
 
   ngOnInit() {
@@ -61,8 +74,25 @@ export class EditPuceDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  onAssignmentTypeChange() {
+    // Reset both IDs when changing assignment type
+    this.puce.contact_id = null;
+    this.puce.mission_id = null;
+  }
+
   updatePuce() {
     if (this.puce.numero.trim() && this.puce.operateur.trim() && this.puce.id) {
+      // Ensure only the correct ID is sent based on the assignment type
+      if (this.assignmentType === 'contact') {
+        this.puce.mission_id = null;
+      } else if (this.assignmentType === 'mission') {
+        this.puce.contact_id = null;
+      } else {
+        // If "none" is selected, ensure both are null
+        this.puce.contact_id = null;
+        this.puce.mission_id = null;
+      }
+
       this.puceService.updatePuce(this.puce.id, this.puce).subscribe(
         (response) => {
           console.log('Puce updated successfully:', response);
