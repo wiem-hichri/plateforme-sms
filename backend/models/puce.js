@@ -2,13 +2,23 @@ const db = require('../config/dbConnect').promise();
 
 const Puce = {
     create: async (puce) => {
-        if ((puce.contact_id && puce.mission_id) || (!puce.contact_id && !puce.mission_id)) {
-          throw new Error("You must provide either contact_id or mission_id, but not both.");
+        // Modified to allow neither contact_id nor mission_id
+        if (puce.contact_id && puce.mission_id) {
+            throw new Error("You cannot provide both contact_id and mission_id.");
         }
+        
+        let contactIdValue = puce.contact_id || null;
+        let missionIdValue = puce.mission_id || null;
+        
+        // If contact_id is 0, set it to null
+        if (contactIdValue === 0) contactIdValue = null;
+        
+        // If mission_id is 0, set it to null
+        if (missionIdValue === 0) missionIdValue = null;
       
         let query = `
-          INSERT INTO sim_cards (numero, operateur, etat, quota, ${puce.contact_id ? 'contact_id' : 'mission_id'}, date_acquisition)
-          VALUES (?, ?, ?, ?, ?, ?)
+          INSERT INTO sim_cards (numero, operateur, etat, quota, contact_id, mission_id, date_acquisition)
+          VALUES (?, ?, ?, ?, ?, ?, ?)
         `;
       
         const values = [
@@ -16,14 +26,16 @@ const Puce = {
           puce.operateur,
           puce.etat,
           puce.quota,
-          puce.contact_id || puce.mission_id,
-          puce.date_acquisition
+          contactIdValue,
+          missionIdValue,
+          puce.date_acquisition || new Date()
         ];
       
         const [result] = await db.query(query, values);
         return result;
-      }
-      ,getAllContacts: async () => {
+    },
+    
+    getAllContacts: async () => {
         const [results] = await db.query("SELECT id, nom FROM contacts");
         return results;
     },
@@ -44,17 +56,23 @@ const Puce = {
     },
 
     update: async (id, puce) => {
-        if ((puce.contact_id && puce.mission_id) || (!puce.contact_id && !puce.mission_id)) {
-          throw new Error("You must provide either contact_id or mission_id, but not both.");
+        // Modified to allow neither contact_id nor mission_id
+        if (puce.contact_id && puce.mission_id) {
+            throw new Error("You cannot provide both contact_id and mission_id.");
         }
-      
-        // Build the SET clause dynamically
-        const targetField = puce.contact_id ? 'contact_id' : 'mission_id';
-        const targetValue = puce.contact_id || puce.mission_id;
+        
+        let contactIdValue = puce.contact_id || null;
+        let missionIdValue = puce.mission_id || null;
+        
+        // If contact_id is 0, set it to null
+        if (contactIdValue === 0) contactIdValue = null;
+        
+        // If mission_id is 0, set it to null
+        if (missionIdValue === 0) missionIdValue = null;
       
         const query = `
           UPDATE sim_cards
-          SET numero = ?, operateur = ?, etat = ?, quota = ?, date_acquisition = ?, ${targetField} = ?, ${puce.contact_id ? 'mission_id' : 'contact_id'} = NULL
+          SET numero = ?, operateur = ?, etat = ?, quota = ?, contact_id = ?, mission_id = ?, date_acquisition = ?
           WHERE id = ?
         `;
       
@@ -63,14 +81,15 @@ const Puce = {
           puce.operateur,
           puce.etat,
           puce.quota,
-          puce.date_acquisition,
-          targetValue,
+          contactIdValue,
+          missionIdValue,
+          puce.date_acquisition || new Date(),
           id
         ];
       
         const [result] = await db.query(query, values);
         return result;
-      },
+    },
 
     delete: async (id) => {
         const [result] = await db.query("DELETE FROM sim_cards WHERE id = ?", [id]);
@@ -84,13 +103,13 @@ const Puce = {
     },
 
     assignPuceToContact: async (puceId, contactId) => {
-        const query = `UPDATE sim_cards SET contact_id = ? WHERE id = ?`;
+        const query = `UPDATE sim_cards SET contact_id = ?, mission_id = NULL WHERE id = ?`;
         const [result] = await db.query(query, [contactId, puceId]);
         return result;
     },
 
     assignPuceToMission: async (puceId, missionId) => {
-        const query = `UPDATE sim_cards SET mission_id = ? WHERE id = ?`;
+        const query = `UPDATE sim_cards SET mission_id = ?, contact_id = NULL WHERE id = ?`;
         const [result] = await db.query(query, [missionId, puceId]);
         return result;
     },

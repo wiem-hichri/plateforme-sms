@@ -1,42 +1,63 @@
 <div class="modal-overlay">
-    <div class="modal-card">
-      <h2 class="modal-title">Ajouter une nouvelle puce</h2>
+  <div class="modal-card">
+    <h2 class="modal-title">Ajouter une nouvelle puce</h2>
+    
+    <form>
+      <div class="form-field">
+        <input type="text" [(ngModel)]="newPuce.numero" name="numero" placeholder="Numéro" required />
+      </div>
       
-      <form>
-        <div class="form-field">
-          <input type="text" [(ngModel)]="newPuce.numero" name="numero" placeholder="Numéro" required />
-        </div>
-        
-        <div class="form-field">
-          <input type="text" [(ngModel)]="newPuce.operateur" name="operateur" placeholder="Opérateur" required />
-        </div>
-        
-        <div class="form-field">
-          <input type="text" [(ngModel)]="newPuce.etat" name="etat" placeholder="État" required />
-        </div>
-        
-        <div class="form-field">
-          <input type="text" [(ngModel)]="newPuce.quota" name="quota" placeholder="Quota" required />
-        </div>
-        
-        <div class="form-field">
-          <select [(ngModel)]="newPuce.contact_id" name="contact_id" required>
-            <option [value]="0" disabled>Sélectionner un contact</option>
-            <option *ngFor="let contact of contacts" [value]="contact.id">{{ contact.nom }}</option>
-          </select>
-        </div>
-        
-        <div class="form-field">
-          <select [(ngModel)]="newPuce.mission_id" name="mission_id" required>
-            <option [value]="0" disabled>Sélectionner une mission</option>
-            <option *ngFor="let mission of missions" [value]="mission.id">{{ mission.type_mission }}</option>
-          </select>
-        </div>
-  
-        <div class="modal-actions">
-          <button type="button" class="cancel-btn" (click)="closeDialog()">Annuler</button>
-          <button type="button" class="submit-btn" (click)="addPuce()">Ajouter</button>
-        </div>
-      </form>
-    </div>
+      <div class="form-field">
+        <label>Opérateur:</label>
+        <select [(ngModel)]="newPuce.operateur" name="operateur" required>
+          <option [ngValue]="''" disabled>Sélectionner un opérateur</option>
+          <option *ngFor="let op of operateurs" [value]="op">{{ op }}</option>
+        </select>
+      </div>
+      
+      <div class="form-field">
+        <label>État:</label>
+        <select [(ngModel)]="newPuce.etat" name="etat" required>
+          <option [ngValue]="''" disabled>Sélectionner un état</option>
+          <option *ngFor="let etat of etats" [value]="etat">{{ etat }}</option>
+        </select>
+      </div>
+      
+      <div class="form-field">
+        <input type="text" [(ngModel)]="newPuce.quota" name="quota" placeholder="Quota" required />
+      </div>
+      
+      <div class="form-field">
+        <label>Type d'affectation:</label>
+        <select [(ngModel)]="assignmentType" name="assignmentType" (change)="onAssignmentTypeChange()">
+          <option value="none">Sans affectation</option>
+          <option value="contact">Contact</option>
+          <option value="mission">Mission</option>
+        </select>
+      </div>
+      
+      <div class="form-field" *ngIf="assignmentType === 'contact'">
+        <label>Contact:</label>
+        <select [(ngModel)]="newPuce.contact_id" name="contact_id">
+          <option [ngValue]="null">Sélectionner un contact</option>
+          <option *ngFor="let contact of contacts" [ngValue]="contact.id">{{ contact.nom }}</option>
+          <option [ngValue]="null" *ngIf="newPuce.contact_id !== null">-- Aucun --</option>
+        </select>
+      </div>
+      
+      <div class="form-field" *ngIf="assignmentType === 'mission'">
+        <label>Mission:</label>
+        <select [(ngModel)]="newPuce.mission_id" name="mission_id">
+          <option [ngValue]="null">Sélectionner une mission</option>
+          <option *ngFor="let mission of missions" [ngValue]="mission.id">{{ mission.type_mission }}</option>
+          <option [ngValue]="null" *ngIf="newPuce.mission_id !== null">-- Aucun --</option>
+        </select>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="cancel-btn" (click)="closeDialog()">Annuler</button>
+        <button type="button" class="submit-btn" (click)="addPuce()">Ajouter</button>
+      </div>
+    </form>
   </div>
+</div>
