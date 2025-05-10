@@ -13,8 +13,9 @@ interface Puce {
   operateur: string;
   etat: string;
   quota: string;
-  contact_id: number;
-  mission_id: number;
+  contact_id: number | null;
+  mission_id: number | null;
+  date_acquisition?: Date;
 }
 
 @Component({
@@ -36,12 +37,16 @@ export class AddPuceDialogComponent {
     operateur: '',
     etat: '',
     quota: '',
-    contact_id: 0,
-    mission_id: 0
+    contact_id: null,
+    mission_id: null,
+    date_acquisition: new Date()
   };
   
+  operateurs: string[] = ['Ooredoo', 'Orange', 'Telecom'];
+  etats: string[] = ['Active', 'Suspendu', 'Desactivé'];
   contacts: any[] = [];
   missions: any[] = [];
+  assignmentType: 'none' | 'contact' | 'mission' = 'none';
 
   constructor(
     public dialogRef: MatDialogRef<AddPuceDialogComponent>,
@@ -65,8 +70,25 @@ export class AddPuceDialogComponent {
     this.dialogRef.close();
   }
 
+  onAssignmentTypeChange() {
+    // Reset both IDs
+    this.newPuce.contact_id = null;
+    this.newPuce.mission_id = null;
+  }
+
   addPuce() {
     if (this.newPuce.numero.trim() && this.newPuce.operateur.trim()) {
+      // Ensure only the correct ID is sent based on the assignment type
+      if (this.assignmentType === 'contact') {
+        this.newPuce.mission_id = null;
+      } else if (this.assignmentType === 'mission') {
+        this.newPuce.contact_id = null;
+      } else {
+        // If "none" is selected, ensure both are null
+        this.newPuce.contact_id = null;
+        this.newPuce.mission_id = null;
+      }
+
       this.puceService.createPuce(this.newPuce).subscribe(
         (response) => {
           console.log('Puce added successfully:', response);

@@ -22,6 +22,7 @@ interface GeneratedMessage {
   matricule: string;
   telephone: string;
   message: string;
+  originalMessage: string; // Added to store the original message with real values
   [key: string]: any; // For dynamic Excel columns
 }
 
@@ -47,7 +48,7 @@ export class MgcComponent implements OnInit {
   isLoading = false;
 
   constructor(
-    private phonesService:PhonesService,
+    private phonesService: PhonesService,
     private groupService: GroupService,
     private smsmodelService: SmsModelService,
     private smsService: SmsService,
@@ -136,7 +137,7 @@ export class MgcComponent implements OnInit {
     reader.readAsArrayBuffer(file);
   }
 
-  // Find variable pattern in a string (like {{variable}})
+  // Find variables in a string (like {{variable}})
   findVariables(text: string): string[] {
     const regex = /{{([^{}]+)}}/g;
     const matches = [];
@@ -188,13 +189,34 @@ export class MgcComponent implements OnInit {
       const matricule = row['Matricule'] || row['matricule'];
       let telephone = row['Telephone'] || row['telephone'] || '';
       
-      // Replace variables in the template
-      const message = this.replaceVariables(this.selectedModelContent || '', row);
+      // Replace variables in the template to create the original message
+      const originalMessage = this.replaceVariables(this.selectedModelContent || '', row);
+      
+      // Create a modified message with salary information hidden
+      let message = originalMessage;
+      
+      // Check if the message contains salary information
+      // Look for patterns that might indicate salary values by looking for "Salaire" in the template
+      const variables = this.findVariables(this.selectedModelContent || '');
+      if (variables.some(v => v.toLowerCase().includes('salaire'))) {
+        // Find the salary variable name
+        const salaryVar = variables.find(v => v.toLowerCase().includes('salaire'));
+        if (salaryVar && row[salaryVar]) {
+          // Create a regex to find the salary value in the message
+          const salaryValue = row[salaryVar].toString();
+          const salaryPattern = new RegExp(salaryValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
+          
+          // Replace the salary value with asterisks
+          const asterisks = '*'.repeat(salaryValue.length);
+          message = message.replace(salaryPattern, asterisks);
+        }
+      }
       
       messages.push({
         matricule,
         telephone,
         message,
+        originalMessage, // Store the original message for sending
         ...row // Keep all original data
       });
     });
@@ -261,7 +283,6 @@ export class MgcComponent implements OnInit {
       }
     }
   
-
     // Server-side generation (fallback)
     const formData = new FormData();
     formData.append('file', this.excelFile);
@@ -275,7 +296,21 @@ export class MgcComponent implements OnInit {
       next: (response) => {
         this.isLoading = false;
         if (response.status === 'success') {
-          this.generatedMessages = response.messages;
+          // Process the returned messages to hide salary values
+          const processedMessages = response.messages.map((msg: any) => {
+            // Create a regex to find salary pattern (e.g., "900 D €", "850 D €")
+            const salaryRegex = /(\d+(\.\d+)?\s*[^\s,\.]+\s*€)/g;
+            const originalMessage = msg.message;
+            const message = originalMessage.replace(salaryRegex, (match: string) => '*'.repeat(match.length));
+            
+            return {
+              ...msg,
+              message: message,
+              originalMessage: originalMessage
+            };
+          });
+          
+          this.generatedMessages = processedMessages;
           
           // Display warnings about any errors with matricules
           if (response.erreursMatricules && response.erreursMatricules.length > 0) {
@@ -314,7 +349,8 @@ export class MgcComponent implements OnInit {
       
       for (const msg of this.generatedMessages) {
         try {
-          await this.smsService.sendSMS(msg.telephone, msg.message, senderID, this.selectedModelId);
+          // Use originalMessage for sending instead of the displayed message with hidden salary
+          await this.smsService.sendSMS(msg.telephone, msg.originalMessage, senderID, this.selectedModelId);
           successCount++;
         } catch (error) {
           failCount++;
