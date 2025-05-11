@@ -1,0 +1,34 @@
+<!-- src/app/components/sms-mode-modal/sms-mode-modal.component.html -->
+<div class="modal-backdrop" [class.show]="isOpen" (click)="closeModal($event)">
+  <div class="modal-container">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Choisissez votre méthode d'envoi</h2>
+        <button type="button" class="close-button" (click)="close()">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="choice-cards">
+          <!-- Direct SMS Card -->
+          <div class="choice-card" (click)="selectMode('direct')">
+            <div class="card-icon">
+              <i class="flaticon-contract"></i>
+            </div>
+            <h3>Envoi Direct</h3>
+            <p>Envoyer un SMS directement à un destinataire</p>
+            <button class="btn-select">Sélectionner</button>
+          </div>
+          
+          <!-- MGC SMS Card -->
+          <div class="choice-card" (click)="selectMode('mgc')">
+            <div class="card-icon">
+              <i class="flaticon-newsletter"></i>
+            </div>
+            <h3>Génération SMS Confidentiels</h3>
+            <p>Créer et envoyer des SMS avec données confidentielles à plusieurs destinataires</p>
+            <button class="btn-select">Sélectionner</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
