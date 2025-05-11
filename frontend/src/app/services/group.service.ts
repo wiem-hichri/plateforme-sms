@@ -6,6 +6,10 @@ import { AuthService } from './auth.service';
 export interface Group {
   id?: number;
   nom: string;
+  createur_id?: number;
+  createur_nom?: string;
+  createur_prenom?: string;
+  
 }
 
 @Injectable({
