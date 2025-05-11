@@ -58,7 +58,6 @@ export class DeviceListComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.loadDevices();
-        this.showSnackBar('Appareil ajouté avec succès');
       }
     });
   }
@@ -72,7 +71,6 @@ export class DeviceListComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.loadDevices();
-        this.showSnackBar('Appareil mis à jour avec succès');
       }
     });
   }

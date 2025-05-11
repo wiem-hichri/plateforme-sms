@@ -1,11 +1,6 @@
 import { Component } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatSelectModule } from '@angular/material/select';
+import { CommonModule } from '@angular/common';
 
 import { DeviceService, Device } from '../../services/device.service';
 
@@ -14,11 +9,7 @@ import { DeviceService, Device } from '../../services/device.service';
   standalone: true,
   imports: [
     FormsModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatDialogModule,
-    MatSelectModule
+    CommonModule
   ],
   templateUrl: './add-device-dialog.component.html',
   styleUrls: ['./add-device-dialog.component.scss'],
@@ -30,14 +21,15 @@ export class AddDeviceDialogComponent {
     type: ''
   };
 
+  showDialog = true;
 
   constructor(
-    public dialogRef: MatDialogRef<AddDeviceDialogComponent>,
     private deviceService: DeviceService
   ) {}
 
   closeDialog(): void {
-    this.dialogRef.close();
+    this.showDialog = false;
+    // Additional logic to communicate closing to parent component would go here
   }
 
   addDevice(): void {
@@ -45,7 +37,8 @@ export class AddDeviceDialogComponent {
       this.deviceService.createDevice(this.newDevice).subscribe({
         next: (response) => {
           console.log('Appareil ajouté avec succès:', response);
-          this.dialogRef.close(response || this.newDevice);
+          this.closeDialog();
+          // Additional logic to communicate success to parent component would go here
         },
         error: (error) => {
           console.error('Erreur lors de l\'ajout de l\'appareil:', error);
@@ -56,6 +49,7 @@ export class AddDeviceDialogComponent {
 
   isFormValid(): boolean {
     return this.newDevice.nom.trim() !== '' && 
-           this.newDevice.proprietaire.trim() !== '' ;
+           this.newDevice.proprietaire.trim() !== '' &&
+           this.newDevice.type !== '';
   }
 }

@@ -6,7 +6,8 @@ const Historique = {
     getHistoriqueMessages: async (userID, isSuperAdmin) => {
         const query = `
             SELECT 
-                u.nom AS user_name,  
+                u.nom AS user_name,
+                u.prenom,  
                 si.SendingDateTime,  
                 si.DestinationNumber, 
                 si.TextDecoded,      

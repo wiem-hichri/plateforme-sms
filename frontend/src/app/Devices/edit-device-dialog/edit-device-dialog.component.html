@@ -1,63 +1,66 @@
-<div class="modal-overlay">
-    <div class="modal-card">
+<div class="modal-backdrop" *ngIf="showDialog" (click)="closeDialog()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <div class="modal-header">
       <h3 class="modal-title">Modifier l'Appareil</h3>
+      <button class="close-button" (click)="closeDialog()">×</button>
+    </div>
+    
+    <div class="modal-body">
       <form>
-        <div class="form-field">
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Nom de l'appareil</mat-label>
-            <input 
-              matInput 
-              type="text" 
-              [(ngModel)]="device.nom" 
-              name="nom" 
-              placeholder="Entrez le nom de l'appareil" 
-              required>
-          </mat-form-field>
+        <div class="form-group">
+          <label for="nom">Nom de l'appareil</label>
+          <input 
+            type="text" 
+            id="nom"
+            class="form-control" 
+            [(ngModel)]="device.nom" 
+            name="nom" 
+            placeholder="Entrez le nom de l'appareil" 
+            required>
         </div>
-  
-        <div class="form-field">
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Propriétaire</mat-label>
-            <input 
-              matInput 
-              type="text" 
-              [(ngModel)]="device.proprietaire" 
-              name="proprietaire" 
-              placeholder="Entrez le nom du propriétaire" 
-              required>
-          </mat-form-field>
+    
+        <div class="form-group">
+          <label for="proprietaire">Propriétaire</label>
+          <input 
+            type="text" 
+            id="proprietaire"
+            class="form-control" 
+            [(ngModel)]="device.proprietaire" 
+            name="proprietaire" 
+            placeholder="Entrez le nom du propriétaire" 
+            required>
         </div>
-  
-        <div class="form-field">
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Type d'appareil</mat-label>
-            <mat-select [(ngModel)]="device.type" name="type" required>
-              <mat-option value="float">float
-              </mat-option>
-              <mat-option value="nonfloat">nonfloat
-            </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-        
-        <div class="modal-actions">
-          <button 
-            type="button" 
-            mat-button 
-            class="cancel-btn" 
-            (click)="closeDialog()">
-            Annuler
-          </button>
-          <button 
-            type="button" 
-            mat-raised-button 
-            color="primary"
-            class="submit-btn" 
-            [disabled]="!isFormValid()"
-            (click)="updateDevice()">
-            Enregistrer
-          </button>
+    
+        <div class="form-group">
+          <label for="type">Type d'appareil</label>
+          <select 
+            id="type"
+            class="form-control"
+            [(ngModel)]="device.type" 
+            name="type" 
+            required>
+            <option value="" disabled>Sélectionner un type</option>
+            <option value="float">float</option>
+            <option value="ORfloat">ORfloat</option>
+          </select>
         </div>
       </form>
     </div>
+    
+    <div class="modal-footer">
+      <button 
+        type="button" 
+        class="btn btn-secondary" 
+        (click)="closeDialog()">
+        Annuler
+      </button>
+      <button 
+        type="button" 
+        class="btn btn-primary" 
+        [disabled]="!isFormValid()"
+        (click)="updateDevice()">
+        Enregistrer
+      </button>
+    </div>
   </div>
+</div>
