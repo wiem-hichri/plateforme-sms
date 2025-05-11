@@ -33,7 +33,7 @@
           </thead>
           <tbody>
             <tr *ngFor="let log of historique" class="hover:bg-orange-100 transition-all">
-              <td class="p-3 border">{{ log.user_name }}</td>
+              <td class="p-3 border">{{ log.user_name }}  {{log.prenom}} </td>
               <td class="p-3 border">{{ log.SendingDateTime | date:'yyyy-MM-dd HH:mm'}}</td>
               <td class="p-3 border truncate max-w-xs">{{ log.DestinationNumber }}</td>
               <td class="p-3 border">{{ log.TextDecoded}}</td>

@@ -14,7 +14,7 @@ export interface Device {
 })
 export class DeviceService {
   private apiUrl = 'http://localhost:3000/api/devices'; 
-  private addapiUrl = 'http://localhost:3000/api/devices/addMission'; 
+  private addapiUrl = 'http://localhost:3000/api/devices/addDevice'; 
   constructor(private http: HttpClient) {}
 
   getDevices(): Observable<any> {
@@ -22,7 +22,7 @@ export class DeviceService {
   }
 
   createDevice(device: Device): Observable<any> {
-    return this.http.post(`${this.apiUrl}`, device,{ withCredentials: true});
+    return this.http.post(`${this.addapiUrl}`, device,{ withCredentials: true});
   }
 
   updateDevice(id: number, device: Device): Observable<any> {
