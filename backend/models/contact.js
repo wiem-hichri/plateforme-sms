@@ -2,6 +2,13 @@ const db = require('../config/dbConnect').promise();
 
 const Contact = {
     create: async (contact, userId) => {
+        
+            // Nettoyage des champs vides
+        Object.keys(contact).forEach(key => {
+            if (typeof contact[key] === 'string' && contact[key].trim() === '') {
+                contact[key] = null;
+            }
+        });
         const query = `INSERT INTO contacts (matricule, nom, prenom, telephone_personnel, telephone_professionnel, site, cin, fonction)
                        VALUES (?, ?, ?, ?, ?, ?, ? , ?)`;
         const values = [contact.matricule, contact.nom, contact.prenom, contact.telephone_personnel, contact.telephone_professionnel, contact.site, contact.cin, contact.fonction];

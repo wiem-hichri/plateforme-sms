@@ -72,76 +72,46 @@
                 </div>
               </div>
             </div>
-            <div class="col-xl-3 col-xxl-3 col-lg-6 col-sm-6">
-              <div class="card card-bd">
-                <div class="bg-info card-border"></div>
-                <div class="card-body box-style">
-                  <div class="media align-items-center">
-                    <div class="media-body me-3">
-                      <h2 class="text-black count num-text font-w700">{{ stats.totalSmsFailed || 0 }}</h2>
-                      <span class="fs-14">SMS Échoués</span>
-                    </div>
-                    <svg width="46" height="46" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M34.4999 1.91663H11.4999C8.95917 1.91967 6.52338 2.93032 4.72682 4.72688C2.93026 6.52345 1.91961 8.95924 1.91656 11.5V26.8333C1.91935 29.0417 2.6834 31.1816 4.07994 32.8924C5.47648 34.6031 7.42011 35.7801 9.58323 36.225V42.1666C9.58318 42.5136 9.67733 42.8541 9.85564 43.1518C10.0339 43.4495 10.2897 43.6932 10.5957 43.8569C10.9016 44.0206 11.2463 44.0982 11.5929 44.0813C11.9395 44.0645 12.275 43.9539 12.5636 43.7613L23.5749 36.4166H34.4999C37.0406 36.4136 39.4764 35.4029 41.273 33.6064C43.0695 31.8098 44.0802 29.374 44.0832 26.8333V11.5C44.0802 8.95924 43.0695 6.52345 41.273 4.72688C39.4764 2.93032 37.0406 1.91967 34.4999 1.91663ZM30.6666 24.9166H15.3332C14.8249 24.9166 14.3374 24.7147 13.9779 24.3552C13.6185 23.9958 13.4166 23.5083 13.4166 23C13.4166 22.4916 13.6185 22.0041 13.9779 21.6447C14.3374 21.2852 14.8249 21.0833 15.3332 21.0833H30.6666C31.1749 21.0833 31.6624 21.2852 32.0219 21.6447C32.3813 22.0041 32.5832 22.4916 32.5832 23C32.5832 23.5083 32.3813 23.9958 32.0219 24.3552C31.6624 24.7147 31.1749 24.9166 30.6666 24.9166ZM34.4999 17.25H11.4999C10.9916 17.25 10.5041 17.048 10.1446 16.6886C9.78517 16.3291 9.58323 15.8416 9.58323 15.3333C9.58323 14.825 9.78517 14.3374 10.1446 13.978C10.5041 13.6186 10.9916 13.4166 11.4999 13.4166H34.4999C35.0082 13.4166 35.4957 13.6186 35.8552 13.978C36.2146 14.3374 36.4166 14.825 36.4166 15.3333C36.4166 15.8416 36.2146 16.3291 35.8552 16.6886C35.4957 17.048 35.0082 17.25 34.4999 17.25Z" fill="#3ECDFF"/>
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </div>
+            
           </div>
           
           <!--   Courbes  -->
           <div class="row">
-            <div class="col-xl-6 col-xxl-12">
-              <div class="card">
-                <div class="pb-0 border-0 card-header d-block">
-                  <div class="pb-3 d-flex justify-content-between">
-                    <h4 class="mb-0 text-black fs-20">Project Created</h4>
-                    <div class="dropdown">
-                      <a href="javascript:void(0)" data-bs-toggle="dropdown" aria-expanded="false">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                          <path d="M12 6C12.5523 6 13 5.55228 13 5C13 4.44772 12.5523 4 12 4C11.4477 4 11 4.44772 11 5C11 5.55228 11.4477 6 12 6Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                          <path d="M12 20C12.5523 20 13 19.5523 13 19C13 18.4477 12.5523 18 12 18C11.4477 18 11 18.4477 11 19C11 19.5523 11.4477 20 12 20Z" stroke="#575757" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                        </svg>
-                      </a>
-                    </div>
-                  </div>
-                  <div class="d-flex align-items-center">
-                    <span class="text-black fs-36 font-w600 me-4">25%</span>
-                    <div>
-                      <svg class="me-2" width="27" height="14" viewBox="0 0 27 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M0 13.435L13.435 0L26.8701 13.435H0Z" fill="#fc5130"></path>
-                      </svg>
-                      <span>last month $563,443</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="px-2 pt-2 pb-0 card-body">
-                  <div id="chartTimeline" class="timeline-chart"></div>
-                </div>
-              </div>    
-            </div>
-
-            
-            <div class="col-xl-6 col-xxl-12 col-sm-6">
-              <div class="card">
+            <!-- Colonne du graphique en barres -->
+            <div class="col-lg-6 col-md-12 mb-4">
+              <div class="card h-100">
                 <div class="card-header pb-0 border-0">
-                  <h4 class="mb-0 text-black fs-20"></h4>
+                  <h5 class="mb-0">Taux de réussite et d'échec</h5>
+                </div>
+                <div class="card-body px-2 pt-2 pb-0 text-center">
+                  <canvas baseChart
+                    [data]="barChartData"
+                    [options]="barChartOptions"
+                    [type]="barChartType">
+                  </canvas>
+                </div>
+              </div>
+            </div>
+          
+            <!-- Colonne du graphique en ligne -->
+            <div class="col-lg-6 col-md-12 mb-4">
+              <div class="card h-100">
+                <div class="card-header pb-0 border-0">
+                  <h5 class="mb-0">Évolution des SMS envoyés</h5>
                 </div>
                 <div class="card-body px-2 pt-2 pb-0 text-center">
                   <canvas baseChart
                     [data]="lineChartData"
                     [options]="lineChartOptions"
-                    [type]="lineChartType"
-                    >
+                    [type]="lineChartType">
                   </canvas>
                 </div>
               </div>
             </div>
-            
+          
+          
               
-            <div class="col-xl-3 col-xxl-6 col-sm-6">
+            <!--<div class="col-xl-3 col-xxl-6 col-sm-6">
               <div class="card">  
                 <div class="pb-0 border-0 card-header">
                   <h4 class="mb-0 text-black fs-20">Monthly Target</h4>
@@ -164,7 +134,7 @@
                   <span class="text-black fs-14 d-block op5">100 Projects/ monthy</span>
                 </div>
               </div>
-            </div>
+            </div>-->
           </div> 
 
           <!--   ***   

@@ -54,6 +54,40 @@ const getDashboardStats = async (req, res) => {
   }
 };
 
+const getTauxStats = async (req, res) => {
+  try {
+    const sql = `
+      SELECT 
+        DATE_FORMAT(SendingDateTime, '%Y-%m') AS mois,
+        SUM(CASE WHEN status = 'SendingOK' THEN 1 ELSE 0 END) AS success_count,
+        SUM(CASE WHEN status = 'SendingErr' THEN 1 ELSE 0 END) AS fail_count
+      FROM sentitems
+      GROUP BY mois
+      ORDER BY mois ASC
+    `;
+
+    const [rows] = await db.query(sql);
+
+    // Calculer les taux (pourcentage) pour chaque mois
+    const tauxMensuels = rows.map(row => {
+      const total = row.success_count + row.fail_count;
+      return {
+        mois: row.mois,
+        taux_success: total > 0 ? Math.round((row.success_count / total) * 100) : 0,
+        taux_fail: total > 0 ? Math.round((row.fail_count / total) * 100) : 0
+      };
+    });
+
+    res.json({ tauxMensuels });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Erreur serveur' });
+  }
+};
+
+
 module.exports = {
-  getDashboardStats
+  getDashboardStats,
+  getTauxStats
 };

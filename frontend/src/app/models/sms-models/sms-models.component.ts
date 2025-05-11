@@ -14,6 +14,8 @@ interface SmsModel {
   nom: string;
   contenu: string;
   is_confidential: boolean;
+  prenom?: string;
+  createur_nom?: string;
 }
 
 @Component({
