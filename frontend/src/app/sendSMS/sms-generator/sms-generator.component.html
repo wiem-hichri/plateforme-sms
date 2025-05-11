@@ -3,11 +3,7 @@
         <!-- sms-generator.component.html -->
 <div class="sms-generator-container">
     <!-- Button to open modal -->
-    <button class="open-button" (click)="toggleModal()">
-      <app-icon name="message-square" [size]="18"></app-icon>
-      Générer un modèle SMS
-    </button>
-  
+    
     <!-- Modal overlay with backdrop (only shown when isOpen is true) -->
     @if (isOpen) {
       <div class="modal-overlay" (click)="toggleModal()">
