@@ -1,47 +1,52 @@
-<div class="modal-backdrop" *ngIf="showDialog" (click)="closeDialog()">
+<div class="modal-backdrop" (click)="closeDialog()">
   <div class="modal-container" (click)="$event.stopPropagation()">
     <div class="modal-header">
       <h3 class="modal-title">Modifier l'Appareil</h3>
-      <button class="close-button" (click)="closeDialog()">×</button>
+      <button class="close-button" (click)="closeDialog()">&times;</button>
     </div>
     
     <div class="modal-body">
-      <form>
+      <!-- Error message -->
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+
+      <form (ngSubmit)="updateDevice()">
         <div class="form-group">
-          <label for="nom">Nom de l'appareil</label>
+          <label for="nom">Nom de l'appareil *</label>
           <input 
             type="text" 
             id="nom"
             class="form-control" 
             [(ngModel)]="device.nom" 
             name="nom" 
-            placeholder="Entrez le nom de l'appareil" 
+            [disabled]="isLoading"
             required>
         </div>
     
         <div class="form-group">
-          <label for="proprietaire">Propriétaire</label>
+          <label for="proprietaire">Propriétaire *</label>
           <input 
             type="text" 
             id="proprietaire"
             class="form-control" 
             [(ngModel)]="device.proprietaire" 
             name="proprietaire" 
-            placeholder="Entrez le nom du propriétaire" 
+            [disabled]="isLoading"
             required>
         </div>
     
         <div class="form-group">
-          <label for="type">Type d'appareil</label>
+          <label for="type">Type d'appareil *</label>
           <select 
             id="type"
             class="form-control"
             [(ngModel)]="device.type" 
             name="type" 
+            [disabled]="isLoading"
             required>
             <option value="" disabled>Sélectionner un type</option>
-            <option value="float">float</option>
-            <option value="ORfloat">ORfloat</option>
+            <option *ngFor="let type of deviceTypes" [value]="type">{{ type }}</option>
           </select>
         </div>
       </form>
@@ -51,15 +56,16 @@
       <button 
         type="button" 
         class="btn btn-secondary" 
-        (click)="closeDialog()">
+        (click)="closeDialog()"
+        [disabled]="isLoading">
         Annuler
       </button>
       <button 
         type="button" 
         class="btn btn-primary" 
-        [disabled]="!isFormValid()"
         (click)="updateDevice()">
-        Enregistrer
+        <span *ngIf="isLoading" class="spinner"></span>
+        {{ isLoading ? 'Enregistrement...' : 'Enregistrer' }}
       </button>
     </div>
   </div>

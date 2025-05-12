@@ -1,50 +1,63 @@
-import { Component, Input } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-
 import { DeviceService, Device } from '../../services/device.service';
 
 @Component({
   selector: 'app-edit-device-dialog',
   standalone: true,
-  imports: [
-    FormsModule,
-    CommonModule
-  ],
+  imports: [FormsModule, CommonModule],
   templateUrl: './edit-device-dialog.component.html',
-  styleUrls: ['./edit-device-dialog.component.scss'],
+  styleUrls: ['./edit-device-dialog.component.scss']
 })
 export class EditDeviceDialogComponent {
-  @Input() device!: Device;
-  showDialog = true;
+  device: Device;
+  deviceTypes = ['float', 'ORfloat'];
+  isLoading = false;
+  errorMessage: string | null = null;
 
   constructor(
-    private deviceService: DeviceService
-  ) {}
+    private deviceService: DeviceService,
+    @Inject('DIALOG_DATA') public data: { device: Device },
+    @Inject('DIALOG_REF') private dialogRef: any
+  ) {
+    this.device = { ...data.device };
+  }
 
   closeDialog(): void {
-    this.showDialog = false;
-    // Additional logic to communicate closing to parent component would go here
+    this.dialogRef.close();
   }
 
   updateDevice(): void {
-    if (this.isFormValid() && this.device.id) {
-      this.deviceService.updateDevice(this.device.id, this.device).subscribe({
-        next: (response) => {
-          console.log('Appareil mis à jour avec succès:', response);
-          this.closeDialog();
-          // Additional logic to communicate success to parent component would go here
-        },
-        error: (error) => {
-          console.error('Erreur lors de la mise à jour de l\'appareil:', error);
-        }
-      });
+    if (!this.isFormValid()) {
+      this.errorMessage = 'Please fill all required fields';
+      return;
     }
+
+    if (!this.device.id) {
+      this.errorMessage = 'Device ID is missing';
+      return;
+    }
+
+    this.isLoading = true;
+    this.errorMessage = null;
+
+    this.deviceService.updateDevice(this.device.id, this.device).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        this.dialogRef.close(response || this.device);
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.errorMessage = error.message || 'Failed to update device';
+        console.error('Update error:', error);
+      }
+    });
   }
 
-  isFormValid(): boolean {
-    return this.device.nom.trim() !== '' && 
-           this.device.proprietaire.trim() !== '' &&
-           this.device.type !== '';
+  private isFormValid(): boolean {
+    return !!this.device.nom?.trim() && 
+           !!this.device.proprietaire?.trim() &&
+           !!this.device.type;
   }
 }

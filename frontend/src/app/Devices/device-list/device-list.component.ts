@@ -5,8 +5,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatSnackBar } from '@angular/material/snack-bar';
-
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DeviceService, Device } from '../../services/device.service';
 import { AddDeviceDialogComponent } from '../add-device-dialog/add-device-dialog.component';
 import { EditDeviceDialogComponent } from '../edit-device-dialog/edit-device-dialog.component';
@@ -17,9 +17,11 @@ import { EditDeviceDialogComponent } from '../edit-device-dialog/edit-device-dia
   imports: [
     CommonModule,
     MatButtonModule,
+    MatProgressSpinnerModule,
     MatIconModule,
     MatTableModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatSnackBarModule
   ],
   templateUrl: './device-list.component.html',
   styleUrls: ['./device-list.component.scss']
@@ -27,6 +29,7 @@ import { EditDeviceDialogComponent } from '../edit-device-dialog/edit-device-dia
 export class DeviceListComponent implements OnInit {
   devices: Device[] = [];
   displayedColumns: string[] = ['id', 'nom', 'proprietaire', 'type', 'actions'];
+  isLoading = false;
 
   constructor(
     private deviceService: DeviceService,
@@ -39,52 +42,65 @@ export class DeviceListComponent implements OnInit {
   }
 
   loadDevices(): void {
+    this.isLoading = true;
     this.deviceService.getDevices().subscribe({
       next: (response) => {
         this.devices = response.data || [];
+        this.isLoading = false;
       },
       error: (error) => {
         console.error('Erreur lors du chargement des appareils:', error);
         this.showSnackBar('Erreur lors du chargement des appareils');
+        this.isLoading = false;
       }
     });
   }
 
   openAddDialog(): void {
     const dialogRef = this.dialog.open(AddDeviceDialogComponent, {
-      width: '400px'
+      width: '500px',
+      disableClose: true
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+      if (result === 'success') {
+        this.showSnackBar('Appareil ajouté avec succès');
         this.loadDevices();
+      } else if (result === 'error') {
+        this.showSnackBar('Erreur lors de l\'ajout de l\'appareil');
       }
     });
   }
 
   openEditDialog(device: Device): void {
     const dialogRef = this.dialog.open(EditDeviceDialogComponent, {
-      width: '400px',
-      data: { ...device }
+      width: '500px',
+      data: device,
+      disableClose: true
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+      if (result === 'success') {
+        this.showSnackBar('Appareil modifié avec succès');
         this.loadDevices();
+      } else if (result === 'error') {
+        this.showSnackBar('Erreur lors de la modification de l\'appareil');
       }
     });
   }
 
   deleteDevice(id: number): void {
     if (confirm('Êtes-vous sûr de vouloir supprimer cet appareil?')) {
+      this.isLoading = true;
       this.deviceService.deleteDevice(id).subscribe({
         next: () => {
-          this.loadDevices();
           this.showSnackBar('Appareil supprimé avec succès');
+          this.loadDevices();
         },
         error: (error) => {
           console.error('Erreur lors de la suppression de l\'appareil:', error);
           this.showSnackBar('Erreur lors de la suppression de l\'appareil');
+          this.isLoading = false;
         }
       });
     }
@@ -94,7 +110,8 @@ export class DeviceListComponent implements OnInit {
     this.snackBar.open(message, 'Fermer', {
       duration: 3000,
       horizontalPosition: 'center',
-      verticalPosition: 'bottom'
+      verticalPosition: 'bottom',
+      panelClass: ['snackbar-style']
     });
   }
 }
