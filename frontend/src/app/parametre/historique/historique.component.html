@@ -15,6 +15,17 @@
             Exporter en Excel
           </button>
         </div>
+        <!-- 🔎 Search Input -->
+<div class="mt-4 mb-2">
+  <input 
+    type="text" 
+    [(ngModel)]="searchText" 
+    (input)="filterHistorique()" 
+    placeholder="🔍 Rechercher par utilisateur, numéro ou Date"
+    class="w-full p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+  />
+</div>
+
       </div>
     </div>
 
@@ -32,7 +43,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let log of historique" class="hover:bg-orange-100 transition-all">
+<tr *ngFor="let log of filteredHistorique" class="hover:bg-orange-100 transition-all">
               <td class="p-3 border">{{ log.user_name }}  {{log.prenom}} </td>
               <td class="p-3 border">{{ log.SendingDateTime | date:'yyyy-MM-dd HH:mm'}}</td>
               <td class="p-3 border truncate max-w-xs">{{ log.DestinationNumber }}</td>
