@@ -7,15 +7,12 @@ import { DeviceService, Device } from '../../services/device.service';
 @Component({
   selector: 'app-add-device-dialog',
   standalone: true,
-  imports: [
-    FormsModule,
-    CommonModule
-  ],
+  imports: [FormsModule, CommonModule],
   templateUrl: './add-device-dialog.component.html',
   styleUrls: ['./add-device-dialog.component.scss'],
 })
 export class AddDeviceDialogComponent {
-  newDevice: Device = { 
+  newDevice: Device = {
     nom: '',
     proprietaire: '',
     type: ''
@@ -23,22 +20,18 @@ export class AddDeviceDialogComponent {
 
   showDialog = true;
 
-  constructor(
-    private deviceService: DeviceService
-  ) {}
+  constructor(private deviceService: DeviceService) {}
 
   closeDialog(): void {
     this.showDialog = false;
-    // Additional logic to communicate closing to parent component would go here
   }
 
   addDevice(): void {
-    if (this.newDevice.nom.trim() && this.newDevice.proprietaire.trim() && this.newDevice.type) {
+    if (this.isFormValid()) {
       this.deviceService.createDevice(this.newDevice).subscribe({
         next: (response) => {
           console.log('Appareil ajouté avec succès:', response);
-          this.closeDialog();
-          // Additional logic to communicate success to parent component would go here
+          window.location.reload(); // 🚨 Force full reload
         },
         error: (error) => {
           console.error('Erreur lors de l\'ajout de l\'appareil:', error);
@@ -48,7 +41,7 @@ export class AddDeviceDialogComponent {
   }
 
   isFormValid(): boolean {
-    return this.newDevice.nom.trim() !== '' && 
+    return this.newDevice.nom.trim() !== '' &&
            this.newDevice.proprietaire.trim() !== '' &&
            this.newDevice.type !== '';
   }
