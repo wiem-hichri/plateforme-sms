@@ -14,6 +14,7 @@ export class DashboardComponent implements OnInit {
   stats: any = {};
   tauxMensuels: any[] = [];
 
+  // 📊 Ligne : Évolution SMS
   public lineChartData: ChartData<'line'> = {
     labels: [],
     datasets: [
@@ -41,7 +42,7 @@ export class DashboardComponent implements OnInit {
 
   public lineChartType: 'line' = 'line';
 
-  // 🔵 Nouveau : données pour le bar chart
+  // 📊 Barres : Taux mensuels
   public barChartData: ChartData<'bar'> = {
     labels: [],
     datasets: [
@@ -71,9 +72,35 @@ export class DashboardComponent implements OnInit {
 
   public barChartType: 'bar' = 'bar';
 
+  // 🔵 Nouveau : Statistiques des puces
+  pucesStats: any = {
+    contact: { count: 0, taux: 0 },
+    mission: { count: 0, taux: 0 },
+    unassigned: { count: 0, taux: 0 },
+    total: 0
+  };
+
+  public pucesChartData: ChartData<'pie'> = {
+    labels: ['Affectées à un contact', 'Affectées à une mission', 'Non affectées'],
+    datasets: [
+      {
+        data: [0, 0, 0],
+        backgroundColor: ['#17a2b8', '#fc5130', '#6c757d']
+      }
+    ]
+  };
+
+  public pucesChartOptions: ChartOptions<'pie'> = {
+    responsive: true,
+    plugins: {
+      legend: { labels: { color: 'black' } }
+    }
+  };
+
   constructor(private dashboardService: DashboardService) {}
 
   ngOnInit(): void {
+    // 📌 Graphique ligne : SMS envoyés
     this.dashboardService.getStats().subscribe(data => {
       this.stats = data;
 
@@ -97,6 +124,7 @@ export class DashboardComponent implements OnInit {
       }
     });
 
+    // 📌 Graphique barres : Taux mensuels
     this.dashboardService.getTauxMensuels().subscribe(data => {
       this.tauxMensuels = data.tauxMensuels;
 
@@ -120,5 +148,28 @@ export class DashboardComponent implements OnInit {
         ]
       };
     });
+
+    // 📌 Graphique camembert : Statistiques des puces
+    this.dashboardService.getPuceStats().subscribe(
+      (response) => {
+        this.pucesStats = response;
+        this.pucesChartData = {
+          labels: ['Affectées à un contact', 'Affectées à une mission', 'Non affectées'],
+          datasets: [
+            {
+              data: [
+                this.pucesStats.contact.count,
+                this.pucesStats.mission.count,
+                this.pucesStats.unassigned.count
+              ],
+              backgroundColor: ['#17a2b8', '#ffc107', '#6c757d']
+            }
+          ]
+        };
+      },
+      (error) => {
+        console.error('Erreur récupération statistiques des puces:', error);
+      }
+    );
   }
 }

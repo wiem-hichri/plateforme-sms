@@ -14,5 +14,8 @@ export class DashboardService {
   getTauxMensuels() {
     return this.http.get<{ tauxMensuels: any[] }>(`${this.apiUrl}/taux-mensuels`);
   }
-  
+
+  getPuceStats() {
+    return this.http.get<any>(`${this.apiUrl}/puces-stats`);
+  }
 }

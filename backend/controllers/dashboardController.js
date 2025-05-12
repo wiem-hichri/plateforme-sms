@@ -86,8 +86,48 @@ const getTauxStats = async (req, res) => {
   }
 };
 
+const getPucesAffectationStats = async (req, res) => {
+  try {
+    const [rows] = await db.query(`
+      SELECT
+        SUM(CASE WHEN contact_id IS NOT NULL AND mission_id IS NULL THEN 1 ELSE 0 END) AS contact_count,
+        SUM(CASE WHEN mission_id IS NOT NULL AND contact_id IS NULL THEN 1 ELSE 0 END) AS mission_count,
+        SUM(CASE WHEN contact_id IS NULL AND mission_id IS NULL THEN 1 ELSE 0 END) AS unassigned_count,
+        COUNT(*) AS total
+      FROM sim_cards
+    `);
+
+    const stats = rows[0];
+
+    const response = {
+      contact: {
+        count: stats.contact_count,
+        taux: stats.total > 0 ? Math.round((stats.contact_count / stats.total) * 100) : 0
+      },
+      mission: {
+        count: stats.mission_count,
+        taux: stats.total > 0 ? Math.round((stats.mission_count / stats.total) * 100) : 0
+      },
+      unassigned: {
+        count: stats.unassigned_count,
+        taux: stats.total > 0 ? Math.round((stats.unassigned_count / stats.total) * 100) : 0
+      },
+      total: stats.total
+    };
+
+    res.json(response);
+  } catch (error) {
+    console.error("Erreur lors du calcul des stats:", error);
+    res.status(500).json({ message: "Erreur lors du calcul des statistiques." });
+  }
+};
+
+
+
+
 
 module.exports = {
   getDashboardStats,
-  getTauxStats
+  getTauxStats,
+  getPucesAffectationStats
 };
