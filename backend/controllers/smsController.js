@@ -99,11 +99,55 @@ const smsSent = async (req, res) => {
     }
 };
 
+const insertDirectSent = async (req, res) => {
+  try {
+    const { destinationNumber, textDecoded } = req.body;
+    if (!destinationNumber || !textDecoded) {
+      return res.status(400).json({ message: 'Données manquantes' });
+    }
+
+    await SMS.insertDirectSent(destinationNumber, textDecoded);
+    res.status(201).json({ message: 'Message enregistré dans sentitems' });
+  } catch (error) {
+    res.status(500).json({ message: "Erreur lors de l'enregistrement", error: error.message });
+  }
+};
+
+const smsSentESP32 = async (req, res) => {
+  try {
+    const { status, deviceName, messageId } = req.body;
+
+    if (!status || !messageId) {
+      return res.status(400).json({ message: "Données manquantes" });
+    }
+
+    const result = await SMS.smsSentESP32(status, deviceName, messageId);
+    res.status(200).json({ status: "success", message: "Message traité", data: result });
+  } catch (error) {
+    res.status(500).json({ status: "error", message: error.message });
+  }
+};
+
+const getSMSESP32 = async (req, res) => {
+    try {
+        const [rows] = await SMS.getSMSESP32();
+        if (rows.length === 0) {
+            return res.status(404).json({ message: 'Aucun message dans la boîte d\'envoi' });
+        }
+        res.status(200).json({ status: 'success', message: rows[0] });
+    } catch (error) {
+        res.status(500).json({ message: "Erreur lors de la récupération du prochain message", status: error.message });
+    }
+};
+
 module.exports = {
     smsCount,
     insertSMS,
     getSMSFloat,
     getSMSORFloat,
     deleteSMS,
-    smsSent
+    smsSent,
+    insertDirectSent,
+    getSMSESP32,
+    smsSentESP32
 };
