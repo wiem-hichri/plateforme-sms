@@ -7,14 +7,22 @@ const {
     getSMSFloat,
     getSMSORFloat,
     deleteSMS,
-    smsSent
+    smsSent,
+    insertDirectSent,
+    getSMSESP32,
+    smsSentESP32
 } = require('../controllers/smsController');
 
 router.get('/count', smsCount);
 router.post('/insert', insertSMS);
 router.get('/recentFloat', getSMSFloat);
 router.get('/recentORFloat', getSMSORFloat);
-router.post('/delete', deleteSMS);  // Changed to POST to accept message ID
+router.post('/delete', deleteSMS);  
 router.post('/sent', smsSent);
+// *** ESP32****
+router.get('/recentESP32',getSMSESP32);
+router.post('/sentESP32', smsSentESP32);
+
+
 
 module.exports = router;
