@@ -6,8 +6,8 @@
         <mat-icon>file_upload</mat-icon>
       </button>
       <label class="action-btn file-upload-label">
-        <span class="material-icons">file_download</span>
-        <input type="file" onchange="importExcel(event)" accept=".xlsx, .xls" />
+        <mat-icon>file_download</mat-icon>
+        <input type="file" (change)="importExcel($event)" accept=".xlsx, .xls" />
       </label>
       <input type="text" [(ngModel)]="filterValue" (keyup)="applyFilter()" placeholder="🔍 Rechercher " />
     </div>

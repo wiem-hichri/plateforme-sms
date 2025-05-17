@@ -119,6 +119,7 @@ export class ContactsComponent implements OnInit {
   }
 
   importExcel(event: any) {
+    console.log('Import Excel function called', event);
     const target: DataTransfer = <DataTransfer>event.target;
 
     if (target.files.length !== 1) {
@@ -129,22 +130,39 @@ export class ContactsComponent implements OnInit {
     const reader: FileReader = new FileReader();
 
     reader.onload = (e: any) => {
-      const binaryString: string = e.target.result;
-      const workbook: XLSX.WorkBook = XLSX.read(binaryString, { type: 'binary' });
-      const sheetName: string = workbook.SheetNames[0];
-      const sheet: XLSX.WorkSheet = workbook.Sheets[sheetName];
+      try {
+        const binaryString: string = e.target.result;
+        const workbook: XLSX.WorkBook = XLSX.read(binaryString, { type: 'binary' });
+        const sheetName: string = workbook.SheetNames[0];
+        const sheet: XLSX.WorkSheet = workbook.Sheets[sheetName];
 
-      const contacts: Contact[] = XLSX.utils.sheet_to_json(sheet);
+        const contacts: Contact[] = XLSX.utils.sheet_to_json(sheet);
+        console.log('Parsed contacts:', contacts);
 
-      this.contactService.addMultipleContacts(contacts).subscribe(
-        (res) => {
-          alert(`${res.importedCount} contacts imported successfully!`);
-          this.fetchContacts(); // Refresh the contacts list
-        },
-        (err) => {
-          console.error('Error importing contacts:', err);
+        if (contacts && contacts.length > 0) {
+          this.contactService.addMultipleContacts(contacts).subscribe(
+            (res) => {
+              console.log('Import response:', res);
+              alert(`${res.importedCount || contacts.length} contacts imported successfully!`);
+              this.fetchContacts(); // Refresh the contacts list
+            },
+            (err) => {
+              console.error('Error importing contacts:', err);
+              alert('Error importing contacts: ' + (err.message || 'Unknown error'));
+            }
+          );
+        } else {
+          alert('No contacts found in the Excel file.');
         }
-      );
+      } catch (error) {
+        console.error('Error processing Excel file:', error);
+        alert('Error processing Excel file: ');
+      }
+    };
+
+    reader.onerror = (e) => {
+      console.error('FileReader error:', e);
+      alert('Error reading file');
     };
 
     reader.readAsBinaryString(target.files[0]);
