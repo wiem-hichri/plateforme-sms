@@ -34,15 +34,20 @@
                 *ngFor="let contact of filteredContacts" 
                 class="cursor-pointer hover:bg-gray-100 px-4 py-2"
                 (click)="selectContact(contact)">
-                {{ contact.nom }} -{{contact.prenom}}  - {{ contact.telephone_professionnel }}
+                {{ contact.nom }} - {{ contact.prenom }} - 
+                {{ contact.telephone_professionnel || 'Tél. Pro: Non disponible' }}
+                {{ !contact.telephone_professionnel && contact.telephone_personnel ? ' (Tél. Perso disponible)' : '' }}
               </div>
             </div>
           </div>
         </div>
 
         <div *ngIf="selectedContactPhone" class="bg-gray-50 p-3 rounded-md mt-2">
-          <p class="text-sm text-gray-700">Contact sélectionné: <span class="font-medium">{{ selectedContactName }}</span></p>
-          <p class="text-sm text-gray-700">Numéro de destination: <span class="font-medium">{{ selectedContactPhone }}</span></p>
+          <p class="text-sm text-gray-700">Contact sélectionné: <span class="font-medium">{{ selectedContactName }} {{ selectedContactPrenom }}</span></p>
+          <p class="text-sm text-gray-700">
+            Numéro de destination: <span class="font-medium">{{ selectedContactPhone }}</span>
+            <span class="text-xs text-gray-500 ml-1">({{ selectedPhoneType === 'professional' ? 'Professionnel' : 'Personnel' }})</span>
+          </p>
         </div>
 
         <div>
@@ -61,8 +66,9 @@
         <div class="flex justify-end">
           <button 
             type="submit"
-            [disabled]="sending">
-            Send
+            [disabled]="sending" 
+            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-50">
+            {{ sending ? 'Envoi en cours...' : 'Envoyer' }}
           </button>
         </div>
 
