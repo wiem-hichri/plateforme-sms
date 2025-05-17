@@ -21,7 +21,7 @@
         <div>
           <label for="contactSearch" class="block text-sm font-medium text-gray-700">Rechercher un contact</label>
           <div class="relative">
-            <input
+            <input 
               id="contactSearch"
               type="text"
               formControlName="contactSearch"
@@ -34,7 +34,7 @@
                 *ngFor="let contact of filteredContacts" 
                 class="cursor-pointer hover:bg-gray-100 px-4 py-2"
                 (click)="selectContact(contact)">
-                {{ contact.nom }} - {{ contact.telephone_professionnel }}
+                {{ contact.nom }} -{{contact.prenom}}  - {{ contact.telephone_professionnel }}
               </div>
             </div>
           </div>

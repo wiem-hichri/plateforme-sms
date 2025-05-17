@@ -24,6 +24,8 @@ export class SendMessageComponent implements OnInit {
   filteredContacts: Contact[] = [];
   selectedContactPhone: string = '';
   selectedContactName: string = '';
+  selectedContactPrenom: string = '';
+
   selectedContactId: number | null = null;
   showDropdown = false;
 
@@ -74,7 +76,8 @@ export class SendMessageComponent implements OnInit {
     
     this.filteredContacts = this.contacts.filter(contact => 
       contact.nom.toLowerCase().includes(searchValue) || 
-      contact.telephone_professionnel.toLowerCase().includes(searchValue)
+      contact.telephone_professionnel.toLowerCase().includes(searchValue) ||
+      contact.prenom.toLowerCase().includes(searchValue)
     );
     
     this.showDropdown = this.filteredContacts.length > 0;
@@ -84,6 +87,7 @@ export class SendMessageComponent implements OnInit {
       this.selectedContactId = null;
       this.selectedContactPhone = '';
       this.selectedContactName = '';
+      this.selectedContactPrenom='';
     }
   }
 
@@ -91,6 +95,8 @@ export class SendMessageComponent implements OnInit {
     this.selectedContactId = contact.id;
     this.selectedContactPhone = contact.telephone_professionnel;
     this.selectedContactName = contact.nom;
+    this.selectedContactPrenom= contact.prenom;
+
     this.smsForm.get('contactSearch')?.setValue(contact.nom);
     this.showDropdown = false;
   }
