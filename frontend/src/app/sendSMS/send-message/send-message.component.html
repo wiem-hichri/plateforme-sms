@@ -1,68 +1,79 @@
 <div class="min-h-screen flex flex-col items-center bg-gray-100 p-6 mt-16">
-    <div class="w-full max-w-5xl bg-white shadow-lg rounded-lg p-8 mx-auto">
-  
-      <!-- Header -->
-      <div class="sticky top-0 bg-white p-2 z-50">
-        <div class="flex justify-between items-center border-b pb-2">
-          <h2 class="text-xl font-semibold text-gray-800">📤 Envoi Message</h2>
-        </div>    
+  <div class="w-full max-w-5xl bg-white shadow-lg rounded-lg p-8 mx-auto">
 
-      </div>
-      
-  
-      <!-- Form -->
-      <div class="mt-4">
-        <button 
+    <!-- Header -->
+    <div class="sticky top-0 bg-white p-2 z-50">
+      <div class="flex justify-between items-center border-b pb-2">
+        <h2 class="text-xl font-semibold text-gray-800">📤 Envoi Message</h2>
+      </div>    
+    </div>
+    
+    <!-- Form -->
+    <div class="mt-4">
+      <button 
         type="button"
         (click)="openGeneratorModal()"
-        class="ai-button" >
+        class="ai-button">
         Générer un SMS avec l'IA
       </button>
-        <form [formGroup]="smsForm" (ngSubmit)="sendSMS()" class="space-y-4">
-  
-          <div>
-            <label for="destinationNumber" class="block text-sm font-medium text-gray-700">Numéro de destination</label>
+      <form [formGroup]="smsForm" (ngSubmit)="sendSMS()" class="space-y-4">
+
+        <div>
+          <label for="contactSearch" class="block text-sm font-medium text-gray-700">Rechercher un contact</label>
+          <div class="relative">
             <input
-              id="destinationNumber"
+              id="contactSearch"
               type="text"
-              formControlName="destinationNumber"
+              formControlName="contactSearch"
+              (input)="filterContacts()"
               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500"
-              placeholder="+21612345678" />
-            <div *ngIf="smsForm.get('destinationNumber')?.invalid && smsForm.get('destinationNumber')?.touched" class="text-red-600 text-sm">
-              Ce champ est requis.
-            </div>
-          </div>
-  
-          <div>
-            <label for="textDecoded" class="block text-sm font-medium text-gray-700">Message</label>
-            <textarea
-              id="textDecoded"
-              formControlName="textDecoded"
-              rows="4"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500"
-              placeholder="Écrivez votre message ici..."></textarea>
-            <div *ngIf="smsForm.get('textDecoded')?.invalid && smsForm.get('textDecoded')?.touched" class="text-red-600 text-sm">
-              Ce champ est requis.
-            </div>
-          </div>
-  
-          <div class="flex justify-end">
+              placeholder="Tapez le nom du contact..." />
             
-            <button 
-              type="submit"
-              [disabled]="sending">
-              Send
-            </button>
+            <div *ngIf="filteredContacts.length > 0 && showDropdown" class="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base overflow-auto focus:outline-none sm:text-sm">
+              <div 
+                *ngFor="let contact of filteredContacts" 
+                class="cursor-pointer hover:bg-gray-100 px-4 py-2"
+                (click)="selectContact(contact)">
+                {{ contact.nom }} - {{ contact.telephone_professionnel }}
+              </div>
+            </div>
           </div>
-  
-          <div *ngIf="responseMessage" class="text-center mt-2 text-green-600 text-sm font-medium">
-            {{ responseMessage }}
+        </div>
+
+        <div *ngIf="selectedContactPhone" class="bg-gray-50 p-3 rounded-md mt-2">
+          <p class="text-sm text-gray-700">Contact sélectionné: <span class="font-medium">{{ selectedContactName }}</span></p>
+          <p class="text-sm text-gray-700">Numéro de destination: <span class="font-medium">{{ selectedContactPhone }}</span></p>
+        </div>
+
+        <div>
+          <label for="textDecoded" class="block text-sm font-medium text-gray-700">Message</label>
+          <textarea
+            id="textDecoded"
+            formControlName="textDecoded"
+            rows="4"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500"
+            placeholder="Écrivez votre message ici..."></textarea>
+          <div *ngIf="smsForm.get('textDecoded')?.invalid && smsForm.get('textDecoded')?.touched" class="text-red-600 text-sm">
+            Ce champ est requis.
           </div>
-  
-        </form>
-        
-      </div>
-  
+        </div>
+
+        <div class="flex justify-end">
+          <button 
+            type="submit"
+            [disabled]="sending">
+            Send
+          </button>
+        </div>
+
+        <div *ngIf="responseMessage" class="text-center mt-2 text-green-600 text-sm font-medium">
+          {{ responseMessage }}
+        </div>
+
+      </form>
+      
     </div>
+
   </div>
-  <app-sms-generator></app-sms-generator>
+</div>
+<app-sms-generator></app-sms-generator>
