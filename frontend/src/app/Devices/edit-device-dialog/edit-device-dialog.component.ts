@@ -1,63 +1,107 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { DeviceService, Device } from '../../services/device.service';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
+import { Device, DeviceService } from '../../services/device.service';
 
 @Component({
   selector: 'app-edit-device-dialog',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatProgressSpinnerModule,
+    MatIconModule
+  ],
   templateUrl: './edit-device-dialog.component.html',
   styleUrls: ['./edit-device-dialog.component.scss']
 })
-export class EditDeviceDialogComponent {
+export class EditDeviceDialogComponent implements OnInit {
   device: Device;
-  deviceTypes = ['float', 'ORfloat'];
+  deviceTypes = ['float', 'ORfloat']; // Types managed locally in the component
   isLoading = false;
   errorMessage: string | null = null;
+  showDialog = true;
 
   constructor(
     private deviceService: DeviceService,
-    @Inject('DIALOG_DATA') public data: { device: Device },
-    @Inject('DIALOG_REF') private dialogRef: any
+    public dialogRef: MatDialogRef<EditDeviceDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: Device
   ) {
-    this.device = { ...data.device };
+    // Create a deep copy to avoid modifying the original data directly
+    this.device = { ...data };
+    
+    // Ensure the device type is set properly for the select
+    console.log('Initial device type:', this.device.type);
   }
 
-  closeDialog(): void {
+  ngOnInit(): void {
+    // Any initialization can go here
+    console.log('Device types available:', this.deviceTypes);
+    console.log('Current device:', this.device);
+  }
+
+  onCancel(): void {
     this.dialogRef.close();
   }
 
-  updateDevice(): void {
-    if (!this.isFormValid()) {
-      this.errorMessage = 'Please fill all required fields';
+  onSubmit(): void {
+    if (!this.validateForm()) {
       return;
     }
-
-    if (!this.device.id) {
-      this.errorMessage = 'Device ID is missing';
-      return;
-    }
-
+    
     this.isLoading = true;
     this.errorMessage = null;
 
+    if (!this.device.id) {
+      this.errorMessage = 'ID de l\'appareil manquant';
+      this.isLoading = false;
+      return;
+    }
+
+    console.log('Submitting device with type:', this.device.type);
+    
     this.deviceService.updateDevice(this.device.id, this.device).subscribe({
-      next: (response) => {
+      next: () => {
         this.isLoading = false;
-        this.dialogRef.close(response || this.device);
+        this.dialogRef.close('success');
       },
       error: (error) => {
         this.isLoading = false;
-        this.errorMessage = error.message || 'Failed to update device';
-        console.error('Update error:', error);
+        this.errorMessage = error.message || 'Erreur lors de la mise à jour de l\'appareil';
+        console.error('Erreur de mise à jour:', error);
       }
     });
   }
 
-  private isFormValid(): boolean {
-    return !!this.device.nom?.trim() && 
-           !!this.device.proprietaire?.trim() &&
-           !!this.device.type;
+  private validateForm(): boolean {
+    this.errorMessage = null;
+    
+    if (!this.device.nom?.trim()) {
+      this.errorMessage = 'Le nom de l\'appareil est requis';
+      return false;
+    }
+    
+    if (!this.device.proprietaire?.trim()) {
+      this.errorMessage = 'Le propriétaire est requis';
+      return false;
+    }
+    
+    if (!this.device.type) {
+      this.errorMessage = 'Le type d\'appareil est requis';
+      return false;
+    }
+    
+    return true;
   }
 }
