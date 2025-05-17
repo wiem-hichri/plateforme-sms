@@ -22,9 +22,13 @@ export class SendMessageComponent implements OnInit {
   responseMessage = '';
   contacts: Contact[] = [];
   filteredContacts: Contact[] = [];
-  selectedContactPhone: string = '';
+  
+  // Store both phone numbers
+  selectedContactPhonePro: string = '';
+  selectedContactPhonePerso: string = '';
   selectedContactName: string = '';
   selectedContactPrenom: string = '';
+  selectedPhoneType: 'professional' | 'personal' = 'professional';
 
   selectedContactId: number | null = null;
   showDropdown = false;
@@ -76,7 +80,8 @@ export class SendMessageComponent implements OnInit {
     
     this.filteredContacts = this.contacts.filter(contact => 
       contact.nom.toLowerCase().includes(searchValue) || 
-      contact.telephone_professionnel.toLowerCase().includes(searchValue) ||
+      (contact.telephone_professionnel && contact.telephone_professionnel.toLowerCase().includes(searchValue)) ||
+      (contact.telephone_personnel && contact.telephone_personnel.toLowerCase().includes(searchValue)) ||
       contact.prenom.toLowerCase().includes(searchValue)
     );
     
@@ -85,25 +90,38 @@ export class SendMessageComponent implements OnInit {
     // Clear selection if search field is modified
     if (this.selectedContactId) {
       this.selectedContactId = null;
-      this.selectedContactPhone = '';
+      this.selectedContactPhonePro = '';
+      this.selectedContactPhonePerso = '';
       this.selectedContactName = '';
-      this.selectedContactPrenom='';
+      this.selectedContactPrenom = '';
+      this.selectedPhoneType = 'professional';
     }
   }
 
   selectContact(contact: Contact) {
     this.selectedContactId = contact.id;
-    this.selectedContactPhone = contact.telephone_professionnel;
+    this.selectedContactPhonePro = contact.telephone_professionnel || '';
+    this.selectedContactPhonePerso = contact.telephone_personnel || '';
     this.selectedContactName = contact.nom;
-    this.selectedContactPrenom= contact.prenom;
+    this.selectedContactPrenom = contact.prenom;
+    
+    // Determine which phone to use (prefer professional, fall back to personal)
+    this.selectedPhoneType = this.selectedContactPhonePro ? 'professional' : 'personal';
 
     this.smsForm.get('contactSearch')?.setValue(contact.nom);
     this.showDropdown = false;
   }
 
+  // Get the appropriate phone number based on availability
+  get selectedContactPhone(): string {
+    return this.selectedPhoneType === 'professional' && this.selectedContactPhonePro 
+      ? this.selectedContactPhonePro 
+      : this.selectedContactPhonePerso;
+  }
+
   async sendSMS() {
     if (!this.selectedContactId || !this.selectedContactPhone) {
-      this.responseMessage = "Veuillez sélectionner un contact valide.";
+      this.responseMessage = "Veuillez sélectionner un contact valide avec un numéro de téléphone.";
       return;
     }
 
@@ -127,9 +145,12 @@ export class SendMessageComponent implements OnInit {
       await this.smsService.sendSMS(this.selectedContactPhone, textDecoded, SenderID, null);
       this.responseMessage = 'Message envoyé avec succès !';
       this.smsForm.reset();
-      this.selectedContactPhone = '';
+      this.selectedContactPhonePro = '';
+      this.selectedContactPhonePerso = '';
       this.selectedContactName = '';
+      this.selectedContactPrenom = '';
       this.selectedContactId = null;
+      this.selectedPhoneType = 'professional';
     } catch (error) {
       this.responseMessage = "Erreur lors de l'envoi du message.";
     } finally {
