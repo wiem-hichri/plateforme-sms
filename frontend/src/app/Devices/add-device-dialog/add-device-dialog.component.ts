@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -11,7 +11,10 @@ import { DeviceService, Device } from '../../services/device.service';
   templateUrl: './add-device-dialog.component.html',
   styleUrls: ['./add-device-dialog.component.scss'],
 })
-export class AddDeviceDialogComponent {
+export class AddDeviceDialogComponent implements OnInit {
+  deviceTypes: string[] = [];
+  isLoading = true;
+  
   newDevice: Device = {
     nom: '',
     proprietaire: '',
@@ -21,6 +24,23 @@ export class AddDeviceDialogComponent {
   showDialog = true;
 
   constructor(private deviceService: DeviceService) {}
+
+  ngOnInit(): void {
+    // Fetch device types from database
+    this.deviceService.getDeviceTypes().subscribe({
+      next: (types) => {
+        this.deviceTypes = types;
+        this.isLoading = false;
+        console.log('Device types loaded:', this.deviceTypes);
+      },
+      error: (error) => {
+        console.error('Error loading device types:', error);
+        this.isLoading = false;
+        // Fallback to hardcoded values if API fails
+        this.deviceTypes = ['float', 'ORfloat', 'MIX'];
+      }
+    });
+  }
 
   closeDialog(): void {
     this.showDialog = false;

@@ -1,3 +1,4 @@
+<!-- Final Add Device Dialog Template -->
 <div class="modal-backdrop" *ngIf="showDialog" (click)="closeDialog()">
   <div class="modal-container" (click)="$event.stopPropagation()">
     <div class="modal-header">
@@ -6,7 +7,12 @@
     </div>
 
     <div class="modal-body">
-      <form>
+      <div *ngIf="isLoading" class="loading-container">
+        <div class="spinner"></div>
+        <p>Chargement des types d'appareils...</p>
+      </div>
+      
+      <form *ngIf="!isLoading">
         <div class="form-group">
           <label for="nom">Nom de l'appareil</label>
           <input 
@@ -40,8 +46,7 @@
             name="type"
             required>
             <option value="" disabled selected>Sélectionner un type</option>
-            <option value="float">float</option>
-            <option value="ORfloat">ORfloat</option>
+            <option *ngFor="let type of deviceTypes" [value]="type">{{ type }}</option>
           </select>
         </div>
       </form>
@@ -57,7 +62,7 @@
       <button 
         type="button" 
         class="btn btn-primary"
-        [disabled]="!isFormValid()"
+        [disabled]="isLoading || !isFormValid()"
         (click)="addDevice()">
         Créer
       </button>
