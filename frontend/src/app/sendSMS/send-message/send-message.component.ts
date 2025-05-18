@@ -1,3 +1,4 @@
+
 import { Component, ViewChild, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -162,3 +163,4 @@ export class SendMessageComponent implements OnInit {
     this.smsGeneratorComponent?.openModal();
   }
 }
+

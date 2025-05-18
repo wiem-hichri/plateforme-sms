@@ -6,6 +6,12 @@
       <div class="sticky top-0 bg-gradient-to-r from-[#fc5130] to-[#fc5130] to-white-400 text-white p-4 rounded-lg shadow-md z-50">
         <div class="flex items-center justify-between pb-4 border-b">
           <h2 class="text-3xl font-semibold">Groupes</h2>
+           <div class="flex items-center space-x-2">
+            <input
+              [(ngModel)]="searchQuery"
+              placeholder="🔍Rechercher..."
+              class="px-4 py-2 text-black rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
           <button
             class="flex items-center gap-2 px-5 py-2 font-bold text-gray-800 transition-all bg-white rounded-lg shadow-md hover:bg-gray-100"
             (click)="openAddGroupModal()">
@@ -14,13 +20,14 @@
         </div>
       </div>
     </div>
+    </div>
 
     <!-- Main content area with two columns -->
     <div class="flex flex-col md:flex-row gap-6 mt-6">
       <!-- Scrollable Group Cards Grid -->
       <div class="md:w-2/3 overflow-y-auto max-h-[60vh] px-2">
         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-          <div *ngFor="let groupe of groups"
+          <div *ngFor="let groupe of filteredGroups()"
                class="relative p-6 transition-all duration-300 border border-orange-300 rounded-lg shadow-md hover:shadow-lg cursor-pointer"
                [ngClass]="{'bg-orange-50': selectedGroupId === groupe.id}"
                (click)="selectGroup(groupe)">

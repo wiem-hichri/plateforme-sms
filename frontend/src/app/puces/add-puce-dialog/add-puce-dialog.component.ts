@@ -43,7 +43,7 @@ export class AddPuceDialogComponent {
   };
   
   operateurs: string[] = ['Ooredoo', 'Orange', 'Telecom'];
-  etats: string[] = ['Active', 'Suspendu', 'Desactivé'];
+  etats: string[] = ['Active', 'Suspendue', 'Expirée'];
   contacts: any[] = [];
   missions: any[] = [];
   assignmentType: 'none' | 'contact' | 'mission' = 'none';
