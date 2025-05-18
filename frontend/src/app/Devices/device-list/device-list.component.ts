@@ -5,7 +5,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DeviceService, Device } from '../../services/device.service';
 import { AddDeviceDialogComponent } from '../add-device-dialog/add-device-dialog.component';
@@ -20,8 +19,7 @@ import { EditDeviceDialogComponent } from '../edit-device-dialog/edit-device-dia
     MatProgressSpinnerModule,
     MatIconModule,
     MatTableModule,
-    MatTooltipModule,
-    MatSnackBarModule
+    MatTooltipModule
   ],
   templateUrl: './device-list.component.html',
   styleUrls: ['./device-list.component.scss']
@@ -33,8 +31,7 @@ export class DeviceListComponent implements OnInit {
 
   constructor(
     private deviceService: DeviceService,
-    private dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -50,7 +47,6 @@ export class DeviceListComponent implements OnInit {
       },
       error: (error) => {
         console.error('Erreur lors du chargement des appareils:', error);
-        this.showSnackBar('Erreur lors du chargement des appareils');
         this.isLoading = false;
       }
     });
@@ -64,10 +60,7 @@ export class DeviceListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === 'success') {
-        this.showSnackBar('Appareil ajouté avec succès');
         this.loadDevices();
-      } else if (result === 'error') {
-        this.showSnackBar('Erreur lors de l\'ajout de l\'appareil');
       }
     });
   }
@@ -81,10 +74,7 @@ export class DeviceListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === 'success') {
-        this.showSnackBar('Appareil modifié avec succès');
         this.loadDevices();
-      } else if (result === 'error') {
-        this.showSnackBar('Erreur lors de la modification de l\'appareil');
       }
     });
   }
@@ -94,24 +84,13 @@ export class DeviceListComponent implements OnInit {
       this.isLoading = true;
       this.deviceService.deleteDevice(id).subscribe({
         next: () => {
-          this.showSnackBar('Appareil supprimé avec succès');
           this.loadDevices();
         },
         error: (error) => {
           console.error('Erreur lors de la suppression de l\'appareil:', error);
-          this.showSnackBar('Erreur lors de la suppression de l\'appareil');
           this.isLoading = false;
         }
       });
     }
-  }
-
-  private showSnackBar(message: string): void {
-    this.snackBar.open(message, 'Fermer', {
-      duration: 3000,
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom',
-      panelClass: ['snackbar-style']
-    });
   }
 }
