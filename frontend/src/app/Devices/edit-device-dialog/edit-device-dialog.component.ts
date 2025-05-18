@@ -28,8 +28,9 @@ import { Device, DeviceService } from '../../services/device.service';
 })
 export class EditDeviceDialogComponent implements OnInit {
   device: Device;
-  deviceTypes = ['float', 'ORfloat']; // Types managed locally in the component
+  deviceTypes: string[] = [];
   isLoading = false;
+  isLoadingTypes = true;
   errorMessage: string | null = null;
   showDialog = true;
 
@@ -40,15 +41,24 @@ export class EditDeviceDialogComponent implements OnInit {
   ) {
     // Create a deep copy to avoid modifying the original data directly
     this.device = { ...data };
-    
-    // Ensure the device type is set properly for the select
     console.log('Initial device type:', this.device.type);
   }
 
   ngOnInit(): void {
-    // Any initialization can go here
-    console.log('Device types available:', this.deviceTypes);
-    console.log('Current device:', this.device);
+    // Fetch device types from database
+    this.deviceService.getDeviceTypes().subscribe({
+      next: (types) => {
+        this.deviceTypes = types;
+        this.isLoadingTypes = false;
+        console.log('Device types loaded:', this.deviceTypes);
+      },
+      error: (error) => {
+        console.error('Error loading device types:', error);
+        this.isLoadingTypes = false;
+        // Fallback to hardcoded values if API fails
+        this.deviceTypes = ['float', 'ORfloat', 'MIX'];
+      }
+    });
   }
 
   onCancel(): void {
@@ -104,4 +114,4 @@ export class EditDeviceDialogComponent implements OnInit {
     
     return true;
   }
-}
+} 

@@ -1,3 +1,4 @@
+// controllers/deviceController.js - Add new controller method
 const Device = require('../models/device');
 
 const createDevice = async (req, res) => {
@@ -52,4 +53,20 @@ const deleteDevice = async (req, res) => {
     }
 };
 
-module.exports = { createDevice, getDevices, updateDevice, deleteDevice };
+// New controller method for device types
+const getDeviceTypes = async (req, res) => {
+    try {
+        const types = await Device.getTypes();
+        res.status(200).json({ status: "success", data: types });
+    } catch (error) {
+        res.status(500).json({ message: 'Erreur lors de la récupération des types de device', error: error.message });
+    }
+};
+
+module.exports = { 
+    createDevice, 
+    getDevices, 
+    updateDevice, 
+    deleteDevice,
+    getDeviceTypes 
+};
