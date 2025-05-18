@@ -55,8 +55,11 @@ export class PuceComponent implements OnInit {
         this.puceService.getPuces().subscribe((res3) => {
           this.puces = res3.data.map((puce: any) => ({
             ...puce,
-            contact_name: this.contacts.find(c => c.id === puce.contact_id)?.nom || '—',
-            mission_name: this.missions.find(m => m.id === puce.mission_id)?.type_mission || '—'
+            contact_name: (() => {
+              const contact = this.contacts.find(c => c.id === puce.contact_id);
+              return contact ? `${contact.prenom} ${contact.nom}` : '—';
+            })(), 
+             mission_name: this.missions.find(m => m.id === puce.mission_id)?.type_mission || '—'
           }));
         });
       });

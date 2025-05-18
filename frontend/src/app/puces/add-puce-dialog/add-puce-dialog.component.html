@@ -40,7 +40,7 @@
         <label>Contact:</label>
         <select [(ngModel)]="newPuce.contact_id" name="contact_id">
           <option [ngValue]="null">Sélectionner un contact</option>
-          <option *ngFor="let contact of contacts" [ngValue]="contact.id">{{ contact.nom }}</option>
+          <option *ngFor="let contact of contacts" [ngValue]="contact.id">{{ contact.matricule }} : {{ contact.nom }} {{ contact.prenom }}</option>
           <option [ngValue]="null" *ngIf="newPuce.contact_id !== null">-- Aucun --</option>
         </select>
       </div>

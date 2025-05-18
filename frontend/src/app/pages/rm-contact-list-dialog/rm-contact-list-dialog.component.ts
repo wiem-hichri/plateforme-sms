@@ -3,11 +3,12 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-remove-contact-dialog',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatCheckboxModule],
+  imports: [CommonModule, FormsModule, MatCheckboxModule, MatIconModule],
   templateUrl: './rm-contact-list-dialog.component.html',
   styleUrls: ['./rm-contact-list-dialog.component.scss']
 })

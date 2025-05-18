@@ -16,9 +16,23 @@
       *ngFor="let contact of filteredContacts"
       class="bg-gray-100 p-3 rounded-md shadow-sm hover:bg-gray-200 transition"
     >
-      <mat-checkbox [(ngModel)]="contact.selected">
-        {{ contact.nom }}
-      </mat-checkbox>
+      <mat-checkbox [(ngModel)]="contact.selected" class="w-full">
+      <div class="flex flex-col text-sm text-gray-700">
+        <div><strong>{{ contact.nom }} {{ contact.prenom }}</strong></div>
+        <div *ngIf="contact.matricule">
+          <mat-icon fontIcon="badge" class="text-base mr-1 align-middle"></mat-icon>
+          {{ contact.matricule }}
+        </div>
+        <div *ngIf="contact.fonction">
+          <mat-icon fontIcon="assignment_ind" class="text-base mr-1 align-middle"></mat-icon>
+          {{ contact.fonction }}
+        </div>
+        <div *ngIf="contact.site">
+          <mat-icon fontIcon="location_on" class="text-base mr-1 align-middle"></mat-icon>
+          {{ contact.site }}
+        </div>
+      </div>
+    </mat-checkbox>
     </li>
     <li *ngIf="filteredContacts.length === 0" class="text-gray-500 italic text-sm">
       Aucun contact trouvé.

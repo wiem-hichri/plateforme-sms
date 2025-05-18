@@ -9,11 +9,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { ContactService } from '../../services/contact.service';
 import { AddContactDialogComponent } from '../../pages/contact-list-dialog/contact-list-dialog.component';
 import { RemoveContactDialogComponent } from '../../pages/rm-contact-list-dialog/rm-contact-list-dialog.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-groups',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule],
+  imports: [CommonModule, MatButtonModule, MatIconModule, FormsModule],
   templateUrl: './groups.component.html',
   styleUrls: ['./groups.component.scss'],
 })
@@ -22,6 +23,8 @@ export class GroupsComponent implements OnInit {
   selectedGroupContacts: any[] = [];
   selectedGroupId: number | null = null;
   loading = false;
+  searchQuery: string = '';
+
 
   constructor(
     private groupService: GroupService,
@@ -44,6 +47,14 @@ export class GroupsComponent implements OnInit {
         console.error('Error fetching groups:', error);
         this.loading = false;
       }
+    );
+  }
+
+    filteredGroups(): Group[] {
+    if (!this.searchQuery) return this.groups;
+    const query = this.searchQuery.toLowerCase();
+    return this.groups.filter(group =>
+      group.nom.toLowerCase().includes(query)
     );
   }
 
