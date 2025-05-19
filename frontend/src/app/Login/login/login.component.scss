@@ -148,3 +148,24 @@ $border-radius: 8px;
     }
   }
 }
+/* Add these styles to your login.component.scss file */
+
+.password-container {
+  position: relative;
+  width: 100%;
+}
+
+.password-container input {
+  width: 100%;
+  padding-right: 40px; /* Make room for the icon */
+}
+
+.visibility-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #666;
+  user-select: none;
+}
