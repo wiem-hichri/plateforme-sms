@@ -22,7 +22,7 @@ export class DeleteMissionDialogComponent {
   }
 
   confirmDelete() {
-    this.missionService.deleteMission(this.mission.id_mission).subscribe(
+    this.missionService.deleteMission(this.mission.id).subscribe(
       (response) => {
         console.log('Mission deleted successfully:', response);
         this.dialogRef.close(true);

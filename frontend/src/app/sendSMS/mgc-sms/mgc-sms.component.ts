@@ -7,7 +7,7 @@ import { SmsModelService } from '../../services/model.service';
 import { SmsService } from '../../services/sms.service';
 import { AuthService } from '../../services/auth.service';
 import * as XLSX from 'xlsx';
-import { PhonesService } from '../../services/phones.service';  // Import the service
+import { PhonesService } from '../../services/phones.service';
 
 interface SmsModel {
   id: number;
@@ -21,9 +21,11 @@ interface SmsModel {
 interface GeneratedMessage {
   matricule: string;
   telephone: string;
+  telephone_personnel?: string;
+  telephone_professionnel?: string;
   message: string;
-  originalMessage: string; // Added to store the original message with real values
-  [key: string]: any; // For dynamic Excel columns
+  originalMessage: string;
+  [key: string]: any;
 }
 
 @Component({
@@ -44,8 +46,9 @@ export class MgcComponent implements OnInit {
   generatedMessages: GeneratedMessage[] = [];
   sending = false;
   responseMessage = '';
-  isGroupSelected = true; // Track if group is selected or "all contacts" option
+  isGroupSelected = true;
   isLoading = false;
+  missingPhoneContacts: string[] = [];
 
   constructor(
     private phonesService: PhonesService,
@@ -100,7 +103,6 @@ export class MgcComponent implements OnInit {
     const value = (event.target as HTMLSelectElement).value;
     if (value) {
       this.selectedModelId = Number(value);
-      // Find the selected model to display its content
       const selectedModel = this.models.find(model => model.id === this.selectedModelId);
       this.selectedModelContent = selectedModel?.contenu || null;
     } else {
@@ -117,19 +119,14 @@ export class MgcComponent implements OnInit {
     }
   }
 
-  // Process Excel file locally
   readExcelFile(file: File) {
     const reader = new FileReader();
     
     reader.onload = (e: any) => {
       const data = new Uint8Array(e.target.result);
       const workbook = XLSX.read(data, { type: 'array' });
-      
-      // Get first sheet
       const firstSheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[firstSheetName];
-      
-      // Convert to JSON
       this.excelData = XLSX.utils.sheet_to_json(worksheet);
       console.log('Excel data loaded:', this.excelData);
     };
@@ -137,7 +134,6 @@ export class MgcComponent implements OnInit {
     reader.readAsArrayBuffer(file);
   }
 
-  // Find variables in a string (like {{variable}})
   findVariables(text: string): string[] {
     const regex = /{{([^{}]+)}}/g;
     const matches = [];
@@ -150,18 +146,12 @@ export class MgcComponent implements OnInit {
     return matches;
   }
 
-  // Replace variables in a template with values from Excel data
   replaceVariables(template: string, rowData: any): string {
     let result = template;
-    
-    // Find all variables in the template
     const variables = this.findVariables(template);
     
-    // Replace each variable with its value from Excel if available
     variables.forEach(variable => {
       const variablePattern = new RegExp(`{{\\s*${variable}\\s*}}`, 'g');
-      
-      // Check if the variable exists in the Excel data
       if (rowData.hasOwnProperty(variable)) {
         result = result.replace(variablePattern, rowData[variable].toString());
       }
@@ -170,7 +160,22 @@ export class MgcComponent implements OnInit {
     return result;
   }
 
-  // Generate messages locally based on loaded Excel data
+  getPhoneNumber(row: any): { telephone: string, telephone_professionnel: string, telephone_personnel: string } {
+    // Extract phone numbers with various possible field names
+    const telephone_professionnel = row['Telephone_professionnel'] || row['telephone_professionnel'] || row['TelephoneProfessionnel'] || '';
+    const telephone_personnel = row['Telephone_personnel'] || row['telephone_personnel'] || row['TelephonePersonnel'] || '';
+    const generic_telephone = row['Telephone'] || row['telephone'] || '';
+    
+    // Set the primary telephone to use (prioritize professional, then personal, then generic)
+    const telephone = telephone_professionnel || telephone_personnel || generic_telephone || '';
+    
+    return {
+      telephone,
+      telephone_professionnel,
+      telephone_personnel
+    };
+  }
+
   generateMessagesLocally() {
     if (!this.selectedModelContent || this.excelData.length === 0) {
       return [];
@@ -178,35 +183,30 @@ export class MgcComponent implements OnInit {
     
     const messages: GeneratedMessage[] = [];
     const missingMatricules: string[] = [];
+    this.missingPhoneContacts = [];
     
     this.excelData.forEach((row, index) => {
-      // Check if row has matricule
       if (!row['Matricule'] && !row['matricule']) {
         missingMatricules.push(`Row ${index + 1}`);
         return;
       }
       
       const matricule = row['Matricule'] || row['matricule'];
-      let telephone = row['Telephone'] || row['telephone'] || '';
+      const { telephone, telephone_professionnel, telephone_personnel } = this.getPhoneNumber(row);
       
-      // Replace variables in the template to create the original message
+      if (!telephone) {
+        this.missingPhoneContacts.push(matricule);
+      }
+      
       const originalMessage = this.replaceVariables(this.selectedModelContent || '', row);
-      
-      // Create a modified message with salary information hidden
       let message = originalMessage;
       
-      // Check if the message contains salary information
-      // Look for patterns that might indicate salary values by looking for "Salaire" in the template
       const variables = this.findVariables(this.selectedModelContent || '');
       if (variables.some(v => v.toLowerCase().includes('salaire'))) {
-        // Find the salary variable name
         const salaryVar = variables.find(v => v.toLowerCase().includes('salaire'));
         if (salaryVar && row[salaryVar]) {
-          // Create a regex to find the salary value in the message
           const salaryValue = row[salaryVar].toString();
           const salaryPattern = new RegExp(salaryValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
-          
-          // Replace the salary value with asterisks
           const asterisks = '*'.repeat(salaryValue.length);
           message = message.replace(salaryPattern, asterisks);
         }
@@ -215,9 +215,11 @@ export class MgcComponent implements OnInit {
       messages.push({
         matricule,
         telephone,
+        telephone_professionnel,
+        telephone_personnel,
         message,
-        originalMessage, // Store the original message for sending
-        ...row // Keep all original data
+        originalMessage,
+        ...row
       });
     });
     
@@ -236,37 +238,44 @@ export class MgcComponent implements OnInit {
   
     this.isLoading = true;
   
-    // Try local generation first if Excel data is loaded
     if (this.excelData.length > 0) {
       try {
         const localMessages = this.generateMessagesLocally();
         if (localMessages.length > 0) {
-          // Check if any message is missing a phone number
           const missingPhoneNumbers = localMessages.filter(msg => !msg.telephone);
   
           if (missingPhoneNumbers.length === 0 || !this.isGroupSelected) {
-            // No missing phone numbers, or we're in "all contacts" mode
+            // No missing phone numbers or group selection is not required, return local messages
             setTimeout(() => {
               this.generatedMessages = localMessages;
               this.isLoading = false;
             }, 500);
             return;
           } else {
-            // Fetch missing phone numbers using matricule
+            // If phone numbers are missing and group selection is required, fetch from service
             const matricules = missingPhoneNumbers.map(msg => msg.matricule);
   
             this.phonesService.getPhoneNumbersByMatricules(matricules).subscribe({
               next: (response) => {
-                // Map the fetched phone numbers to the corresponding messages
                 response.data.forEach((contact: any) => {
                   const message = localMessages.find(msg => msg.matricule === contact.matricule);
                   if (message) {
-                    message.telephone = contact.telephone_professionnel; // Assign the phone number
+                    // Update the phone numbers based on what was fetched
+                    message.telephone_professionnel = contact.telephone_professionnel || '';
+                    message.telephone_personnel = contact.telephone_personnel || '';
+                    // Set the primary telephone (with fallback to personal number)
+                    message.telephone = contact.telephone_professionnel || contact.telephone_personnel || '';
                   }
                 });
   
-                // After updating the phone numbers, set the messages
                 this.generatedMessages = localMessages;
+                
+                const stillMissingPhones = localMessages.filter(msg => !msg.telephone);
+                if (stillMissingPhones.length > 0) {
+                  const missingMatricules = stillMissingPhones.map(msg => msg.matricule).join(', ');
+                  alert(`Attention: Certains contacts n'ont pas de numéro de téléphone: ${missingMatricules}`);
+                }
+                
                 this.isLoading = false;
               },
               error: (error) => {
@@ -279,15 +288,16 @@ export class MgcComponent implements OnInit {
         }
       } catch (error) {
         console.error('Error generating messages locally:', error);
-        // Fall back to server-side generation if there's an error
+        this.isLoading = false;
       }
+      // Don't continue with the HTTP request if we've already handled things locally
+      return;
     }
   
-    // Server-side generation (fallback)
+    // Below is the fallback to server-side processing if needed
     const formData = new FormData();
     formData.append('file', this.excelFile);
     
-    // If group is not selected, pass only the model ID
     const url = this.selectedGroupId 
       ? `http://localhost:3000/api/models/messageConfidentiel/${this.selectedModelId}/${this.selectedGroupId}`
       : `http://localhost:3000/api/models/messageConfidentiel/${this.selectedModelId}`;
@@ -296,15 +306,17 @@ export class MgcComponent implements OnInit {
       next: (response) => {
         this.isLoading = false;
         if (response.status === 'success') {
-          // Process the returned messages to hide salary values
           const processedMessages = response.messages.map((msg: any) => {
-            // Create a regex to find salary pattern (e.g., "900 D €", "850 D €")
             const salaryRegex = /(\d+(\.\d+)?\s*[^\s,\.]+\s*€)/g;
             const originalMessage = msg.message;
             const message = originalMessage.replace(salaryRegex, (match: string) => '*'.repeat(match.length));
             
+            // Ensure phone number fallback logic is applied
+            const telephone = msg.telephone_professionnel || msg.telephone_personnel || msg.telephone || '';
+            
             return {
               ...msg,
+              telephone,
               message: message,
               originalMessage: originalMessage
             };
@@ -312,7 +324,6 @@ export class MgcComponent implements OnInit {
           
           this.generatedMessages = processedMessages;
           
-          // Display warnings about any errors with matricules
           if (response.erreursMatricules && response.erreursMatricules.length > 0) {
             const errorMsg = `Note: Certains matricules n'ont pas été trouvés: ${response.erreursMatricules.join(', ')}`;
             alert(errorMsg);
@@ -348,8 +359,13 @@ export class MgcComponent implements OnInit {
       let failCount = 0;
       
       for (const msg of this.generatedMessages) {
+        if (!msg.telephone) {
+          failCount++;
+          console.error(`Missing phone number for matricule: ${msg.matricule}`);
+          continue;
+        }
+        
         try {
-          // Use originalMessage for sending instead of the displayed message with hidden salary
           await this.smsService.sendSMS(msg.telephone, msg.originalMessage, senderID, this.selectedModelId);
           successCount++;
         } catch (error) {
@@ -358,13 +374,10 @@ export class MgcComponent implements OnInit {
         }
       }
 
-      if (failCount === 0) {
-        this.responseMessage = `Tous les messages (${successCount}) ont été envoyés avec succès !`;
-      } else {
-        this.responseMessage = `${successCount} messages envoyés avec succès. ${failCount} messages ont échoué.`;
-      }
+      this.responseMessage = failCount === 0
+        ? `Tous les messages (${successCount}) ont été envoyés avec succès !`
+        : `${successCount} messages envoyés avec succès. ${failCount} messages ont échoué.`;
       
-      // Optionally clear the list after sending
       if (successCount === this.generatedMessages.length) {
         this.generatedMessages = [];
       }
@@ -375,20 +388,16 @@ export class MgcComponent implements OnInit {
     }
   }
 
-  // Helper method to handle API errors consistently
   private handleApiError(error: any, defaultMessage: string): void {
     let errorMessage = defaultMessage;
     
     if (error instanceof HttpErrorResponse) {
-      // Check if it's a 404
       if (error.status === 404) {
         errorMessage += ': Endpoint non trouvé. Vérifiez la configuration du serveur.';
       }
-      // Check if it's a JSON parsing error (which happens when HTML is returned instead of JSON)
       else if (error.error instanceof SyntaxError && error.error.message.includes('JSON')) {
         errorMessage += ': Réponse invalide du serveur. La route API peut être incorrecte.';
       }
-      // Try to extract the error message from the response
       else if (error.error && error.error.message) {
         errorMessage += `: ${error.error.message}`;
       } else if (typeof error.error === 'string') {
