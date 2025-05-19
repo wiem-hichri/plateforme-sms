@@ -40,6 +40,13 @@ const Contact = {
     },
 
     update: async (id, contact) => {
+        
+         Object.keys(contact).forEach(key => {
+            if (typeof contact[key] === 'string' && contact[key].trim() === '') {
+                contact[key] = null;
+            }
+        });
+
         const query = `UPDATE contacts SET matricule=?, nom=?, prenom=?, telephone_personnel=?, telephone_professionnel=?, site=?, cin=?, fonction=? WHERE id=?`;
         const values = [contact.matricule, contact.nom, contact.prenom, contact.telephone_personnel, contact.telephone_professionnel, contact.site, contact.cin, contact.fonction, id];
         const [result] = await db.query(query, values);
