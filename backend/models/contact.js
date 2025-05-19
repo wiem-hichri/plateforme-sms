@@ -68,44 +68,53 @@ const Contact = {
         return rows;
     },
 
-    getPhonesByMatricules : async (matricules) => {
-        try {
-            // Validate input
-            if (!Array.isArray(matricules) || matricules.length === 0) {
-                console.log('No matricules provided or invalid format');
-                return [];
-            }
-            
-            // Log the request
-            console.log(`Looking up phone numbers for ${matricules.length} matricules`);
-            
-            // Create placeholders for SQL query
-            const placeholders = matricules.map(() => '?').join(', ');
-            
-            // Execute the query
-            const [rows] = await db.query(
-                `SELECT c.telephone_professionnel,c.telephone_personnel, c.matricule
-                 FROM contacts c
-                 WHERE c.matricule IN (${placeholders})`,
-                matricules
-            );
-            
-            // Log the results
-            console.log(`Found ${rows.length} matches out of ${matricules.length} matricules`);
-            
-            // If some matricules were not found, log them
-            if (rows.length < matricules.length) {
-                const foundMatricules = rows.map(row => row.matricule);
-                const missingMatricules = matricules.filter(m => !foundMatricules.includes(m));
-                console.log(`Missing phone numbers for matricules: ${missingMatricules.join(', ')}`);
-            }
-            
-            return rows;
-        } catch (error) {
-            console.error("Error in getPhonesByMatricules:", error);
-            throw error;
+    getPhonesByMatricules: async (matricules) => {
+    try {
+        // Validate input
+        if (!Array.isArray(matricules) || matricules.length === 0) {
+            console.log('No matricules provided or invalid format');
+            return [];
         }
-    },
+        
+        // Log the request
+        console.log(`Looking up phone numbers for ${matricules.length} matricules`);
+        
+        // Create placeholders for SQL query
+        const placeholders = matricules.map(() => '?').join(', ');
+        
+        // Execute the query
+        const [rows] = await db.query(
+            `SELECT c.telephone_professionnel, c.telephone_personnel, c.matricule
+             FROM contacts c
+             WHERE c.matricule IN (${placeholders})`,
+            matricules
+        );
+        
+        // Log the results
+        console.log(`Found ${rows.length} matches out of ${matricules.length} matricules`);
+        
+        // If some matricules were not found, log them
+        if (rows.length < matricules.length) {
+            const foundMatricules = rows.map(row => row.matricule);
+            const missingMatricules = matricules.filter(m => !foundMatricules.includes(m));
+            console.log(`Missing phone numbers for matricules: ${missingMatricules.join(', ')}`);
+        }
+        
+        // Process the results to use telephone_personnel when telephone_professionnel is null/empty
+        const processedRows = rows.map(row => {
+            const telephone = row.telephone_professionnel || row.telephone_personnel || null;
+            return {
+                ...row,
+                telephone: telephone
+            };
+        });
+        
+        return processedRows;
+    } catch (error) {
+        console.error("Error in getPhonesByMatricules:", error);
+        throw error;
+    }
+},
     
 
     addMultipleContacts: async (contacts, callback) => {
