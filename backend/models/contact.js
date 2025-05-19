@@ -84,7 +84,7 @@ const Contact = {
             
             // Execute the query
             const [rows] = await db.query(
-                `SELECT c.telephone_professionnel, c.matricule
+                `SELECT c.telephone_professionnel,c.telephone_personnel, c.matricule
                  FROM contacts c
                  WHERE c.matricule IN (${placeholders})`,
                 matricules

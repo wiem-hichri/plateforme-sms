@@ -28,13 +28,13 @@ export class EditMissionDialogComponent {
 
   updateMission() {
     if (this.mission.type_mission.trim()) { // Ensure type_mission is not empty
-      this.missionService.updateMission(this.data.id_mission, this.mission).subscribe(
+      this.missionService.updateMission(this.data.id, this.mission).subscribe(
         (response) => {
           console.log('Mission updated successfully:', response);
           
           // Return the updated mission data
           const updatedMission: Mission = {
-            id_mission: this.data.id_mission,
+            id: this.data.id,
             type_mission: this.mission.type_mission
           };
           

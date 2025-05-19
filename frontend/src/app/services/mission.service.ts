@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface Mission {
-  id_mission: number;
+  id: number;
   type_mission: string;
 }
 

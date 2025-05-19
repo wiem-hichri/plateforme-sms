@@ -76,7 +76,7 @@ export class MissionManagementComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         // Update the mission in the list without requiring a full reload
-        const index = this.missions.findIndex(m => m.id_mission === mission.id_mission);
+        const index = this.missions.findIndex(m => m.id === mission.id);
         if (index !== -1) {
           this.missions[index] = result;
         } else {
@@ -95,7 +95,7 @@ export class MissionManagementComponent implements OnInit {
     dialogRef.afterClosed().subscribe(deleted => {
       if (deleted) {
         // Remove the mission from the list without requiring a full reload
-        this.missions = this.missions.filter(m => m.id_mission !== mission.id_mission);
+        this.missions = this.missions.filter(m => m.id !== mission.id);
       }
     });
   }

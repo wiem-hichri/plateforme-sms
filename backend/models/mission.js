@@ -15,19 +15,19 @@ const Mission = {
     },
 
     getById: async (id) => {
-        const [results] = await db.query("SELECT * FROM missions WHERE id_mission = ?", [id]);
+        const [results] = await db.query("SELECT * FROM missions WHERE id = ?", [id]);
         return results.length > 0 ? results[0] : null;
     },
 
     update: async (id, mission) => {
-        const query = `UPDATE missions SET type_mission = ? WHERE id_mission = ?`;
+        const query = `UPDATE missions SET type_mission = ? WHERE id = ?`;
         const values = [mission.type_mission, id];
         const [result] = await db.query(query, values);
         return result;
     },
 
     delete: async (id) => {
-        const [result] = await db.query("DELETE FROM missions WHERE id_mission = ?", [id]);
+        const [result] = await db.query("DELETE FROM missions WHERE id = ?", [id]);
         return result;
     },
 };
