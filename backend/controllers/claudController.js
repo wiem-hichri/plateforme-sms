@@ -1,7 +1,6 @@
 const axios = require("axios");
 require("dotenv").config();
 
-// Stockage de l'historique en mémoire (reset quand serveur redémarre)
 let conversationHistory = [];
 
 async function genererSMS(req, res) {
@@ -12,24 +11,30 @@ async function genererSMS(req, res) {
   }
 
   try {
-    // Ajouter la question de l'utilisateur à l'historique
     conversationHistory.push({
       role: "user",
       content: prompt,
     });
 
     const messages = [
-      {
-        role: "system",
-        content: `Tu es un assistant dédié à l'entreprise Lumière, spécialisée dans le domaine de la logistique et du transport. 
-    Ta seule mission est de générer des SMS professionnels courts et des modèles de SMS contenant des variables dynamiques au format {{variable}}.
-    Tu ne dois en aucun cas répondre à des questions ou demandes qui ne concernent pas la génération de SMS. 
-    Si quelqu’un te pose une question hors sujet, tu dois répondre : 
-    "Je suis un assistant dédié exclusivement à la génération de SMS professionnels et de modèles dynamiques pour l'entreprise Lumière. Je ne peux pas répondre à d'autres types de demandes."`,
+  {
+    role: "system",
+    content: `Tu es un assistant IA spécialisé dans la génération de SMS professionnels pour l'entreprise Lumière, dans le secteur logistique et transport.
+
+    Règles strictes :
+    1. Si l'utilisateur demande un **SMS simple**, réponds par un texte court, professionnel, sans variable.
+    2. Si l'utilisateur demande un **modèle de SMS**, utilise des **variables dynamiques** au format exact : double accolades, exemple : {{ nom }}, {{ date }}, {{ site }}.
+    3. Si l’utilisateur demande explicitement une réponse **en arabe**, tu dois répondre en arabe, quelle que soit la langue utilisée dans la question.
+    4. Sinon, réponds dans la même langue que la question.
+    5. Si l’utilisateur pose une question hors sujet (pas liée à un SMS), réponds : "Je suis un assistant dédié exclusivement à la génération de SMS professionnels et de modèles dynamiques pour l'entreprise Lumière. Je ne peux pas répondre à d'autres types de demandes.".
+
+    Tu dois toujours rester dans le cadre de ta mission.`,
       },
       ...conversationHistory,
     ];
-    
+
+
+        
     
 
     const response = await axios.post(
