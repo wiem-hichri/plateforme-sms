@@ -4,11 +4,12 @@ import { AuthService } from '../../services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatDialogModule],
+  imports: [CommonModule, FormsModule, MatDialogModule, MatIconModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
@@ -18,6 +19,7 @@ export class LoginComponent {
   showPopup: boolean = false;
   popupMessage: string = '';
   expired: boolean = false;
+  hidePassword: boolean = true;  // Added for password visibility toggle
 
   constructor(private authService: AuthService, private router: Router, public dialog: MatDialog) {}
 
@@ -52,5 +54,10 @@ export class LoginComponent {
 
   goToResetPassword() {
     this.router.navigate(['/reset-password']);
+  }
+  
+  // Added method to toggle password visibility
+  togglePasswordVisibility() {
+    this.hidePassword = !this.hidePassword;
   }
 }
