@@ -1,11 +1,21 @@
 <div class="page-wrapper">
   <div class="container">
     <div class="filter-wrapper">
-      <button mat-raised-button color="primary" (click)="openAddContactModal()">+</button>
-      <button mat-raised-button color="primary" (click)="exportToExcel()">
+      <!-- Only show add/import/export buttons if user has permissions -->
+      <button 
+        mat-raised-button 
+        color="primary" 
+        (click)="openAddContactModal()">+</button>
+      <button 
+        *ngIf="canManageContacts()" 
+        mat-raised-button 
+        color="primary" 
+        (click)="exportToExcel()">
         <mat-icon>file_upload</mat-icon>
       </button>
-      <label class="action-btn file-upload-label">
+      <label 
+        *ngIf="canManageContacts()" 
+        class="action-btn file-upload-label">
         <mat-icon>file_download</mat-icon>
         <input type="file" (change)="importExcel($event)" accept=".xlsx, .xls" />
       </label>
@@ -64,10 +74,17 @@
         <ng-container matColumnDef="action">
           <th mat-header-cell *matHeaderCellDef> Action </th>
           <td mat-cell *matCellDef="let contact">
-            <button mat-icon-button class="edit-btn" (click)="editContact(contact)">
+            <!-- Only show edit/delete buttons if user has permissions -->
+            <button 
+              mat-icon-button 
+              class="edit-btn" 
+              (click)="editContact(contact)">
               <mat-icon class="text-blue-600">edit</mat-icon>
             </button>
-            <button mat-icon-button class="delete-btn" (click)="deleteContact(contact.id)">
+            <button 
+              mat-icon-button 
+              class="delete-btn" 
+              (click)="deleteContact(contact.id)">
               <mat-icon class="text-red-600">delete</mat-icon>
             </button>
           </td>

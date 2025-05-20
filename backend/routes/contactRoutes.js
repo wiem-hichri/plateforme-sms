@@ -6,7 +6,7 @@ const  {createContact, getContacts, getContactByMatricule, updateContact, delete
 
 
 
-router.post('/addcontacts',isAuthentificated, checkRole( 'super-administrateur','administrateur'), createContact);
+router.post('/addcontacts',isAuthentificated, checkRole( 'utilisateur','super-administrateur','administrateur'), createContact);
 router.get('/contacts',isAuthentificated, checkRole( 'utilisateur','super-administrateur','administrateur'), getContacts);
 router.get('/contacts/:matricule', getContactByMatricule);
 router.get('/contacts/group/:groupName',isAuthentificated, checkRole( 'utilisateur','super-administrateur','administrateur'), getContactsByGroup);
