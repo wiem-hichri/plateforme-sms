@@ -2,7 +2,7 @@
   <div class="deznav-scroll">
     <a class="add-project-sidebar btn btn-primary" (click)="openSmsModal($event)" >+ Envoyer un SMS</a>
     <ul class="metismenu" id="menu" >
-      <li><a routerLink="/dashboard" routerLinkActive="active" href="/dashboard">
+      <li *ngIf="currentUserRole !== 'utilisateur'"><a routerLink="/dashboard" routerLinkActive="active" href="/dashboard">
           <i class="flaticon-layout"></i>
           <span class="nav-text">Dashboard</span>
         </a>
@@ -43,6 +43,11 @@
           <span class="nav-text">Rapports</span>
         </a>
       </li>
+      <li *ngIf="currentUserRole == 'super-administrateur'" ><a routerLink="/login-history" routerLinkActive="active" href="/login-history">
+        <i class="flaticon-table"></i>
+        <span class="nav-text">Login_history</span>
+      </a>
+    </li>
 
       <li *ngIf="currentUserRole == 'super-administrateur'" >
         <a routerLink="/parametre" routerLinkActive="active" href="/parametre">
@@ -50,11 +55,7 @@
           <span class="nav-text">Parametres</span>
         </a>
       </li>
-      <li *ngIf="currentUserRole !== 'utilisateur'"><a routerLink="/login-history" routerLinkActive="active" href="/login-history">
-        <i class="flaticon-table"></i>
-        <span class="nav-text">Login_history</span>
-      </a>
-    </li>
+      
 
     </ul>
   </div>
