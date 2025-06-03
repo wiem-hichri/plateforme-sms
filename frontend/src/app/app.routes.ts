@@ -18,8 +18,11 @@ import { MissionManagementComponent } from './parametre/mission/mission.componen
 import { SiteListComponent } from './parametre/Sites/site/site.component';
 import { HistoriqueComponent } from './parametre/historique/historique.component';
 import { DeviceListComponent } from './Devices/device-list/device-list.component';
+import { WelcomeComponent } from './Welcome/welcome/welcome.component';
+
 import { ResetPasswordComponent } from './Login/reset-password/reset-password.component';
 export const appRoutes: Routes = [
+  {path:'welcome',component:WelcomeComponent},
   { path: 'login', component: LoginComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'dashboard', component: DashboardComponent },

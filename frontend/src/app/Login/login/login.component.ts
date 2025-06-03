@@ -38,7 +38,7 @@ export class LoginComponent {
           }
         }
 
-        this.router.navigate(['/dashboard']).then(() => window.location.reload());
+        this.router.navigate(['/welcome']).then(() => window.location.reload());
       },
       (error) => {
         this.showPopup = true;
