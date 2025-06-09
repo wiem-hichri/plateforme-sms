@@ -7,9 +7,9 @@ const  {createUser,updatePassword, getUsers, getUserById, updateUser, deleteUser
 router.post('/addusers',isAuthentificated, checkRole( 'super-administrateur','administrateur'), createUser);
 router.get('/users',isAuthentificated, checkRole( 'super-administrateur','administrateur'), getUsers);
 router.get('/users/:id',isAuthentificated, checkRole( 'super-administrateur','administrateur'), getUserById);
-router.put('/users/:id',isAuthentificated, checkRole( 'super-administrateur','administrateur','utilisateur'), updateUser);
+router.put('/users/:id',isAuthentificated, checkRole( 'super-administrateur','administrateur','Employé'), updateUser);
 router.delete('/users/:id',isAuthentificated, checkRole( 'super-administrateur','administrateur'), deleteUser);
-router.put('/users/password/:id',isAuthentificated, checkRole( 'super-administrateur','administrateur','utilisateur'), updatePassword);
+router.put('/users/password/:id',isAuthentificated, checkRole( 'super-administrateur','administrateur','Employé'), updatePassword);
 router.get('/login-history', getAllLoginHistory);
 
 
