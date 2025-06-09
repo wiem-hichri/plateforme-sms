@@ -42,7 +42,7 @@ async function genererSMS(req, res) {
       {
         model: "anthropic/claude-3-sonnet-20240229", 
         messages: messages,
-        max_tokens: 500,
+        max_tokens: 450,
         temperature: 0.7,
       },
       {
