@@ -11,10 +11,10 @@ const {
 } = require('../controllers/missionController');
 
 
-router.post('/addmission', isAuthentificated, checkRole('super-administrateur', 'administrateur'), createMission);
-router.get('/missions', isAuthentificated, checkRole('super-administrateur', 'administrateur'), getMissions);
-router.get('/missions/:id', isAuthentificated, checkRole('super-administrateur', 'administrateur'), getMissionById);
-router.put('/missions/:id', isAuthentificated, checkRole('super-administrateur', 'administrateur'), updateMission);
-router.delete('/missions/:id', isAuthentificated, checkRole('super-administrateur', 'administrateur'), deleteMission);
+router.post('/addmission', isAuthentificated, checkRole('super-administrateur', 'Administrateur'), createMission);
+router.get('/missions', isAuthentificated, checkRole('super-administrateur', 'Administrateur'), getMissions);
+router.get('/missions/:id', isAuthentificated, checkRole('super-administrateur', 'Administrateur'), getMissionById);
+router.put('/missions/:id', isAuthentificated, checkRole('super-administrateur', 'Administrateur'), updateMission);
+router.delete('/missions/:id', isAuthentificated, checkRole('super-administrateur', 'Administrateur'), deleteMission);
 
 module.exports = router;
