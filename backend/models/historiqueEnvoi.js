@@ -11,7 +11,8 @@ const Historique = {
                 si.SendingDateTime,  
                 si.DestinationNumber, 
                 si.TextDecoded,      
-                si.Status            
+                si.Status,
+                si.SentBy            
             FROM 
                 users u
             JOIN 

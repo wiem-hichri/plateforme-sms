@@ -40,6 +40,8 @@
               <th class="p-3 border">Destinataire</th>
               <th class="p-3 border">contenu</th>
               <th class="p-3 border">Status</th>
+              <th class="p-3 border">Device</th>
+
             </tr>
           </thead>
           <tbody>
@@ -49,6 +51,8 @@
               <td class="p-3 border truncate max-w-xs">{{ log.DestinationNumber }}</td>
               <td class="p-3 border">{{ log.TextDecoded}}</td>
               <td class="p-3 border">{{ log.Status}}</td>
+              <td class="p-3 border">{{ log.SentBy}}</td>
+
             </tr>
           </tbody>
         </table>
