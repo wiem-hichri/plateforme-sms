@@ -35,7 +35,8 @@ export class HistoriqueComponent implements OnInit {
     this.filteredHistorique = this.historique.filter(item =>
       item.user_name?.toLowerCase().includes(text) ||
       item.DestinationNumber?.toLowerCase().includes(text) ||
-      item.SendingDateTime?.toLowerCase().includes(text)
+      item.SendingDateTime?.toLowerCase().includes(text) ||
+      item.SentBy?.toLowerCase().includes(text)
     );
   }
 
