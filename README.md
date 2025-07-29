@@ -48,7 +48,7 @@ Plateforme web complète de **gestion et d’envoi de SMS professionnels**, dév
 ```bash
 git clone https://github.com/wiem-hichri/plateforme-sms.git
 cd plateforme-sms
-
+```
 ### 3. Configuration de la base de données
 
 - Crée une base de données nommée `sms_platform` dans MySQL.
@@ -69,7 +69,7 @@ cd plateforme-sms
 cd backend
 npm install
 npm start
-
+```
 ### 4. Lancer le frontend
 
 ```bash
